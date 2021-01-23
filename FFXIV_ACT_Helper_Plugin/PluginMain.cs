@@ -56,10 +56,16 @@ namespace FFXIV_ACT_Helper_Plugin
                 // End combat when restarted content
                 if (checkBox1.Checked)
                 {
-                    // eg. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
+                    // e.g. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
                     if (logComponents[0] == "33" && logComponents[3] == "40000006")
                     {
-                        ActGlobals.oFormActMain.EndCombat(false);
+                        if (ActGlobals.oFormActMain.InCombat)
+                        {
+                            // Normally EndCombat function argument should be True.
+                            // see: https://advancedcombattracker.com/apidoc/html/M_Advanced_Combat_Tracker_FormActMain_EndCombat.htm
+                            //ActGlobals.oFormActMain.EndCombat(false);
+                            ActGlobals.oFormActMain.EndCombat(true);
+                        }
                     }
                 }
             }
