@@ -19,6 +19,33 @@ namespace FFXIV_ACT_Helper_Plugin
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\FFXIV_ACT_Helper_Plugin.config.xml");
         SettingsSerializer xmlSettings;
 
+        string myName;
+        List<MasterSwing> buffSwingHistory = new List<MasterSwing>();
+
+        bool EnabledEndCombatWhenRestartContent
+        {
+            get
+            {
+                return this.checkBox1.Checked;
+            }
+        }
+
+        bool EnabledDetectBuffsDuringNonCombat
+        {
+            get
+            {
+                return this.checkBox2.Checked;
+            }
+        }
+
+        bool EnabledCountMedicatedBuffs
+        {
+            get
+            {
+                return this.checkBox2.Checked;
+            }
+        }
+
         public PluginMain()
         {
             InitializeComponent();
@@ -26,7 +53,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public void DeInitPlugin()
         {
-            ActGlobals.oFormActMain.BeforeLogLineRead -= oFormActMain_BeforeLogLineRead;
+            ActGlobals.oFormActMain.BeforeLogLineRead -= BeforeLogLineRead;
 
             SaveSettings();
             lblStatus.Text = "Plugin Exited";
@@ -39,22 +66,30 @@ namespace FFXIV_ACT_Helper_Plugin
             this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             xmlSettings = new SettingsSerializer(this); // Create a new settings serializer and pass it this instance
             LoadSettings();
+            UpdateACTTables();
 
-            ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(oFormActMain_BeforeLogLineRead);
+            ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(BeforeLogLineRead);
 
             lblStatus.Text = "Plugin Started";
         }
 
-        void oFormActMain_BeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
+        void BeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
-            //Debug.WriteLine(logInfo.originalLogLine);
+            Debug.WriteLine(logInfo.originalLogLine);
 
             try
             {
                 string[] logComponents = logInfo.originalLogLine.Split('|');
 
+                // Get character name
+                // e.g. 02|2021-01-26T17:12:16.7800000+09:00|102ddfef|Hoge Fuga|a13ccee9756841e80f90f3a2498e4fd1
+                if (logComponents[0] == "02")
+                {
+                    this.myName = logComponents[3];
+                }
+
                 // End combat when restarted content
-                if (checkBox1.Checked)
+                if (this.EnabledEndCombatWhenRestartContent)
                 {
                     // e.g. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
                     if (logComponents[0] == "33" && logComponents[3] == "40000006")
@@ -68,6 +103,67 @@ namespace FFXIV_ACT_Helper_Plugin
                         }
                     }
                 }
+
+                // Detect medicated buff during non-combat
+                // TODO: Apply all buffs
+                if (this.EnabledDetectBuffsDuringNonCombat)
+                {
+                    if (ActGlobals.oFormActMain.InCombat)
+                    {
+                        // Insert swings to ACT
+                        foreach (var swing in Enumerable.Reverse(buffSwingHistory))
+                        {
+                            MasterSwing newSwing = new MasterSwing(
+                                swing.SwingType,
+                                swing.Critical,
+                                swing.Damage,
+                                DateTime.Now,
+                                swing.TimeSorter,
+                                swing.AttackType,
+                                swing.Attacker,
+                                swing.DamageType,
+                                swing.Victim);
+                            newSwing.Tags = swing.Tags;
+                            newSwing.Tags["BuffDuration"] = (double)swing.Tags["BuffDuration"] - (DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond;
+
+                            ActGlobals.oFormActMain.AddCombatAction(newSwing);
+
+                            buffSwingHistory.Remove(swing);
+                        }
+                    }
+                    else
+                    {
+                        // Add swings to histroy
+                        // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
+                        if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
+                        {
+                            string name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
+
+                            MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
+                            //swing.Tags.Add("Potency", 0);
+                            //swing.Tags.Add("Job", "");
+                            //swing.Tags.Add("ActorID", logComponents[5]);
+                            //swing.Tags.Add("TargetID", logComponents[7]);
+                            //swing.Tags.Add("SkillID", "34578697"); 
+                            //swing.Tags.Add("BuffID", "49");
+                            swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
+                            //swing.Tags.Add("BuffByte1", "97");
+                            //swing.Tags.Add("BuffByte2", "00");
+                            //swing.Tags.Add("BuffByte3", "00");
+
+                            buffSwingHistory.Add(swing);
+                        }
+
+                        // Remove expired swings
+                        foreach (var swing in Enumerable.Reverse(buffSwingHistory))
+                        {
+                            if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags["BuffDuration"])
+                            {
+                                buffSwingHistory.Remove(swing);
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -75,10 +171,16 @@ namespace FFXIV_ACT_Helper_Plugin
             }
         }
 
+        private void CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateACTTables();
+        }
+
         void LoadSettings()
         {
             // Add any controls you want to save the state of
             xmlSettings.AddControlSetting(checkBox1.Name, checkBox1);
+            xmlSettings.AddControlSetting(checkBox2.Name, checkBox2);
 
             if (File.Exists(settingsFile))
             {
@@ -124,5 +226,65 @@ namespace FFXIV_ACT_Helper_Plugin
             xWriter.Close();
         }
 
+        void UpdateACTTables()
+        {
+            if (this.EnabledCountMedicatedBuffs)
+            {
+                if (!CombatantData.ColumnDefs.ContainsKey("MedicatedCount"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "MedicatedCount",
+                        new CombatantData.ColumnDef(
+                            "MedicatedCount",
+                            true,
+                            "INT",
+                            "MedicatedCount",
+                            new CombatantData.StringDataCallback(MedicatedCountDataCallback),
+                            new CombatantData.StringDataCallback(MedicatedCountDataCallback),
+                            new Comparison<CombatantData>(MedicatedCountSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("MedicatedCount"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "MedicatedCount",
+                        new CombatantData.TextExportFormatter(
+                            "MedicatedCount",
+                            "MedicatedCount",
+                            "Number of medicated buffs",
+                            new CombatantData.ExportStringDataCallback(MedicatedCountExporttDataCallback)));
+                }
+            }
+            else
+            {
+                if (CombatantData.ColumnDefs.ContainsKey("MedicatedCount"))
+                {
+                    CombatantData.ColumnDefs.Remove("MedicatedCount");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("MedicatedCount"))
+                {
+                    CombatantData.ExportVariables.Remove("MedicatedCount");
+                }
+            }
+            ActGlobals.oFormActMain.ValidateLists();
+            ActGlobals.oFormActMain.ValidateTableSetup();
+        }
+
+        string MedicatedCountDataCallback(CombatantData data)
+        {
+            return data.AllInc
+                .Where(x => x.Key == "Medicated" || x.Key == "強化薬")  // TODO: localize
+                .Select(x => x.Value.Swings.ToString())
+                .FirstOrDefault() ?? "0";
+        }
+
+        int MedicatedCountSortComparer(CombatantData left, CombatantData right)
+        {
+            return (int.Parse(left.GetColumnByName("MedicatedCount")) <= int.Parse(right.GetColumnByName("MedicatedCount"))) ? -1 : 1;
+        }
+
+        string MedicatedCountExporttDataCallback(CombatantData Data, string ExtraFormat)
+        {
+            return Data.GetColumnByName("MedicatedCount");
+        }
     }
 }
