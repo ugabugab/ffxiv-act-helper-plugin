@@ -10,6 +10,8 @@ using System.IO;
 using System.Xml;
 using System.Diagnostics;
 using Advanced_Combat_Tracker;
+using System.Net;
+using System.Xml.Serialization;
 
 namespace FFXIV_ACT_Helper_Plugin
 {
@@ -17,10 +19,12 @@ namespace FFXIV_ACT_Helper_Plugin
     {
         Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\FFXIV_ACT_Helper_Plugin.config.xml");
+        string bossDataFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Data\\FFXIV_ACT_Helper_Plugin.boss_data.xml");
         SettingsSerializer xmlSettings;
 
         string myName;
         List<MasterSwing> buffSwingHistory = new List<MasterSwing>();
+        BossData bossData;
 
         bool EnabledEndCombatWhenRestartContent
         {
@@ -46,6 +50,14 @@ namespace FFXIV_ACT_Helper_Plugin
             }
         }
 
+        bool EnabledSimulateFFLogsDPSPerf
+        {
+            get
+            {
+                return this.checkBox3.Checked;
+            }
+        }
+
         public PluginMain()
         {
             InitializeComponent();
@@ -63,9 +75,12 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
+            pluginScreenSpace.Text = "FFXIV Helper Settings"; // Tab name
             this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             xmlSettings = new SettingsSerializer(this); // Create a new settings serializer and pass it this instance
             LoadSettings();
+            DownloadData();
+            LoadData();
             UpdateACTTables();
 
             ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(BeforeLogLineRead);
@@ -75,7 +90,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
         void BeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
-            Debug.WriteLine(logInfo.originalLogLine);
+            //Debug.WriteLine(logInfo.originalLogLine);
 
             try
             {
@@ -181,6 +196,7 @@ namespace FFXIV_ACT_Helper_Plugin
             // Add any controls you want to save the state of
             xmlSettings.AddControlSetting(checkBox1.Name, checkBox1);
             xmlSettings.AddControlSetting(checkBox2.Name, checkBox2);
+            xmlSettings.AddControlSetting(checkBox3.Name, checkBox3);
 
             if (File.Exists(settingsFile))
             {
@@ -226,6 +242,35 @@ namespace FFXIV_ACT_Helper_Plugin
             xWriter.Close();
         }
 
+        void DownloadData()
+        {
+            // Download latest boss data
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(this.bossDataFile));
+                new WebClient().DownloadFile("https://ugabugab.com/ffxiv-act-helper-plugin/boss_data.xml", this.bossDataFile);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        void LoadData()
+        {
+            // Load boss data
+            try
+            {
+                FileStream fs = new FileStream(this.bossDataFile, FileMode.Open);
+                XmlSerializer serializer = new XmlSerializer(typeof(BossData));
+                this.bossData = (BossData)serializer.Deserialize(fs);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
         void UpdateACTTables()
         {
             if (this.EnabledCountMedicatedBuffs)
@@ -265,6 +310,45 @@ namespace FFXIV_ACT_Helper_Plugin
                     CombatantData.ExportVariables.Remove("MedicatedCount");
                 }
             }
+
+            if (this.EnabledSimulateFFLogsDPSPerf)
+            {
+                if (!CombatantData.ColumnDefs.ContainsKey("Perf"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "Perf",
+                        new CombatantData.ColumnDef(
+                            "Perf",
+                            true,
+                            "INT",
+                            "Perf",
+                            new CombatantData.StringDataCallback(PerfDataCallback),
+                            new CombatantData.StringDataCallback(PerfDataCallback),
+                            new Comparison<CombatantData>(PerfSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("Perf"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "Perf",
+                        new CombatantData.TextExportFormatter(
+                            "Perf",
+                            "Perf",
+                            "Simulated FFLogs DPS Perf",
+                            new CombatantData.ExportStringDataCallback(PerfExporttDataCallback)));
+                }
+            }
+            else
+            {
+                if (CombatantData.ColumnDefs.ContainsKey("Perf"))
+                {
+                    CombatantData.ColumnDefs.Remove("Perf");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("Perf"))
+                {
+                    CombatantData.ExportVariables.Remove("Perf");
+                }
+            }
+
             ActGlobals.oFormActMain.ValidateLists();
             ActGlobals.oFormActMain.ValidateTableSetup();
         }
@@ -279,12 +363,106 @@ namespace FFXIV_ACT_Helper_Plugin
 
         int MedicatedCountSortComparer(CombatantData left, CombatantData right)
         {
-            return (int.Parse(left.GetColumnByName("MedicatedCount")) <= int.Parse(right.GetColumnByName("MedicatedCount"))) ? -1 : 1;
+            return left.GetColumnByName("MedicatedCount").CompareTo(right.GetColumnByName("MedicatedCount"));
         }
 
-        string MedicatedCountExporttDataCallback(CombatantData Data, string ExtraFormat)
+        string MedicatedCountExporttDataCallback(CombatantData data, string extraFormat)
         {
-            return Data.GetColumnByName("MedicatedCount");
+            return data.GetColumnByName("MedicatedCount");
+        }
+
+        string PerfDataCallback(CombatantData data)
+        {
+            if (this.bossData != null)
+            {
+                var boss = this.bossData.Bosses
+                    .Where(x => x.Zone == data.Parent.ZoneName)
+                    .Where(x => data.Allies.ContainsKey(x.Name) || data.Allies.ContainsKey(x.NameJa))
+                    .FirstOrDefault();
+
+                if (boss != null)
+                {
+                    var job = data.AllOut
+                        .Select(x => x.Value.Items
+                            .Select(y => y.Tags
+                                .Where(z => z.Key == "Job").Select(z => z.Value.ToString()).FirstOrDefault())
+                            .FirstOrDefault())
+                        .FirstOrDefault();
+                    // If failed to get Job from Tag, get it from Column
+                    if (job == null)
+                    {
+                        job = data.GetColumnByName("Job");
+                    }
+
+                    var percentile = boss.Percentiles.Where(x => x.Job == job).FirstOrDefault();
+
+                    if (percentile != null)
+                    {
+                        var dps = data.EncDPS;
+
+                        // Add pet's DPS
+                        var name = (data.Name == ActGlobals.charName) ? this.myName : data.Name;
+                        dps += data.Parent.Items
+                            .Where(x => x.Value.Name.Contains("(" + name + ")"))
+                            .Select(x => x.Value.EncDPS)
+                            .Sum();
+
+                        // Recalculate DPS with applying exclusion period
+                        var duration = data.Duration.TotalSeconds;
+                        foreach (var exclusionPeriod in boss.ExclusionPeriods)
+                        {
+                            if (data.Duration.TotalSeconds > exclusionPeriod.StartTime)
+                            {
+                                duration -= (Math.Min(data.Duration.TotalSeconds, exclusionPeriod.EndTime) - exclusionPeriod.StartTime);
+                            }
+                        }
+                        dps = (dps * data.Duration.TotalSeconds) / duration;
+
+                        var perfTable = new Dictionary<int, int>()
+                        {
+                            { 99, percentile.Perf99 },
+                            { 95, percentile.Perf95 },
+                            { 75, percentile.Perf75 },
+                            { 50, percentile.Perf50 },
+                            { 25, percentile.Perf25 },
+                            { 1, percentile.Perf1 },
+                        };
+
+                        double p0 = 1.0;
+                        double p1 = 100.0;
+                        double d0 = 0.0;
+                        double d1 = Double.MaxValue;
+
+                        foreach (var x in perfTable)
+                        {
+                            if (dps >= x.Value)
+                            {
+                                p0 = x.Key;
+                                d0 = x.Value;
+                                break;
+                            }
+                            p1 = x.Key;
+                            d1 = x.Value;
+                        }
+
+                        var perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
+
+                        return ((int)perf).ToString();
+                    }
+                }
+            }
+
+            return "-";
+        }
+
+        int PerfSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("Perf").CompareTo(right.GetColumnByName("Perf"));
+        }
+
+        string PerfExporttDataCallback(CombatantData data, string extraFormat)
+        {
+            return data.GetColumnByName("Perf");
         }
     }
 }
