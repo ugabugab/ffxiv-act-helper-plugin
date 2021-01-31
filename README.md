@@ -5,7 +5,7 @@ An ACT helper Plugin for Final Fantasy XIV.
 - End combat when restart content
 
 [Pre-Release]
-- Count Medicated buffs
-- **(Beta)** Simulate FFLogs DPS Perf<br/>
+- Count Medicated buffs (Add "MedicatedCount" parameter to Encounter View)
+- **(Beta)** Simulate FFLogs DPS Perf (Add "Perf" parameter to Encounter View)<br/>
 *Currently supported zones: Eden's Promise (Normal/Savage), The Navel (Unreal)
 
