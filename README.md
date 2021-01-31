@@ -1,7 +1,7 @@
 # FFXIV_ACT_Helper_Plugin
 An ACT helper Plugin for Final Fantasy XIV.
 
-Features:
+### Features:
 - End combat when restart content
 
 [Pre-Release]
