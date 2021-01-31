@@ -1,4 +1,4 @@
-# FFXIV ACT Helper Plugin
+# FFXIV_ACT_Helper_Plugin
 An ACT helper Plugin for Final Fantasy XIV.
 
 Features:
@@ -6,4 +6,6 @@ Features:
 
 [Pre-Release]
 - Count Medicated buffs
-- **(Beta)** Simulate FFLogs DPS Perf
+- **(Beta)** Simulate FFLogs DPS Perf<br/>
+*Currently supported zones: Eden's Promise (Normal/Savage), The Navel (Unreal)
+
