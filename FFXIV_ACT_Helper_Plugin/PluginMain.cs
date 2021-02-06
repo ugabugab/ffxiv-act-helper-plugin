@@ -213,7 +213,7 @@ namespace FFXIV_ACT_Helper_Plugin
             xmlSettings.AddControlSetting(checkBox1.Name, checkBox1);
             xmlSettings.AddControlSetting(checkBox2.Name, checkBox2);
             xmlSettings.AddControlSetting(checkBox3.Name, checkBox3);
-            xmlSettings.AddControlSetting(checkBox3.Name, checkBox4);
+            xmlSettings.AddControlSetting(checkBox4.Name, checkBox4);
 
             if (File.Exists(settingsFile))
             {
