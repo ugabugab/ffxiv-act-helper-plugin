@@ -25,6 +25,7 @@ namespace FFXIV_ACT_Helper_Plugin
         string myName;
         List<MasterSwing> buffSwingHistory = new List<MasterSwing>();
         BossData bossData;
+        List<MedicatedItem> medicatedItems = new List<MedicatedItem>();
 
         bool EnabledEndCombatWhenRestartContent
         {
@@ -58,6 +59,14 @@ namespace FFXIV_ACT_Helper_Plugin
             }
         }
 
+        bool EnabledCountOnlyTheLatestAndHighQuality
+        {
+            get
+            {
+                return this.checkBox4.Checked;
+            }
+        }
+
         public PluginMain()
         {
             InitializeComponent();
@@ -81,6 +90,7 @@ namespace FFXIV_ACT_Helper_Plugin
             LoadSettings();
             DownloadData();
             LoadData();
+            UpdateUI();
             UpdateACTTables();
 
             ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(BeforeLogLineRead);
@@ -152,30 +162,35 @@ namespace FFXIV_ACT_Helper_Plugin
                         // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
                         if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
                         {
-                            string name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
+                            string skillId = this.medicatedItems.Where(x => x.Id == logComponents[9]).Select(x => x.SkillId).FirstOrDefault();
 
-                            MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
-                            //swing.Tags.Add("Potency", 0);
-                            //swing.Tags.Add("Job", "");
-                            //swing.Tags.Add("ActorID", logComponents[5]);
-                            //swing.Tags.Add("TargetID", logComponents[7]);
-                            //swing.Tags.Add("SkillID", "34578697"); 
-                            //swing.Tags.Add("BuffID", "49");
-                            swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
-                            //swing.Tags.Add("BuffByte1", "97");
-                            //swing.Tags.Add("BuffByte2", "00");
-                            //swing.Tags.Add("BuffByte3", "00");
-
-                            buffSwingHistory.Add(swing);
-                        }
-
-                        // Remove expired swings
-                        foreach (var swing in Enumerable.Reverse(buffSwingHistory))
-                        {
-                            if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags["BuffDuration"])
+                            if (skillId != null)
                             {
-                                buffSwingHistory.Remove(swing);
+                                string name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
+
+                                MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
+                                swing.Tags.Add("Potency", 0);
+                                //swing.Tags.Add("Job", "");
+                                swing.Tags.Add("ActorID", logComponents[5]);
+                                swing.Tags.Add("TargetID", logComponents[7]);
+                                swing.Tags.Add("SkillID", skillId);
+                                swing.Tags.Add("BuffID", "49");
+                                swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
+                                //swing.Tags.Add("BuffByte1", "97");
+                                //swing.Tags.Add("BuffByte2", "00");
+                                //swing.Tags.Add("BuffByte3", "00");
+
+                                buffSwingHistory.Add(swing);
                             }
+                        }
+                    }
+
+                    // Remove expired swings
+                    foreach (var swing in Enumerable.Reverse(buffSwingHistory))
+                    {
+                        if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags["BuffDuration"])
+                        {
+                            buffSwingHistory.Remove(swing);
                         }
                     }
                 }
@@ -188,6 +203,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
         private void CheckedChanged(object sender, EventArgs e)
         {
+            UpdateUI();
             UpdateACTTables();
         }
 
@@ -197,6 +213,7 @@ namespace FFXIV_ACT_Helper_Plugin
             xmlSettings.AddControlSetting(checkBox1.Name, checkBox1);
             xmlSettings.AddControlSetting(checkBox2.Name, checkBox2);
             xmlSettings.AddControlSetting(checkBox3.Name, checkBox3);
+            xmlSettings.AddControlSetting(checkBox3.Name, checkBox4);
 
             if (File.Exists(settingsFile))
             {
@@ -269,6 +286,36 @@ namespace FFXIV_ACT_Helper_Plugin
             {
                 Debug.WriteLine(e.Message);
             }
+
+            // Load medicated item data
+            try
+            {
+                string[] rows = Properties.Resources.medicated_items
+                    .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var row in rows)
+                {
+                    string[] cols = row.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                    if (cols.Length >= 3)
+                    {
+                        medicatedItems.Add(new MedicatedItem
+                        {
+                            Id = cols[0],
+                            Name = cols[1],
+                            SkillId = cols[2]
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        void UpdateUI()
+        {
+            checkBox4.Enabled = checkBox2.Checked;
         }
 
         void UpdateACTTables()
@@ -355,10 +402,21 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string MedicatedCountDataCallback(CombatantData data)
         {
+            var medicatedIncKeys = new string[] { "Medicated", "強化薬" }; // TODO: localize
+            var medicatedSkillIds = this.medicatedItems.Select(x => x.SkillId).ToList();
+
+            if (this.EnabledCountOnlyTheLatestAndHighQuality)
+            {
+                // Last 5 items are the latest & high quality
+                medicatedSkillIds = medicatedSkillIds.Skip(medicatedSkillIds.Count - 5).Take(5).ToList();
+            }
+
             return data.AllInc
-                .Where(x => x.Key == "Medicated" || x.Key == "強化薬")  // TODO: localize
-                .Select(x => x.Value.Swings.ToString())
-                .FirstOrDefault() ?? "0";
+                .Where(x => medicatedIncKeys.Contains(x.Key))
+                .Select(x => x.Value.Items
+                    .Where(y => y.Tags.ContainsKey("SkillID") && medicatedSkillIds.Contains(y.Tags["SkillID"]))
+                    .Count())
+                .Sum().ToString();
         }
 
         int MedicatedCountSortComparer(CombatantData left, CombatantData right)
@@ -384,8 +442,8 @@ namespace FFXIV_ACT_Helper_Plugin
                 {
                     var job = data.AllOut
                         .Select(x => x.Value.Items
-                            .Select(y => y.Tags
-                                .Where(z => z.Key == "Job").Select(z => z.Value.ToString()).FirstOrDefault())
+                            .Where(y => y.Tags.ContainsKey("Job"))
+                            .Select(y => y.Tags["Job"].ToString())
                             .FirstOrDefault())
                         .FirstOrDefault();
                     // If failed to get Job from Tag, get it from Column
@@ -425,10 +483,11 @@ namespace FFXIV_ACT_Helper_Plugin
                             { 75, percentile.Perf75 },
                             { 50, percentile.Perf50 },
                             { 25, percentile.Perf25 },
+                            { 10, percentile.Perf10 },
                             { 1, percentile.Perf1 },
                         };
 
-                        double p0 = 1.0;
+                        double p0 = 0.0;
                         double p1 = 100.0;
                         double d0 = 0.0;
                         double d1 = Double.MaxValue;
@@ -445,7 +504,13 @@ namespace FFXIV_ACT_Helper_Plugin
                             d1 = x.Value;
                         }
 
-                        var perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
+                        double perf = 1.0;
+                        if (d0 != d1) // Avoid division by zero
+                        {
+                            perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
+                            perf = Math.Round(perf, MidpointRounding.AwayFromZero);
+                            perf = Math.Max(perf, 1.0);
+                        }
 
                         return ((int)perf).ToString();
                     }

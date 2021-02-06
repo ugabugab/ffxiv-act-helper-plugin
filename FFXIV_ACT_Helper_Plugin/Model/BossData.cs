@@ -44,6 +44,9 @@ namespace FFXIV_ACT_Helper_Plugin
             [XmlElement("perf1")]
             public int Perf1 { get; set; }
 
+            [XmlElement("perf10")]
+            public int Perf10 { get; set; }
+
             [XmlElement("perf25")]
             public int Perf25 { get; set; }
 

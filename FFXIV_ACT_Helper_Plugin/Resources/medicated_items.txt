@@ -1,0 +1,140 @@
+0A|Potion of Strength|33559026
+0B|Potion of Dexterity|33559027
+0C|Potion of Vitality|33559028
+0D|Potion of Intelligence|33559029
+0E|Potion of Mind|33559030
+10|Hi-Potion of Strength|33559031
+11|Hi-Potion of Dexterity|33559032
+12|Hi-Potion of Vitality|33559033
+13|Hi-Potion of Intelligence|33559034
+14|Hi-Potion of Mind|33559035
+1D|Mega-Potion of Strength|33559036
+1E|Mega-Potion of Dexterity|33559037
+1F|Mega-Potion of Vitality|33559038
+20|Mega-Potion of Intelligence|33559039
+21|Mega-Potion of Mind|33559040
+28|X-Potion of Strength|33559041
+29|X-Potion of Dexterity|33559042
+2A|X-Potion of Vitality|33559043
+2B|X-Potion of Intelligence|33559044
+2C|X-Potion of Mind|33559045
+E4|Draconian Potion of Strength|33567054
+E5|Draconian Potion of Dexterity|33567055
+E6|Draconian Potion of Vitality|33567056
+E7|Draconian Potion of Intelligence|33567057
+E8|Draconian Potion of Mind|33567058
+EE|Max-Potion of Strength|33568608
+EF|Max-Potion of Dexterity|33568609
+F0|Max-Potion of Vitality|33568610
+F1|Max-Potion of Intelligence|33568611
+F2|Max-Potion of Mind|33568612
+108|Supramax-Potion of Strength|33571148
+109|Supramax-Potion of Dexterity|33571149
+10A|Supramax-Potion of Vitality|33571150
+10B|Supramax-Potion of Intelligence|33571151
+10C|Supramax-Potion of Mind|33571152
+155|Infusion of Strength|33574318
+156|Infusion of Dexterity|33574319
+157|Infusion of Vitality|33574320
+158|Infusion of Intelligence|33574321
+159|Infusion of Mind|33574322
+169|Grade 2 Infusion of Strength|33576879
+16A|Grade 2 Infusion of Dexterity|33576880
+16B|Grade 2 Infusion of Vitality|33576881
+16C|Grade 2 Infusion of Intelligence|33576882
+16D|Grade 2 Infusion of Mind|33576883
+183|Grade 3 Infusion of Strength|33578693
+184|Grade 3 Infusion of Dexterity|33578694
+185|Grade 3 Infusion of Vitality|33578695
+186|Grade 3 Infusion of Intelligence|33578696
+187|Grade 3 Infusion of Mind|33578697
+1BA|Tincture of Strength|33582218
+1BB|Tincture of Dexterity|33582219
+1BC|Tincture of Vitality|33582220
+1BD|Tincture of Intelligence|33582221
+1BE|Tincture of Mind|33582222
+1C5|Grade 2 Tincture of Strength|33582427
+1C6|Grade 2 Tincture of Dexterity|33582428
+1C7|Grade 2 Tincture of Vitality|33582429
+1C8|Grade 2 Tincture of Intelligence|33582430
+1C9|Grade 2 Tincture of Mind|33582431
+1D0|Grade 3 Tincture of Strength|33583924
+1D1|Grade 3 Tincture of Dexterity|33583925
+1D2|Grade 3 Tincture of Vitality|33583926
+1D3|Grade 3 Tincture of Intelligence|33583927
+1D4|Grade 3 Tincture of Mind|33583928
+1E6|Grade 4 Tincture of Strength|33586325
+1E7|Grade 4 Tincture of Dexterity|33586326
+1E8|Grade 4 Tincture of Vitality|33586327
+1E9|Grade 4 Tincture of Intelligence|33586328
+1EA|Grade 4 Tincture of Mind|33586329"
+271A|Potion of Strength ð||34559026
+271B|Potion of Dexterity ð||34559027
+271C|Potion of Vitality ð||34559028
+271D|Potion of Intelligence ð||34559029
+271E|Potion of Mind ð||34559030
+2720|Hi-Potion of Strength ð||34559031
+2721|Hi-Potion of Dexterity ð||34559032
+2722|Hi-Potion of Vitality ð||34559033
+2723|Hi-Potion of Intelligence ð||34559034
+2724|Hi-Potion of Mind ð||34559035
+272D|Mega-Potion of Strength ð||34559036
+272E|Mega-Potion of Dexterity ð||34559037
+272F|Mega-Potion of Vitality ð||34559038
+2730|Mega-Potion of Intelligence ð||34559039
+2731|Mega-Potion of Mind ð||34559040
+2738|X-Potion of Strength ð||34559041
+2739|X-Potion of Dexterity ð||34559042
+273A|X-Potion of Vitality ð||34559043
+273B|X-Potion of Intelligence ð||34559044
+273C|X-Potion of Mind ð||34559045
+27F4|Draconian Potion of Strength ð||34567054
+27F5|Draconian Potion of Dexterity ð||34567055
+27F6|Draconian Potion of Vitality ð||34567056
+27F7|Draconian Potion of Intelligence ð||34567057
+27F8|Draconian Potion of Mind ð||34567058
+27FE|Max-Potion of Strength ð||34568608
+27FF|Max-Potion of Dexterity ð||34568609
+2800|Max-Potion of Vitality ð||34568610
+2801|Max-Potion of Intelligence ð||34568611
+2802|Max-Potion of Mind ð||34568612
+2818|Supramax-Potion of Strength ð||34571148
+2819|Supramax-Potion of Dexterity ð||34571149
+281A|Supramax-Potion of Vitality ð||34571150
+281B|Supramax-Potion of Intelligence ð||34571151
+281C|Supramax-Potion of Mind ð||34571152
+2865|Infusion of Strength ð||34574318
+2866|Infusion of Dexterity ð||34574319
+2867|Infusion of Vitality ð||34574320
+2868|Infusion of Intelligence ð||34574321
+2869|Infusion of Mind ð||34574322
+2879|Grade 2 Infusion of Strength ð||34576879
+287A|Grade 2 Infusion of Dexterity ð||34576880
+287B|Grade 2 Infusion of Vitality ð||34576881
+287C|Grade 2 Infusion of Intelligence ð||34576882
+287D|Grade 2 Infusion of Mind ð||34576883
+2893|Grade 3 Infusion of Strength ð||34578693
+2894|Grade 3 Infusion of Dexterity ð||34578694
+2895|Grade 3 Infusion of Vitality ð||34578695
+2896|Grade 3 Infusion of Intelligence ð||34578696
+2897|Grade 3 Infusion of Mind ð||34578697
+28CA|Tincture of Strength ð||34582218
+28CB|Tincture of Dexterity ð||34582219
+28CC|Tincture of Vitality ð||34582220
+28CD|Tincture of Intelligence ð||34582221
+28CE|Tincture of Mind ð||34582222
+28D5|Grade 2 Tincture of Strength ð||34582427
+28D6|Grade 2 Tincture of Dexterity ð||34582428
+28D7|Grade 2 Tincture of Vitality ð||34582429
+28D8|Grade 2 Tincture of Intelligence ð||34582430
+28D9|Grade 2 Tincture of Mind ð||34582431
+28E0|Grade 3 Tincture of Strength ð||34583924
+28E1|Grade 3 Tincture of Dexterity ð||34583925
+28E2|Grade 3 Tincture of Vitality ð||34583926
+28E3|Grade 3 Tincture of Intelligence ð||34583927
+28E4|Grade 3 Tincture of Mind ð||34583928
+28F6|Grade 4 Tincture of Strength ð||34586325
+28F7|Grade 4 Tincture of Dexterity ð||34586326
+28F8|Grade 4 Tincture of Vitality ð||34586327
+28F9|Grade 4 Tincture of Intelligence ð||34586328
+28FA|Grade 4 Tincture of Mind ð||34586329
