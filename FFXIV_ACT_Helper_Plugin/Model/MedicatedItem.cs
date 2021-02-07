@@ -12,5 +12,17 @@ namespace FFXIV_ACT_Helper_Plugin
         public string Name { get; set; }
 
         public string SkillId { get; set; }
+
+        public string BuffByte
+        {
+            get
+            {
+                if (Id != null && Id.Length >= 2)
+                {
+                    return Id.Substring(Id.Length - 2, 2);
+                }
+                return null;
+            }
+        }
     }
 }
