@@ -156,32 +156,31 @@ namespace FFXIV_ACT_Helper_Plugin
                             buffSwingHistory.Remove(swing);
                         }
                     }
-                    else
+
+                    // Add swings to histroy
+                    // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
+                    if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
                     {
-                        // Add swings to histroy
-                        // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
-                        if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
+                        var item = this.medicatedItems.Where(x => x.Id == logComponents[9]).FirstOrDefault();
+                        var name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
+
+                        if (item != null
+                            && (!ActGlobals.oFormActMain.InCombat
+                                || ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetCombatant(name) == null))　// If target character is NOT present in active encounter
                         {
-                            var item = this.medicatedItems.Where(x => x.Id == logComponents[9]).FirstOrDefault();
+                            MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
+                            swing.Tags.Add("Potency", 0);
+                            //swing.Tags.Add("Job", "");
+                            swing.Tags.Add("ActorID", logComponents[5]);
+                            swing.Tags.Add("TargetID", logComponents[7]);
+                            swing.Tags.Add("SkillID", item.SkillId);
+                            swing.Tags.Add("BuffID", "49");
+                            swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
+                            swing.Tags.Add("BuffByte1", item.BuffByte);
+                            swing.Tags.Add("BuffByte2", "00");
+                            swing.Tags.Add("BuffByte3", "00");
 
-                            if (item != null)
-                            {
-                                string name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
-
-                                MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
-                                swing.Tags.Add("Potency", 0);
-                                //swing.Tags.Add("Job", "");
-                                swing.Tags.Add("ActorID", logComponents[5]);
-                                swing.Tags.Add("TargetID", logComponents[7]);
-                                swing.Tags.Add("SkillID", item.SkillId);
-                                swing.Tags.Add("BuffID", "49");
-                                swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
-                                swing.Tags.Add("BuffByte1", item.BuffByte);
-                                swing.Tags.Add("BuffByte2", "00");
-                                swing.Tags.Add("BuffByte3", "00");
-
-                                buffSwingHistory.Add(swing);
-                            }
+                            buffSwingHistory.Add(swing);
                         }
                     }
 
