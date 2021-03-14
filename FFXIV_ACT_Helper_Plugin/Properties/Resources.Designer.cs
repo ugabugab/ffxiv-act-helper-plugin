@@ -61,6 +61,15 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
+        ///   49|Medicated|強化薬|30|0 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Buffs {
+            get {
+                return ResourceManager.GetString("Buffs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   0A|Potion of Strength|33559026
         ///0B|Potion of Dexterity|33559027
         ///0C|Potion of Vitality|33559028
@@ -77,9 +86,9 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         ///20|Mega-Potion of Intelligence|33559039
         ///21|Mega-Potion of Mind [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string medicated_items {
+        internal static string MedicatedItems {
             get {
-                return ResourceManager.GetString("medicated_items", resourceCulture);
+                return ResourceManager.GetString("MedicatedItems", resourceCulture);
             }
         }
     }

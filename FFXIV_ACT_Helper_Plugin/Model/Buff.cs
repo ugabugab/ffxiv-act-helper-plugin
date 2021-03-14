@@ -5,24 +5,25 @@ using System.Text;
 
 namespace FFXIV_ACT_Helper_Plugin
 {
-    public class MedicatedItem
+    public class Buff
     {
         public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public string SkillId { get; set; }
+        public string NameJa { get; set; }
 
-        public string BuffByte
+        public int Duration { get; set; }
+        
+        public int DamageUpRate { get; set; }
+
+        public string[] NameList
         {
             get
             {
-                if (Id != null && Id.Length >= 2)
-                {
-                    return Id.Substring(Id.Length - 2, 2);
-                }
-                return null;
+                return new string[] { Name, NameJa };
             }
+
         }
     }
 }

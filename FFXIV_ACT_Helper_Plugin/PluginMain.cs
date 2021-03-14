@@ -21,11 +21,7 @@ namespace FFXIV_ACT_Helper_Plugin
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\FFXIV_ACT_Helper_Plugin.config.xml");
         string bossDataFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Data\\FFXIV_ACT_Helper_Plugin.boss_data.xml");
         SettingsSerializer xmlSettings;
-
-        string myName;
         List<MasterSwing> buffSwingHistory = new List<MasterSwing>();
-        BossData bossData;
-        List<MedicatedItem> medicatedItems = new List<MedicatedItem>();
 
         bool EnabledEndCombatWhenRestartContent
         {
@@ -110,7 +106,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 // e.g. 02|2021-01-26T17:12:16.7800000+09:00|102ddfef|Hoge Fuga|a13ccee9756841e80f90f3a2498e4fd1
                 if (logComponents[0] == "02")
                 {
-                    this.myName = logComponents[3];
+                    ActGlobalsExtension.myName = logComponents[3];
                 }
 
                 // End combat when restarted content
@@ -161,8 +157,8 @@ namespace FFXIV_ACT_Helper_Plugin
                     // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
                     if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
                     {
-                        var item = this.medicatedItems.Where(x => x.Id == logComponents[9]).FirstOrDefault();
-                        var name = (this.myName == logComponents[6] ? ActGlobals.charName : logComponents[6]);
+                        var item = ActGlobalsExtension.medicatedItems.Where(x => x.Id == logComponents[9]).FirstOrDefault();
+                        var name = ActGlobalsExtension.ConvertClientNameToActName(logComponents[6]);
 
                         if (item != null
                             && (!ActGlobals.oFormActMain.InCombat
@@ -174,7 +170,7 @@ namespace FFXIV_ACT_Helper_Plugin
                             swing.Tags.Add("ActorID", logComponents[5]);
                             swing.Tags.Add("TargetID", logComponents[7]);
                             swing.Tags.Add("SkillID", item.SkillId);
-                            swing.Tags.Add("BuffID", "49");
+                            swing.Tags.Add("BuffID", ActGlobalsExtension.medicatedBuffID);
                             swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
                             swing.Tags.Add("BuffByte1", item.BuffByte);
                             swing.Tags.Add("BuffByte2", "00");
@@ -279,7 +275,34 @@ namespace FFXIV_ACT_Helper_Plugin
             {
                 FileStream fs = new FileStream(this.bossDataFile, FileMode.Open);
                 XmlSerializer serializer = new XmlSerializer(typeof(BossData));
-                this.bossData = (BossData)serializer.Deserialize(fs);
+                var dossData = (BossData)serializer.Deserialize(fs);
+                ActGlobalsExtension.bosses = dossData.Bosses;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            // Load buff data
+            try
+            {
+                string[] rows = Properties.Resources.Buffs
+                    .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                var items = new List<Buff>();
+                foreach (var row in rows)
+                {
+                    string[] cols = row.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                    items.Add(new Buff
+                    {
+                        Id = cols[0],
+                        Name = cols[1],
+                        NameJa = cols[2],
+                        Duration = int.Parse(cols[3]),
+                        DamageUpRate = int.Parse(cols[4])
+                    });
+                }
+                ActGlobalsExtension.buffs = items;
             }
             catch (Exception e)
             {
@@ -289,15 +312,16 @@ namespace FFXIV_ACT_Helper_Plugin
             // Load medicated item data
             try
             {
-                string[] rows = Properties.Resources.medicated_items
+                string[] rows = Properties.Resources.MedicatedItems
                     .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
+                var items = new List<MedicatedItem>();
                 foreach (var row in rows)
                 {
                     string[] cols = row.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     if (cols.Length >= 3)
                     {
-                        medicatedItems.Add(new MedicatedItem
+                        items.Add(new MedicatedItem
                         {
                             Id = cols[0],
                             Name = cols[1],
@@ -305,6 +329,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         });
                     }
                 }
+                ActGlobalsExtension.medicatedItems = items;
             }
             catch (Exception e)
             {
@@ -382,6 +407,29 @@ namespace FFXIV_ACT_Helper_Plugin
                             "Simulated FFLogs DPS Perf",
                             new CombatantData.ExportStringDataCallback(PerfExporttDataCallback)));
                 }
+                if (!CombatantData.ColumnDefs.ContainsKey("ADPS"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "ADPS",
+                        new CombatantData.ColumnDef(
+                            "ADPS",
+                            false,
+                            "INT",
+                            "ADPS",
+                            new CombatantData.StringDataCallback(ADPSDataCallback),
+                            new CombatantData.StringDataCallback(ADPSDataCallback),
+                            new Comparison<CombatantData>(ADPSSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("ADPS"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "ADPS",
+                        new CombatantData.TextExportFormatter(
+                            "ADPS",
+                            "ADPS",
+                            "Simulated FFLogs ADPS",
+                            new CombatantData.ExportStringDataCallback(ADPSExporttDataCallback)));
+                }
             }
             else
             {
@@ -393,6 +441,14 @@ namespace FFXIV_ACT_Helper_Plugin
                 {
                     CombatantData.ExportVariables.Remove("Perf");
                 }
+                if (CombatantData.ColumnDefs.ContainsKey("ADPS"))
+                {
+                    CombatantData.ColumnDefs.Remove("ADPS");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("ADPS"))
+                {
+                    CombatantData.ExportVariables.Remove("ADPS");
+                }
             }
 
             ActGlobals.oFormActMain.ValidateLists();
@@ -401,8 +457,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string MedicatedCountDataCallback(CombatantData data)
         {
-            var medicatedIncKeys = new string[] { "Medicated", "強化薬" }; // TODO: localize
-            var medicatedBuffBytes = this.medicatedItems.Select(x => x.BuffByte).ToList();
+            var medicatedIncKeys = ActGlobalsExtension.buffs
+                .Where(x => x.Id == ActGlobalsExtension.medicatedBuffID).Select(x => x.NameList).FirstOrDefault();
+            var medicatedBuffBytes = ActGlobalsExtension.medicatedItems.Select(x => x.BuffByte).ToList();
 
             if (this.EnabledCountOnlyTheLatestAndHighQuality)
             {
@@ -430,89 +487,69 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string PerfDataCallback(CombatantData data)
         {
-            if (this.bossData != null)
+            var boss = ActGlobalsExtension.bosses
+                .Where(x => x.Zone == data.Parent.ZoneName)
+                .Where(x => x.NameList.Intersect(data.Allies.Keys).Count() != 0)
+                .FirstOrDefault();
+
+            if (boss != null)
             {
-                var boss = this.bossData.Bosses
-                    .Where(x => x.Zone == data.Parent.ZoneName)
-                    .Where(x => data.Allies.ContainsKey(x.Name) || data.Allies.ContainsKey(x.NameJa))
-                    .FirstOrDefault();
+                var job = data.GetJob();
+                var percentile = boss.Percentiles.Where(x => x.Job == job).FirstOrDefault();
 
-                if (boss != null)
+                if (percentile != null)
                 {
-                    var job = data.AllOut
-                        .Select(x => x.Value.Items
-                            .Where(y => y.Tags.ContainsKey("Job"))
-                            .Select(y => y.Tags["Job"].ToString())
-                            .FirstOrDefault())
-                        .FirstOrDefault();
-                    // If failed to get Job from Tag, get it from Column
-                    if (job == null)
+                    var dps = data.GetADPS();
+
+                    // Recalculate DPS with applying exclusion period
+                    var totalDuration = data.Parent.Duration.TotalSeconds;
+                    var duration = totalDuration;
+                    foreach (var exclusionPeriod in boss.ExclusionPeriods)
                     {
-                        job = data.GetColumnByName("Job");
+                        if (totalDuration > exclusionPeriod.StartTime)
+                        {
+                            duration -= (Math.Min(totalDuration, exclusionPeriod.EndTime) - exclusionPeriod.StartTime);
+                        }
+                    }
+                    dps = (dps * totalDuration) / duration;
+
+                    var perfTable = new Dictionary<int, int>()
+                    {
+                        { 99, percentile.Perf99 },
+                        { 95, percentile.Perf95 },
+                        { 75, percentile.Perf75 },
+                        { 50, percentile.Perf50 },
+                        { 25, percentile.Perf25 },
+                        { 10, percentile.Perf10 },
+                        { 1, percentile.Perf1 },
+                    };
+
+                    double p0 = 0.0;
+                    double p1 = 100.0;
+                    double d0 = 0.0;
+                    double d1 = Double.MaxValue;
+
+                    foreach (var x in perfTable)
+                    {
+                        if (dps >= x.Value)
+                        {
+                            p0 = x.Key;
+                            d0 = x.Value;
+                            break;
+                        }
+                        p1 = x.Key;
+                        d1 = x.Value;
                     }
 
-                    var percentile = boss.Percentiles.Where(x => x.Job == job).FirstOrDefault();
-
-                    if (percentile != null)
+                    double perf = 1.0;
+                    if (d0 != d1) // Avoid division by zero
                     {
-                        var dps = data.EncDPS;
-
-                        // Add pet's DPS
-                        var name = (data.Name == ActGlobals.charName) ? this.myName : data.Name;
-                        dps += data.Parent.Items
-                            .Where(x => x.Value.Name.Contains("(" + name + ")"))
-                            .Select(x => x.Value.EncDPS)
-                            .Sum();
-
-                        // Recalculate DPS with applying exclusion period
-                        var duration = data.Duration.TotalSeconds;
-                        foreach (var exclusionPeriod in boss.ExclusionPeriods)
-                        {
-                            if (data.Duration.TotalSeconds > exclusionPeriod.StartTime)
-                            {
-                                duration -= (Math.Min(data.Duration.TotalSeconds, exclusionPeriod.EndTime) - exclusionPeriod.StartTime);
-                            }
-                        }
-                        dps = (dps * data.Duration.TotalSeconds) / duration;
-
-                        var perfTable = new Dictionary<int, int>()
-                        {
-                            { 99, percentile.Perf99 },
-                            { 95, percentile.Perf95 },
-                            { 75, percentile.Perf75 },
-                            { 50, percentile.Perf50 },
-                            { 25, percentile.Perf25 },
-                            { 10, percentile.Perf10 },
-                            { 1, percentile.Perf1 },
-                        };
-
-                        double p0 = 0.0;
-                        double p1 = 100.0;
-                        double d0 = 0.0;
-                        double d1 = Double.MaxValue;
-
-                        foreach (var x in perfTable)
-                        {
-                            if (dps >= x.Value)
-                            {
-                                p0 = x.Key;
-                                d0 = x.Value;
-                                break;
-                            }
-                            p1 = x.Key;
-                            d1 = x.Value;
-                        }
-
-                        double perf = 1.0;
-                        if (d0 != d1) // Avoid division by zero
-                        {
-                            perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
-                            perf = Math.Round(perf, MidpointRounding.AwayFromZero);
-                            perf = Math.Max(perf, 1.0);
-                        }
-
-                        return ((int)perf).ToString();
+                        perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
+                        perf = Math.Round(perf, MidpointRounding.AwayFromZero);
+                        perf = Math.Max(perf, 1.0);
                     }
+
+                    return ((int)perf).ToString();
                 }
             }
 
@@ -527,6 +564,21 @@ namespace FFXIV_ACT_Helper_Plugin
         string PerfExporttDataCallback(CombatantData data, string extraFormat)
         {
             return data.GetColumnByName("Perf");
+        }
+
+        string ADPSDataCallback(CombatantData data)
+        {
+            return data.GetADPS().ToString("#,0.00");
+        }
+
+        int ADPSSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("ADPS").CompareTo(right.GetColumnByName("ADPS"));
+        }
+
+        string ADPSExporttDataCallback(CombatantData data, string extraFormat)
+        {
+            return data.GetColumnByName("ADPS");
         }
     }
 }
