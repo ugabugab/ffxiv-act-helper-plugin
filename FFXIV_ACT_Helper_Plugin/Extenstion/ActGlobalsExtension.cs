@@ -8,8 +8,6 @@ namespace FFXIV_ACT_Helper_Plugin
 {
     public static class ActGlobalsExtension
     {
-        public static string medicatedBuffID = "49";
-
         public static string myName = ActGlobals.charName;
 
         public static List<Boss> bosses = new List<Boss>();
@@ -27,5 +25,20 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             return (name == myName) ? ActGlobals.charName : name;
         }
+
+        public static Buff GetMedicatedBuff()
+        {
+            return buffs.Find(x => x.Group == BuffGroup.Medicated);
+        }
+
+        public static List<Buff> GetDamageBuffs()
+        {
+            return buffs.FindAll(x => x.Group != BuffGroup.Medicated);
+        }
+
+        public static List<Buff> GetCardBuffs()
+        {
+            return buffs.FindAll(x => x.Group == BuffGroup.CardForMeleeDPSOrTank || x.Group == BuffGroup.CardForRangedDPSOrHealer);
+        }   
     }
 }

@@ -170,7 +170,7 @@ namespace FFXIV_ACT_Helper_Plugin
                             swing.Tags.Add("ActorID", logComponents[5]);
                             swing.Tags.Add("TargetID", logComponents[7]);
                             swing.Tags.Add("SkillID", item.SkillId);
-                            swing.Tags.Add("BuffID", ActGlobalsExtension.medicatedBuffID);
+                            swing.Tags.Add("BuffID", ActGlobalsExtension.GetMedicatedBuff().Id);
                             swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
                             swing.Tags.Add("BuffByte1", item.BuffByte);
                             swing.Tags.Add("BuffByte2", "00");
@@ -299,7 +299,8 @@ namespace FFXIV_ACT_Helper_Plugin
                         Name = cols[1],
                         NameJa = cols[2],
                         Duration = int.Parse(cols[3]),
-                        DamageUpRate = int.Parse(cols[4])
+                        Value = int.Parse(cols[4]),
+                        Group = (BuffGroup)int.Parse(cols[5])
                     });
                 }
                 ActGlobalsExtension.buffs = items;
@@ -414,7 +415,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         new CombatantData.ColumnDef(
                             "ADPS",
                             false,
-                            "INT",
+                            "DOUBLE",
                             "ADPS",
                             new CombatantData.StringDataCallback(ADPSDataCallback),
                             new CombatantData.StringDataCallback(ADPSDataCallback),
@@ -457,22 +458,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string MedicatedCountDataCallback(CombatantData data)
         {
-            var medicatedIncKeys = ActGlobalsExtension.buffs
-                .Where(x => x.Id == ActGlobalsExtension.medicatedBuffID).Select(x => x.NameList).FirstOrDefault();
-            var medicatedBuffBytes = ActGlobalsExtension.medicatedItems.Select(x => x.BuffByte).ToList();
+            var isLatestOnly = this.EnabledCountOnlyTheLatestAndHighQuality;
 
-            if (this.EnabledCountOnlyTheLatestAndHighQuality)
-            {
-                // Last 5 items are the latest & high quality
-                medicatedBuffBytes = medicatedBuffBytes.Skip(medicatedBuffBytes.Count - 5).Take(5).ToList();
-            }
-
-            return data.AllInc
-                .Where(x => medicatedIncKeys.Contains(x.Key))
-                .Select(x => x.Value.Items
-                    .Where(y => y.Tags.ContainsKey("BuffByte1") && medicatedBuffBytes.Contains(y.Tags["BuffByte1"]))
-                    .Count())
-                .Sum().ToString();
+            return data.GetMedicatedCount(isLatestOnly).ToString();
         }
 
         int MedicatedCountSortComparer(CombatantData left, CombatantData right)
@@ -487,73 +475,10 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string PerfDataCallback(CombatantData data)
         {
-            var boss = ActGlobalsExtension.bosses
-                .Where(x => x.Zone == data.Parent.ZoneName)
-                .Where(x => x.NameList.Intersect(data.Allies.Keys).Count() != 0)
-                .FirstOrDefault();
+            var job = data.GetJob();
+            var boss = data.GetBoss();
 
-            if (boss != null)
-            {
-                var job = data.GetJob();
-                var percentile = boss.Percentiles.Where(x => x.Job == job).FirstOrDefault();
-
-                if (percentile != null)
-                {
-                    var dps = data.GetADPS();
-
-                    // Recalculate DPS with applying exclusion period
-                    var totalDuration = data.Parent.Duration.TotalSeconds;
-                    var duration = totalDuration;
-                    foreach (var exclusionPeriod in boss.ExclusionPeriods)
-                    {
-                        if (totalDuration > exclusionPeriod.StartTime)
-                        {
-                            duration -= (Math.Min(totalDuration, exclusionPeriod.EndTime) - exclusionPeriod.StartTime);
-                        }
-                    }
-                    dps = (dps * totalDuration) / duration;
-
-                    var perfTable = new Dictionary<int, int>()
-                    {
-                        { 99, percentile.Perf99 },
-                        { 95, percentile.Perf95 },
-                        { 75, percentile.Perf75 },
-                        { 50, percentile.Perf50 },
-                        { 25, percentile.Perf25 },
-                        { 10, percentile.Perf10 },
-                        { 1, percentile.Perf1 },
-                    };
-
-                    double p0 = 0.0;
-                    double p1 = 100.0;
-                    double d0 = 0.0;
-                    double d1 = Double.MaxValue;
-
-                    foreach (var x in perfTable)
-                    {
-                        if (dps >= x.Value)
-                        {
-                            p0 = x.Key;
-                            d0 = x.Value;
-                            break;
-                        }
-                        p1 = x.Key;
-                        d1 = x.Value;
-                    }
-
-                    double perf = 1.0;
-                    if (d0 != d1) // Avoid division by zero
-                    {
-                        perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
-                        perf = Math.Round(perf, MidpointRounding.AwayFromZero);
-                        perf = Math.Max(perf, 1.0);
-                    }
-
-                    return ((int)perf).ToString();
-                }
-            }
-
-            return "-";
+            return (job != null && boss != null) ? data.GetPerf(job, boss).ToString() : "-";
         }
 
         int PerfSortComparer(CombatantData left, CombatantData right)
@@ -568,7 +493,10 @@ namespace FFXIV_ACT_Helper_Plugin
 
         string ADPSDataCallback(CombatantData data)
         {
-            return data.GetADPS().ToString("#,0.00");
+            var job = data.GetJob();
+            var boss = data.GetBoss();
+
+            return (job != null && boss != null) ? data.GetADPS(job, boss).ToString("#,0.00") : "-";
         }
 
         int ADPSSortComparer(CombatantData left, CombatantData right)

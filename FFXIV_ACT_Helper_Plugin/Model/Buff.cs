@@ -14,8 +14,10 @@ namespace FFXIV_ACT_Helper_Plugin
         public string NameJa { get; set; }
 
         public int Duration { get; set; }
-        
-        public int DamageUpRate { get; set; }
+
+        public int Value { get; set; }
+
+        public BuffGroup Group { get; set; }
 
         public string[] NameList
         {
@@ -23,7 +25,14 @@ namespace FFXIV_ACT_Helper_Plugin
             {
                 return new string[] { Name, NameJa };
             }
-
         }
+    }
+
+    public enum BuffGroup
+    {
+        None = 0,
+        Medicated = 1,
+        CardForMeleeDPSOrTank = 2,
+        CardForRangedDPSOrHealer = 3,
     }
 }
