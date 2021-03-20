@@ -11,9 +11,10 @@ namespace FFXIV_ACT_Helper_Plugin
     {
         public static int GetMedicatedCount(this CombatantData data, bool isLastestOnly = false)
         {
-            var medicatedBuff = ActGlobalsExtension.GetMedicatedBuff();
+            var medicatedBuffId = ActGlobalsExtension.buffs
+                .Where(x => x.Group == BuffGroup.Medicated).Select(x => x.Id).FirstOrDefault() ?? "";
             var medicatedKeys = ActGlobalsExtension.buffs
-                .Where(x => x.Id == medicatedBuff.Id).Select(x => x.NameList).FirstOrDefault() ?? (new string[] { });
+                .Where(x => x.Id == medicatedBuffId).Select(x => x.NameList).FirstOrDefault() ?? (new string[] { });
             var medicatedBuffBytes = ActGlobalsExtension.medicatedItems.Select(x => x.BuffByte).ToList();
 
             if (isLastestOnly)
@@ -43,7 +44,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 return new Job(jobName);
             }
 
-            return  null;
+            return null;
         }
 
         public static Boss GetBoss(this CombatantData data)
@@ -54,80 +55,81 @@ namespace FFXIV_ACT_Helper_Plugin
                 .FirstOrDefault();
         }
 
-        public static double GetTotalBuffDuration(this CombatantData data, Buff buff, Buff[] conflictBuffs = null)
+        public static int GetDirectHitCount(this CombatantData data)
         {
-            var totalDuration = 0.0;
-
-            var buffKeys = new List<string>(buff.NameList);
-            if (conflictBuffs != null)
-            {
-                buffKeys.AddRange(conflictBuffs.SelectMany(x => x.NameList));
-            }
-
-            var swings = data.AllInc
-                .Where(x => buffKeys.Contains(x.Key))
+            return data.AllOut
+                .Where(x => x.Key == "All")
                 .SelectMany(x => x.Value.Items)
-                .OrderBy(x => x.Time)
-                .ToList();
+                .Where(x => x.Tags.ContainsKey("DirectHit") && bool.Parse((string)x.Tags["DirectHit"]))
+                .Count();
+        }
 
-            MasterSwing lastSwing = null;
-            foreach (var swing in swings)
-            {
-                if (lastSwing != null)
-                {
-                    var duration = Math.Min((swing.Time - lastSwing.Time).TotalSeconds, buff.Duration);
-                    totalDuration += duration;
-                    lastSwing = null;
-                }
-                if (swing.Tags["BuffID"].Equals(buff.Id) && swing.Attacker != data.Name)
-                {
-                    lastSwing = swing;
-                }
-            }
-            if (lastSwing != null)
-            {
-                var duration = Math.Min((data.EncEndTime - lastSwing.Time).TotalSeconds, buff.Duration);
-                totalDuration += duration;
-            }
-
-            return totalDuration;
+        public static double GetDirectHitRate(this CombatantData data)
+        {
+            return (double)data.GetDirectHitCount() / data.Swings;
         }
 
         public static double GetADPS(this CombatantData data, Job job, Boss boss)
         {
-            var totalDuration = data.Parent.Duration.TotalSeconds;
-            var damage = data.Damage;
+            // Attacks
+            var damageSwingTypes = new int[] { SwingType.attack, SwingType.damageSkill, SwingType.dot };
+            var attacks = data.AllOut
+                .Where(x => x.Key == "All")
+                .SelectMany(x => x.Value.Items)
+                .Where(x => x.Damage.Number > 0 && damageSwingTypes.Contains(x.SwingType))
+                .ToList();
 
-            // Add pet's DPS
-            var name = ActGlobalsExtension.ConvertActNameToClientName(data.Name);
-            damage += data.Parent.Items
-                .Where(x => x.Value.Name.Contains("(" + name + ")"))
-                .Select(x => x.Value.Damage)
-                .Sum();
-
-            // Subtract the damage up by specific buffs
-            var upRate = 0.0;
-
-            var cardBuffs = ActGlobalsExtension.GetCardBuffs().ToArray();
-            ActGlobalsExtension.GetDamageBuffs().ForEach(buff =>
+            // Buff taken
+            var buffTakens = new List<BuffTaken>();
+            ActGlobalsExtension.buffs.ForEach(buff =>
             {
-                switch(buff.Group)
-                {
-                    case BuffGroup.CardForMeleeDPSOrTank:
-                        upRate += 0.01 * (job.IsMeleeDPSOrTank() ? 1.0 : 0.5) * buff.Value * data.GetTotalBuffDuration(buff, cardBuffs) / totalDuration;
-                        break;
-
-                    case BuffGroup.CardForRangedDPSOrHealer:
-                        upRate += 0.01 * (job.IsRangedDPSOrHealer() ? 1.0 : 0.5) * buff.Value * data.GetTotalBuffDuration(buff, cardBuffs) / totalDuration;
-                        break;
-
-                    default:
-                        upRate += 0.01 * buff.Value * data.GetTotalBuffDuration(buff) / totalDuration;
-                        break;
-                }
+                var conflictBuffs = ActGlobalsExtension.buffs.Where(x => x.IsConflict(buff)).ToArray();
+                buffTakens.AddRange(data.GetBuffTakens(buff, conflictBuffs));
             });
 
-            // Apply exclusion period
+            // Damage
+            var damage = 0.0;
+            var criticalRate = data.CritDamPerc;
+            var criticalDamageRate = 40.0 + Math.Max(criticalRate - 5.0, 0.0);
+            var directHitRate = data.GetDirectHitRate();
+            var directHitDamageRate = 25.0;
+            attacks.ForEach(attack =>
+            {
+                var upRate = 0.0;
+                buffTakens.Where(x => x.StartTime <= attack.Time && x.EndTime >= attack.Time).Select(x => x.Buff).ToList()
+                .ForEach(buff =>
+                {
+                    // Damage
+                    switch (buff.Group)
+                    {
+                        case BuffGroup.CardForMeleeDPSOrTank:
+                            upRate += 0.01 * (job.IsMeleeDPSOrTank() ? 1.0 : 0.5) * buff.DamageRate;
+                            break;
+                        
+                        case BuffGroup.CardForRangedDPSOrHealer:
+                            upRate += 0.01 * (job.IsRangedDPSOrHealer() ? 1.0 : 0.5) * buff.DamageRate;
+                            break;
+
+                        default:
+                            upRate += 0.01 * buff.DamageRate;
+                            break;
+                    }
+                    // Critical hit
+                    if (attack.Critical)
+                    {
+                        upRate += 0.01 * criticalDamageRate * (buff.CriticalRate / (criticalRate + buff.CriticalRate));
+                    }
+                    // Direct hit
+                    if (attack.Tags.ContainsKey("DirectHit") && bool.Parse((string)attack.Tags["DirectHit"]))
+                    {
+                        upRate += 0.01 * directHitDamageRate * (buff.DirectHitRate / (directHitRate + buff.DirectHitRate));
+                    }
+                });
+                damage += attack.Damage.Number / (1.0 + upRate);
+            });
+
+            // Duration
+            var totalDuration = data.Parent.Duration.TotalSeconds;
             var duration = totalDuration;
             foreach (var exclusionPeriod in boss.ExclusionPeriods)
             {
@@ -137,7 +139,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 }
             }
 
-            return damage / (1.0 + upRate) / duration;
+            return damage / duration;
         }
 
         public static int GetPerf(this CombatantData data, Job job, Boss boss)
@@ -176,7 +178,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     p1 = x.Key;
                     d1 = x.Value;
                 }
-                
+
                 if (d0 != d1) // Avoid division by zero
                 {
                     perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
@@ -186,6 +188,65 @@ namespace FFXIV_ACT_Helper_Plugin
             }
 
             return (int)perf;
+        }
+
+        private class BuffTaken
+        {
+            public Buff Buff { get; set; }
+            public string Attacker { get; set; }
+            public DateTime StartTime { get; set; }
+            public DateTime EndTime { get; set; }
+        }
+
+        private static List<BuffTaken> GetBuffTakens(this CombatantData data, Buff buff, Buff[] conflictBuffs = null)
+        {
+            var buffTimes = new List<BuffTaken>();
+
+            var buffKeys = new List<string>(buff.NameList);
+            if (conflictBuffs != null)
+            {
+                buffKeys.AddRange(conflictBuffs.SelectMany(x => x.NameList));
+            }
+
+            var swings = data.AllInc
+                .Where(x => buffKeys.Contains(x.Key))
+                .SelectMany(x => x.Value.Items)
+                .OrderBy(x => x.Time)
+                .ToList();
+
+            MasterSwing lastSwing = null;
+            foreach (var swing in swings)
+            {
+                if (lastSwing != null)
+                {
+                    var duration = Math.Min((swing.Time - lastSwing.Time).TotalSeconds, buff.Duration);
+                    buffTimes.Add(new BuffTaken()
+                    {
+                        Buff = buff,
+                        Attacker = lastSwing.Attacker,
+                        StartTime = lastSwing.Time,
+                        EndTime = lastSwing.Time.AddSeconds(duration)
+                    });
+                    lastSwing = null;
+                }
+                if (swing.Tags["BuffID"].Equals(buff.Id) && swing.Attacker != data.Name)
+                {
+                    lastSwing = swing;
+                }
+            }
+            if (lastSwing != null)
+            {
+                var duration = Math.Min((data.EncEndTime - lastSwing.Time).TotalSeconds, buff.Duration);
+                buffTimes.Add(new BuffTaken()
+                {
+                    Buff = buff,
+                    Attacker = lastSwing.Attacker,
+                    StartTime = lastSwing.Time,
+                    EndTime = lastSwing.Time.AddSeconds(duration)
+                });
+            }
+
+            return buffTimes;
         }
     }
 }

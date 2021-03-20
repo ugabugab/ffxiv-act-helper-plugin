@@ -15,7 +15,11 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public int Duration { get; set; }
 
-        public int Value { get; set; }
+        public int DamageRate { get; set; }
+
+        public int CriticalRate { get; set; }
+
+        public int DirectHitRate { get; set; }
 
         public BuffGroup Group { get; set; }
 
@@ -25,6 +29,16 @@ namespace FFXIV_ACT_Helper_Plugin
             {
                 return new string[] { Name, NameJa };
             }
+        }
+
+        public bool IsCard()
+        {
+            return Group == BuffGroup.CardForMeleeDPSOrTank || Group == BuffGroup.CardForRangedDPSOrHealer;
+        }
+
+        public bool IsConflict(Buff target)
+        {
+            return (this.IsCard() && target.IsCard());
         }
     }
 

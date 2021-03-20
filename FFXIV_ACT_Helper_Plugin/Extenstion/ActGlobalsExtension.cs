@@ -25,20 +25,5 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             return (name == myName) ? ActGlobals.charName : name;
         }
-
-        public static Buff GetMedicatedBuff()
-        {
-            return buffs.Find(x => x.Group == BuffGroup.Medicated);
-        }
-
-        public static List<Buff> GetDamageBuffs()
-        {
-            return buffs.FindAll(x => x.Group != BuffGroup.Medicated);
-        }
-
-        public static List<Buff> GetCardBuffs()
-        {
-            return buffs.FindAll(x => x.Group == BuffGroup.CardForMeleeDPSOrTank || x.Group == BuffGroup.CardForRangedDPSOrHealer);
-        }   
     }
 }

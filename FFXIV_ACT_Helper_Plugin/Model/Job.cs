@@ -60,50 +60,11 @@ namespace FFXIV_ACT_Helper_Plugin
 
     public enum Role
     {
-        Tank,
+        Tank = 1,
         Healer,
         MeleeDPS,
         PhysicalRangedDPS,
         MagicalRangedDPS,
-        Unknown
-    }
-
-    public static class JobName
-    {
-        public static string prd = "Prd";
-
-        public static string war = "War";
-
-        public static string drk = "Drk";
-
-        public static string gnb = "Gnb";
-
-        public static string whm = "Whm";
-
-        public static string sch = "Sch";
-
-        public static string ast = "Ast";
-
-        public static string mnk = "Mnk";
-
-        public static string drg = "Drg";
-
-        public static string nin = "Nin";
-
-        public static string sam = "Sam";
-
-        public static string brd = "Brd";
-
-        public static string mch = "Mch";
-
-        public static string dnc = "Dnc";
-
-        public static string blm = "Blm";
-
-        public static string smn = "Smn";
-
-        public static string rdm = "Rdm";
-
-        public static string blu = "Blu";
+        Unknown = 99,
     }
 }

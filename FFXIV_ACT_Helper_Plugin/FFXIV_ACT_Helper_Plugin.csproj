@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constatnts.cs" />
     <Compile Include="Extenstion\ActGlobalsExtension.cs" />
     <Compile Include="Extenstion\CombatantDataExtension.cs" />
     <Compile Include="Model\Boss.cs" />

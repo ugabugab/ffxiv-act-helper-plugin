@@ -164,13 +164,16 @@ namespace FFXIV_ACT_Helper_Plugin
                             && (!ActGlobals.oFormActMain.InCombat
                                 || ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetCombatant(name) == null))　// If target character is NOT present in active encounter
                         {
-                            MasterSwing swing = new MasterSwing(21, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
+                            var medicatedBuffId = ActGlobalsExtension.buffs
+                                .Where(x => x.Group == BuffGroup.Medicated).Select(x => x.Id).FirstOrDefault() ?? "";
+
+                            MasterSwing swing = new MasterSwing(SwingType.buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
                             swing.Tags.Add("Potency", 0);
                             //swing.Tags.Add("Job", "");
                             swing.Tags.Add("ActorID", logComponents[5]);
                             swing.Tags.Add("TargetID", logComponents[7]);
                             swing.Tags.Add("SkillID", item.SkillId);
-                            swing.Tags.Add("BuffID", ActGlobalsExtension.GetMedicatedBuff().Id);
+                            swing.Tags.Add("BuffID", medicatedBuffId);
                             swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
                             swing.Tags.Add("BuffByte1", item.BuffByte);
                             swing.Tags.Add("BuffByte2", "00");
@@ -299,8 +302,10 @@ namespace FFXIV_ACT_Helper_Plugin
                         Name = cols[1],
                         NameJa = cols[2],
                         Duration = int.Parse(cols[3]),
-                        Value = int.Parse(cols[4]),
-                        Group = (BuffGroup)int.Parse(cols[5])
+                        DamageRate = int.Parse(cols[4]),
+                        CriticalRate = int.Parse(cols[5]),
+                        DirectHitRate = int.Parse(cols[6]),
+                        Group = (BuffGroup)int.Parse(cols[7])
                     });
                 }
                 ActGlobalsExtension.buffs = items;
