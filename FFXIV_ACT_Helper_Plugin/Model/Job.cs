@@ -8,23 +8,23 @@ namespace FFXIV_ACT_Helper_Plugin
     public class Job
     {
         public static string[] tankJobNames = { 
-            JobName.prd, JobName.war, JobName.drk, JobName.gnb 
+            JobName.Pld, JobName.War, JobName.Drk, JobName.Gnb 
         };
         
         public static string[] healerJobNames = {
-            JobName.whm, JobName.sch, JobName.ast
+            JobName.Whm, JobName.Sch, JobName.Ast
         };
         
         public static string[] meleeDPSJobNames = {
-            JobName.drg, JobName.mnk, JobName.nin, JobName.sam
+            JobName.Drg, JobName.Mnk, JobName.Nin, JobName.Sam
         };
         
         public static string[] physicalRangedDPSJobNames = {
-            JobName.brd, JobName.mch, JobName.dnc
+            JobName.Brd, JobName.Mch, JobName.Dnc
         };
 
         public static string[] magicalRangedDPSJobNames = {
-            JobName.blm, JobName.smn, JobName.rdm, JobName.blu
+            JobName.Blm, JobName.Smn, JobName.Rdm, JobName.Blu
         };
 
         public string Name { get; set; }

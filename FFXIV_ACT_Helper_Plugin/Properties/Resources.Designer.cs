@@ -61,18 +61,19 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   49|Medicated|強化薬|30|0|1
-        ///1454|Left Eye|竜の左眼|20|5|0
-        ///1825|Devilment|攻めのタンゴ|20|13|0
-        ///1876|Lord Of Crowns|クラウンロード|15|8|2
-        ///1877|Lady Of Crowns|クラウンレディ|15|8|3
-        ///1882|The Balance|アーゼマの均衡|15|6|2
-        ///1883|The Bole|世界樹の幹|15|6|3
-        ///1884|The Arrow|オシュオンの矢|15|6|2
-        ///1885|The Spear|ハルオーネの槍|15|6|2
-        ///1886|The Ewer|サリャクの水瓶|15|6|3
-        ///1887|The Spire|ビエルゴの塔|15|6|3
-        ///2105|Standard Finish|スタンダードフィニッシュ|60|5|0 に類似しているローカライズされた文字列を検索します。
+        ///   49|Medicated|強化薬|1|1|30|0|0|0|1
+        ///141|Battle Voice|バトルボイス|1|2|20|0|0|20|0
+        ///638|Vulnerability Up|被ダメージ上昇|2|1|15|5|0|0|0
+        ///786|Battle Litany|バトルリタニー|1|2|20|0|10|0|0
+        ///1185|Meditative Brotherhood|桃園結義：攻撃|1|2|15|5|0|0|0
+        ///1213|Devotion|エギの加護|1|2|15|5|0|0|0
+        ///1221|Chain Stratagem|連環計|2|1|15|0|10|0|0
+        ///1297|Embolden|エンボルデン|1|2|20|10|0|0|4
+        ///1454|Left Eye|竜の左眼|1|1|20|5|0|0|0
+        ///1822|Technical Finish|テクニカルフィニッシュ|1|2|20|5|0|0|0
+        ///1825|Devilment|攻めのタンゴ|1|1|20|0|20|20|0
+        ///1876|Lord Of Crowns|クラウンロード|1|1|15|8|0|0|2
+        ///1877|Lady Of  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string Buffs {
             get {

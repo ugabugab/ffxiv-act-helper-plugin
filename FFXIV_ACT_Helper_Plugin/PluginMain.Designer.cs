@@ -63,9 +63,9 @@
             this.checkBox3.AutoSize = true;
             this.checkBox3.Location = new System.Drawing.Point(15, 82);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(242, 16);
+            this.checkBox3.Size = new System.Drawing.Size(161, 16);
             this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "(BETA) Simulate FFLogs DPS Perf (aDPS)";
+            this.checkBox3.Text = "Simulate FFLogs DPS Perf";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.CheckedChanged);
             // 

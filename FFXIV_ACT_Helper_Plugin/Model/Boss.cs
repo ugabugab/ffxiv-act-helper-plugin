@@ -28,9 +28,13 @@ namespace FFXIV_ACT_Helper_Plugin
         [XmlElement("zone")]
         public string Zone { get; set; }
 
-        [XmlArray("percentiles")]
+        [XmlArray("rPercentiles")]
         [XmlArrayItem("percentile")]
-        public List<Percentile> Percentiles { get; set; }
+        public List<Percentile> RPercentiles { get; set; }
+
+        [XmlArray("aPercentiles")]
+        [XmlArrayItem("percentile")]
+        public List<Percentile> APercentiles { get; set; }
 
         [XmlArray("exclusionPeriods")]
         [XmlArrayItem("exclusionPeriod")]

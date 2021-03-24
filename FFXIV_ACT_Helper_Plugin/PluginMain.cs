@@ -12,72 +12,41 @@ using System.Diagnostics;
 using Advanced_Combat_Tracker;
 using System.Net;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace FFXIV_ACT_Helper_Plugin
 {
     public partial class PluginMain : UserControl, IActPluginV1
     {
-        Label lblStatus;    // The status label that appears in ACT's Plugin tab
         string settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\FFXIV_ACT_Helper_Plugin.config.xml");
         string bossDataFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Data\\FFXIV_ACT_Helper_Plugin.boss_data.xml");
+
+        Label lblStatus;    // The status label that appears in ACT's Plugin tab
         SettingsSerializer xmlSettings;
-        List<MasterSwing> buffSwingHistory = new List<MasterSwing>();
+        ACTEventHandler actEventHandler = new ACTEventHandler();
+        ACTUIController actUIController = new ACTUIController();
 
-        bool EnabledEndCombatWhenRestartContent
-        {
-            get
-            {
-                return this.checkBox1.Checked;
-            }
-        }
+        public static PluginMain Shared { get; private set; } = null;
 
-        bool EnabledDetectBuffsDuringNonCombat
-        {
-            get
-            {
-                return this.checkBox2.Checked;
-            }
-        }
+        public bool EnabledEndCombatWhenRestartContent => this.checkBox1.Checked;
 
-        bool EnabledCountMedicatedBuffs
-        {
-            get
-            {
-                return this.checkBox2.Checked;
-            }
-        }
+        public bool EnabledDetectBuffsDuringNonCombat => this.checkBox2.Checked;
 
-        bool EnabledSimulateFFLogsDPSPerf
-        {
-            get
-            {
-                return this.checkBox3.Checked;
-            }
-        }
+        public bool EnabledCountMedicatedBuffs => this.checkBox2.Checked;
 
-        bool EnabledCountOnlyTheLatestAndHighQuality
-        {
-            get
-            {
-                return this.checkBox4.Checked;
-            }
-        }
+        public bool EnabledSimulateFFLogsDPSPerf => this.checkBox3.Checked;
+
+        public bool EnabledCountOnlyTheLatestAndHighQuality => this.checkBox4.Checked;
 
         public PluginMain()
         {
             InitializeComponent();
         }
 
-        public void DeInitPlugin()
-        {
-            ActGlobals.oFormActMain.BeforeLogLineRead -= BeforeLogLineRead;
-
-            SaveSettings();
-            lblStatus.Text = "Plugin Exited";
-        }
-
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
+            Shared = this;
+
             lblStatus = pluginStatusText;   // Hand the status label's reference to our local var
             pluginScreenSpace.Controls.Add(this);   // Add this UserControl to the tab ACT provides
             pluginScreenSpace.Text = "FFXIV Helper Settings"; // Tab name
@@ -87,122 +56,20 @@ namespace FFXIV_ACT_Helper_Plugin
             DownloadData();
             LoadData();
             UpdateUI();
-            UpdateACTTables();
-
-            ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(BeforeLogLineRead);
+            actUIController.UpdateTable();
+            actEventHandler.Setup();
 
             lblStatus.Text = "Plugin Started";
         }
 
-        void BeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)
+        public void DeInitPlugin()
         {
-            //Debug.WriteLine(logInfo.originalLogLine);
+            actEventHandler.Teardown();
+            SaveSettings();
 
-            try
-            {
-                string[] logComponents = logInfo.originalLogLine.Split('|');
+            lblStatus.Text = "Plugin Exited";
 
-                // Get character name
-                // e.g. 02|2021-01-26T17:12:16.7800000+09:00|102ddfef|Hoge Fuga|a13ccee9756841e80f90f3a2498e4fd1
-                if (logComponents[0] == "02")
-                {
-                    ActGlobalsExtension.myName = logComponents[3];
-                }
-
-                // End combat when restarted content
-                if (this.EnabledEndCombatWhenRestartContent)
-                {
-                    // e.g. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
-                    if (logComponents[0] == "33" && logComponents[3] == "40000006")
-                    {
-                        if (ActGlobals.oFormActMain.InCombat)
-                        {
-                            // Normally EndCombat function argument should be True.
-                            // see: https://advancedcombattracker.com/apidoc/html/M_Advanced_Combat_Tracker_FormActMain_EndCombat.htm
-                            //ActGlobals.oFormActMain.EndCombat(false);
-                            ActGlobals.oFormActMain.EndCombat(true);
-                        }
-                    }
-                }
-
-                // Detect medicated buff during non-combat
-                // TODO: Apply all buffs
-                if (this.EnabledDetectBuffsDuringNonCombat)
-                {
-                    if (ActGlobals.oFormActMain.InCombat)
-                    {
-                        // Insert swings to ACT
-                        foreach (var swing in Enumerable.Reverse(buffSwingHistory))
-                        {
-                            MasterSwing newSwing = new MasterSwing(
-                                swing.SwingType,
-                                swing.Critical,
-                                swing.Damage,
-                                DateTime.Now,
-                                swing.TimeSorter,
-                                swing.AttackType,
-                                swing.Attacker,
-                                swing.DamageType,
-                                swing.Victim);
-                            newSwing.Tags = swing.Tags;
-                            newSwing.Tags["BuffDuration"] = (double)swing.Tags["BuffDuration"] - (DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond;
-
-                            ActGlobals.oFormActMain.AddCombatAction(newSwing);
-
-                            buffSwingHistory.Remove(swing);
-                        }
-                    }
-
-                    // Add swings to histroy
-                    // e.g. 26|2021-01-14T03:41:25.5060000+09:00|31|Medicated|30.00|102D7D99|Hoge Fuga|102D7D99|Hoge Fuga|2897|116600|116600||2cd0b18ecd384c46125530c91782c4be
-                    if (logComponents[0] == "26" && logComponents[2] == "31" && logComponents[6] == logComponents[8])
-                    {
-                        var item = ActGlobalsExtension.medicatedItems.Where(x => x.Id == logComponents[9]).FirstOrDefault();
-                        var name = ActGlobalsExtension.ConvertClientNameToActName(logComponents[6]);
-
-                        if (item != null
-                            && (!ActGlobals.oFormActMain.InCombat
-                                || ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetCombatant(name) == null))　// If target character is NOT present in active encounter
-                        {
-                            var medicatedBuffId = ActGlobalsExtension.buffs
-                                .Where(x => x.Group == BuffGroup.Medicated).Select(x => x.Id).FirstOrDefault() ?? "";
-
-                            MasterSwing swing = new MasterSwing(SwingType.buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
-                            swing.Tags.Add("Potency", 0);
-                            //swing.Tags.Add("Job", "");
-                            swing.Tags.Add("ActorID", logComponents[5]);
-                            swing.Tags.Add("TargetID", logComponents[7]);
-                            swing.Tags.Add("SkillID", item.SkillId);
-                            swing.Tags.Add("BuffID", medicatedBuffId);
-                            swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
-                            swing.Tags.Add("BuffByte1", item.BuffByte);
-                            swing.Tags.Add("BuffByte2", "00");
-                            swing.Tags.Add("BuffByte3", "00");
-
-                            buffSwingHistory.Add(swing);
-                        }
-                    }
-
-                    // Remove expired swings
-                    foreach (var swing in Enumerable.Reverse(buffSwingHistory))
-                    {
-                        if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags["BuffDuration"])
-                        {
-                            buffSwingHistory.Remove(swing);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
-        }
-
-        private void CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateUI();
-            UpdateACTTables();
+            Shared = null;
         }
 
         void LoadSettings()
@@ -276,10 +143,19 @@ namespace FFXIV_ACT_Helper_Plugin
             // Load boss data
             try
             {
-                FileStream fs = new FileStream(this.bossDataFile, FileMode.Open);
+                Stream fs;
+                if (PluginDebug.UsesDebugData)
+                {
+                    var assembly = Assembly.GetExecutingAssembly();
+                    fs = assembly.GetManifestResourceStream("FFXIV_ACT_Helper_Plugin.Resources.DebugBossData.xml");
+                }
+                else
+                {
+                    fs = new FileStream(this.bossDataFile, FileMode.Open);
+                }
                 XmlSerializer serializer = new XmlSerializer(typeof(BossData));
                 var dossData = (BossData)serializer.Deserialize(fs);
-                ActGlobalsExtension.bosses = dossData.Bosses;
+                ActGlobalsExtension.Bosses = dossData.Bosses;
             }
             catch (Exception e)
             {
@@ -301,14 +177,16 @@ namespace FFXIV_ACT_Helper_Plugin
                         Id = cols[0],
                         Name = cols[1],
                         NameJa = cols[2],
-                        Duration = int.Parse(cols[3]),
-                        DamageRate = int.Parse(cols[4]),
-                        CriticalRate = int.Parse(cols[5]),
-                        DirectHitRate = int.Parse(cols[6]),
-                        Group = (BuffGroup)int.Parse(cols[7])
+                        Type = (BuffType)int.Parse(cols[3]),
+                        Target = (BuffTarget)int.Parse(cols[4]),
+                        Duration = int.Parse(cols[5]),
+                        DamageRate = int.Parse(cols[6]),
+                        CriticalRate = int.Parse(cols[7]),
+                        DirectHitRate = int.Parse(cols[8]),
+                        Group = (BuffGroup)int.Parse(cols[9])
                     });
                 }
-                ActGlobalsExtension.buffs = items;
+                ActGlobalsExtension.Buffs = items;
             }
             catch (Exception e)
             {
@@ -335,7 +213,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         });
                     }
                 }
-                ActGlobalsExtension.medicatedItems = items;
+                ActGlobalsExtension.MedicatedItems = items;
             }
             catch (Exception e)
             {
@@ -348,170 +226,10 @@ namespace FFXIV_ACT_Helper_Plugin
             checkBox4.Enabled = checkBox2.Checked;
         }
 
-        void UpdateACTTables()
+        private void CheckedChanged(object sender, EventArgs e)
         {
-            if (this.EnabledCountMedicatedBuffs)
-            {
-                if (!CombatantData.ColumnDefs.ContainsKey("MedicatedCount"))
-                {
-                    CombatantData.ColumnDefs.Add(
-                        "MedicatedCount",
-                        new CombatantData.ColumnDef(
-                            "MedicatedCount",
-                            true,
-                            "INT",
-                            "MedicatedCount",
-                            new CombatantData.StringDataCallback(MedicatedCountDataCallback),
-                            new CombatantData.StringDataCallback(MedicatedCountDataCallback),
-                            new Comparison<CombatantData>(MedicatedCountSortComparer)));
-                }
-                if (!CombatantData.ExportVariables.ContainsKey("MedicatedCount"))
-                {
-                    CombatantData.ExportVariables.Add(
-                        "MedicatedCount",
-                        new CombatantData.TextExportFormatter(
-                            "MedicatedCount",
-                            "MedicatedCount",
-                            "Number of medicated buffs",
-                            new CombatantData.ExportStringDataCallback(MedicatedCountExporttDataCallback)));
-                }
-            }
-            else
-            {
-                if (CombatantData.ColumnDefs.ContainsKey("MedicatedCount"))
-                {
-                    CombatantData.ColumnDefs.Remove("MedicatedCount");
-                }
-                if (CombatantData.ExportVariables.ContainsKey("MedicatedCount"))
-                {
-                    CombatantData.ExportVariables.Remove("MedicatedCount");
-                }
-            }
-
-            if (this.EnabledSimulateFFLogsDPSPerf)
-            {
-                if (!CombatantData.ColumnDefs.ContainsKey("Perf"))
-                {
-                    CombatantData.ColumnDefs.Add(
-                        "Perf",
-                        new CombatantData.ColumnDef(
-                            "Perf",
-                            true,
-                            "INT",
-                            "Perf",
-                            new CombatantData.StringDataCallback(PerfDataCallback),
-                            new CombatantData.StringDataCallback(PerfDataCallback),
-                            new Comparison<CombatantData>(PerfSortComparer)));
-                }
-                if (!CombatantData.ExportVariables.ContainsKey("Perf"))
-                {
-                    CombatantData.ExportVariables.Add(
-                        "Perf",
-                        new CombatantData.TextExportFormatter(
-                            "Perf",
-                            "Perf",
-                            "Simulated FFLogs DPS Perf",
-                            new CombatantData.ExportStringDataCallback(PerfExporttDataCallback)));
-                }
-                if (!CombatantData.ColumnDefs.ContainsKey("ADPS"))
-                {
-                    CombatantData.ColumnDefs.Add(
-                        "ADPS",
-                        new CombatantData.ColumnDef(
-                            "ADPS",
-                            false,
-                            "DOUBLE",
-                            "ADPS",
-                            new CombatantData.StringDataCallback(ADPSDataCallback),
-                            new CombatantData.StringDataCallback(ADPSDataCallback),
-                            new Comparison<CombatantData>(ADPSSortComparer)));
-                }
-                if (!CombatantData.ExportVariables.ContainsKey("ADPS"))
-                {
-                    CombatantData.ExportVariables.Add(
-                        "ADPS",
-                        new CombatantData.TextExportFormatter(
-                            "ADPS",
-                            "ADPS",
-                            "Simulated FFLogs ADPS",
-                            new CombatantData.ExportStringDataCallback(ADPSExporttDataCallback)));
-                }
-            }
-            else
-            {
-                if (CombatantData.ColumnDefs.ContainsKey("Perf"))
-                {
-                    CombatantData.ColumnDefs.Remove("Perf");
-                }
-                if (CombatantData.ExportVariables.ContainsKey("Perf"))
-                {
-                    CombatantData.ExportVariables.Remove("Perf");
-                }
-                if (CombatantData.ColumnDefs.ContainsKey("ADPS"))
-                {
-                    CombatantData.ColumnDefs.Remove("ADPS");
-                }
-                if (CombatantData.ExportVariables.ContainsKey("ADPS"))
-                {
-                    CombatantData.ExportVariables.Remove("ADPS");
-                }
-            }
-
-            ActGlobals.oFormActMain.ValidateLists();
-            ActGlobals.oFormActMain.ValidateTableSetup();
-        }
-
-        string MedicatedCountDataCallback(CombatantData data)
-        {
-            var isLatestOnly = this.EnabledCountOnlyTheLatestAndHighQuality;
-
-            return data.GetMedicatedCount(isLatestOnly).ToString();
-        }
-
-        int MedicatedCountSortComparer(CombatantData left, CombatantData right)
-        {
-            return left.GetColumnByName("MedicatedCount").CompareTo(right.GetColumnByName("MedicatedCount"));
-        }
-
-        string MedicatedCountExporttDataCallback(CombatantData data, string extraFormat)
-        {
-            return data.GetColumnByName("MedicatedCount");
-        }
-
-        string PerfDataCallback(CombatantData data)
-        {
-            var job = data.GetJob();
-            var boss = data.GetBoss();
-
-            return (job != null && boss != null) ? data.GetPerf(job, boss).ToString() : "-";
-        }
-
-        int PerfSortComparer(CombatantData left, CombatantData right)
-        {
-            return left.GetColumnByName("Perf").CompareTo(right.GetColumnByName("Perf"));
-        }
-
-        string PerfExporttDataCallback(CombatantData data, string extraFormat)
-        {
-            return data.GetColumnByName("Perf");
-        }
-
-        string ADPSDataCallback(CombatantData data)
-        {
-            var job = data.GetJob();
-            var boss = data.GetBoss();
-
-            return (job != null && boss != null) ? data.GetADPS(job, boss).ToString("#,0.00") : "-";
-        }
-
-        int ADPSSortComparer(CombatantData left, CombatantData right)
-        {
-            return left.GetColumnByName("ADPS").CompareTo(right.GetColumnByName("ADPS"));
-        }
-
-        string ADPSExporttDataCallback(CombatantData data, string extraFormat)
-        {
-            return data.GetColumnByName("ADPS");
+            UpdateUI();
+            actUIController.UpdateTable();
         }
     }
 }
