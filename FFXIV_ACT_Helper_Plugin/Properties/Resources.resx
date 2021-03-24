@@ -121,6 +121,23 @@
   <data name="Buffs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Buffs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="HelpCountMedicatedBuffs" xml:space="preserve">
+    <value>When checked, ACT will count the use of medicated items (eg Tincture of Strength) and view "MedicatedCount" on Encounter.</value>
+  </data>
+  <data name="HelpCountOnlyTheLatestAndHighQuality" xml:space="preserve">
+    <value>When checked, ACT will ONLY count the use of the latest and highest quality medicated items. (As of patch 5.4, the "Grade 4 Tincture" series)</value>
+  </data>
+  <data name="HelpEmpty" xml:space="preserve">
+    <value>Mouse-over an item to view a more detailed explanation.</value>
+  </data>
+  <data name="HelpEndCombatWhenRestartContent" xml:space="preserve">
+    <value>When checked, ACT will end current combat when the content restarts due to annihilation.</value>
+  </data>
+  <data name="HelpSimulateFFlogsDPSPerf" xml:space="preserve">
+    <value>When checked, ACT will simulate FFLogs DPS perf and view "rPerf", "rDPS", "aPerf", and "aDPS" on Encounter.
+
+Note: the currently supported zones are as follows.</value>
+  </data>
   <data name="MedicatedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MedicatedItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-2022-jp</value>
   </data>

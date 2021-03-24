@@ -82,6 +82,53 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
+        ///   When checked, ACT will count the use of medicated items (eg Tincture of Strength) and view &quot;MedicatedCount&quot; on Encounter. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpCountMedicatedBuffs {
+            get {
+                return ResourceManager.GetString("HelpCountMedicatedBuffs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   When checked, ACT will ONLY count the use of the latest and highest quality medicated items. (As of patch 5.4, the &quot;Grade 4 Tincture&quot; series) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpCountOnlyTheLatestAndHighQuality {
+            get {
+                return ResourceManager.GetString("HelpCountOnlyTheLatestAndHighQuality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Mouse-over an item to view a more detailed explanation. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpEmpty {
+            get {
+                return ResourceManager.GetString("HelpEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   When checked, ACT will end current combat when the content restarts due to annihilation. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpEndCombatWhenRestartContent {
+            get {
+                return ResourceManager.GetString("HelpEndCombatWhenRestartContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   When checked, ACT will simulate FFLogs DPS perf and view &quot;rPerf&quot;, &quot;rDPS&quot;, &quot;aPerf&quot;, and &quot;aDPS&quot; on Encounter.
+        ///
+        ///Note: the currently supported zones are as follows. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpSimulateFFlogsDPSPerf {
+            get {
+                return ResourceManager.GetString("HelpSimulateFFlogsDPSPerf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   0A|Potion of Strength|33559026
         ///0B|Potion of Dexterity|33559027
         ///0C|Potion of Vitality|33559028

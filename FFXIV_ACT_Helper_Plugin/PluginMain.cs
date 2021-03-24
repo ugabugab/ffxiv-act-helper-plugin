@@ -226,10 +226,42 @@ namespace FFXIV_ACT_Helper_Plugin
             checkBox4.Enabled = checkBox2.Checked;
         }
 
-        private void CheckedChanged(object sender, EventArgs e)
+        private void OnCheckedChange(object sender, EventArgs e)
         {
             UpdateUI();
             actUIController.UpdateTable();
+        }
+
+        private void OnMouseHover(object sender, EventArgs e)
+        {
+            if (sender == checkBox1)
+            {
+                label1.Text = Properties.Resources.HelpEndCombatWhenRestartContent;
+            }
+            else if (sender == checkBox2)
+            {
+                label1.Text = Properties.Resources.HelpCountMedicatedBuffs;
+            }
+            else if (sender == checkBox3)
+            {
+                label1.Text = Properties.Resources.HelpSimulateFFlogsDPSPerf
+                    + "\n\n" + string.Join("\n", ActGlobalsExtension.Bosses.Select(x => x.Zone).Distinct());
+            }
+            else if (sender == checkBox4)
+            {
+                label1.Text = Properties.Resources.HelpCountOnlyTheLatestAndHighQuality;
+            }
+        }
+
+        private void OnMouseLeave(object sender, EventArgs e)
+        {
+            if (sender == checkBox1
+                || sender == checkBox2
+                || sender == checkBox3
+                || sender == checkBox4)
+            {
+                label1.Text = Properties.Resources.HelpEmpty;
+            }
         }
     }
 }
