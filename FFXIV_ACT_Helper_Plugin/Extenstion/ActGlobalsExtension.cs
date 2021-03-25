@@ -25,5 +25,19 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             return (name == MyName) ? ActGlobals.charName : name;
         }
+
+        public static void RunOnACTUIThread(Action code)
+        {
+            if (!ActGlobals.oFormActMain.InvokeRequired)
+            {
+                code();
+                return;
+            }
+            if (ActGlobals.oFormActMain.IsDisposed || ActGlobals.oFormActMain.Disposing)
+            {
+                return;
+            }
+            ActGlobals.oFormActMain.Invoke(code);
+        }
     }
 }

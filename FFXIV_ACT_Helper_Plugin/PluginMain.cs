@@ -52,12 +52,19 @@ namespace FFXIV_ACT_Helper_Plugin
             pluginScreenSpace.Text = "FFXIV Helper Settings"; // Tab name
             this.Dock = DockStyle.Fill; // Expand the UserControl to fill the tab's client space
             xmlSettings = new SettingsSerializer(this); // Create a new settings serializer and pass it this instance
+
             LoadSettings();
             DownloadData();
             LoadData();
             UpdateUI();
             actUIController.UpdateTable();
             actEventHandler.Setup();
+
+            // Automatic update
+            if (ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
+            {
+                new PluginUpdater(this).UpdateCheckOnBackground();
+            }
 
             lblStatus.Text = "Plugin Started";
         }
@@ -70,6 +77,11 @@ namespace FFXIV_ACT_Helper_Plugin
             lblStatus.Text = "Plugin Exited";
 
             Shared = null;
+        }
+
+        public void UpdateCheck()
+        {
+            new PluginUpdater(this).UpdateCheck();
         }
 
         void LoadSettings()

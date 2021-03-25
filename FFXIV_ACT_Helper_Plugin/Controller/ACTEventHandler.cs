@@ -16,6 +16,7 @@ namespace FFXIV_ACT_Helper_Plugin
             buffSwingHistory = new List<MasterSwing>();
 
             ActGlobals.oFormActMain.BeforeLogLineRead += new LogLineEventDelegate(BeforeLogLineRead);
+            ActGlobals.oFormActMain.UpdateCheckClicked += new FormActMain.NullDelegate(UpdateCheckClicked);
         }
 
         public void Teardown()
@@ -23,6 +24,12 @@ namespace FFXIV_ACT_Helper_Plugin
             buffSwingHistory = null;
 
             ActGlobals.oFormActMain.BeforeLogLineRead -= BeforeLogLineRead;
+            ActGlobals.oFormActMain.UpdateCheckClicked -= UpdateCheckClicked;
+        }
+
+        void UpdateCheckClicked()
+        {
+            PluginMain.Shared.UpdateCheck();
         }
 
         void BeforeLogLineRead(bool isImport, LogLineEventArgs logInfo)

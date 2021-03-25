@@ -150,5 +150,36 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
                 return ResourceManager.GetString("MedicatedItems", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   There is an updated version of the FFXIV ACT Helper Plugin. Update it now?
+        ///
+        ///(If there is an update to ACT, you should click Cancel and update ACT first.) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MessagePluginUpdate {
+            get {
+                return ResourceManager.GetString("MessagePluginUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   FFXIV ACT Helper Plugin was updated. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MessagePluginUpdateCompleted {
+            get {
+                return ResourceManager.GetString("MessagePluginUpdateCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Error occurred while updating FFXIV ACT Helper Plugin: 
+        ///
+        ///{0} に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MessagePluginUpdateError {
+            get {
+                return ResourceManager.GetString("MessagePluginUpdateError", resourceCulture);
+            }
+        }
     }
 }

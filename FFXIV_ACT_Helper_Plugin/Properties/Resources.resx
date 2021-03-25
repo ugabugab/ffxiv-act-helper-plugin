@@ -141,4 +141,17 @@ Note: the currently supported zones are as follows.</value>
   <data name="MedicatedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MedicatedItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-2022-jp</value>
   </data>
+  <data name="MessagePluginUpdate" xml:space="preserve">
+    <value>There is an updated version of the FFXIV ACT Helper Plugin. Update it now?
+
+(If there is an update to ACT, you should click Cancel and update ACT first.)</value>
+  </data>
+  <data name="MessagePluginUpdateCompleted" xml:space="preserve">
+    <value>FFXIV ACT Helper Plugin was updated.</value>
+  </data>
+  <data name="MessagePluginUpdateError" xml:space="preserve">
+    <value>Error occurred while updating FFXIV ACT Helper Plugin: 
+
+{0}</value>
+  </data>
 </root>
