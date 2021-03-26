@@ -136,10 +136,18 @@
   <data name="HelpSimulateFFlogsDPSPerf" xml:space="preserve">
     <value>When checked, ACT will simulate FFLogs DPS perf and view "rPerf", "rDPS", "aPerf", and "aDPS" on Encounter.
 
-Note: the currently supported zones are as follows.</value>
+Note: the currently supported zones are as follows.
+
+{0}</value>
   </data>
   <data name="MedicatedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MedicatedItems.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-2022-jp</value>
+  </data>
+  <data name="MessagePluginDeinit" xml:space="preserve">
+    <value>Plugin Exited.</value>
+  </data>
+  <data name="MessagePluginInit" xml:space="preserve">
+    <value>Plugin Started.</value>
   </data>
   <data name="MessagePluginUpdate" xml:space="preserve">
     <value>There is an updated version of the FFXIV ACT Helper Plugin. Update it now?

@@ -120,7 +120,9 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         /// <summary>
         ///   When checked, ACT will simulate FFLogs DPS perf and view &quot;rPerf&quot;, &quot;rDPS&quot;, &quot;aPerf&quot;, and &quot;aDPS&quot; on Encounter.
         ///
-        ///Note: the currently supported zones are as follows. に類似しているローカライズされた文字列を検索します。
+        ///Note: the currently supported zones are as follows.
+        ///
+        ///{0} に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HelpSimulateFFlogsDPSPerf {
             get {
@@ -148,6 +150,24 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         internal static string MedicatedItems {
             get {
                 return ResourceManager.GetString("MedicatedItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Plugin Exited. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MessagePluginDeinit {
+            get {
+                return ResourceManager.GetString("MessagePluginDeinit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Plugin Started. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MessagePluginInit {
+            get {
+                return ResourceManager.GetString("MessagePluginInit", resourceCulture);
             }
         }
         

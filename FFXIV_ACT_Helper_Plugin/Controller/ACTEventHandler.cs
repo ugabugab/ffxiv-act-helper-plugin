@@ -72,20 +72,8 @@ namespace FFXIV_ACT_Helper_Plugin
                         // Insert swings to ACT
                         foreach (var swing in Enumerable.Reverse(buffSwingHistory))
                         {
-                            MasterSwing newSwing = new MasterSwing(
-                                swing.SwingType,
-                                swing.Critical,
-                                swing.Damage,
-                                DateTime.Now,
-                                swing.TimeSorter,
-                                swing.AttackType,
-                                swing.Attacker,
-                                swing.DamageType,
-                                swing.Victim);
-                            newSwing.Tags = swing.Tags;
-                            newSwing.Tags["BuffDuration"] = (double)swing.Tags["BuffDuration"] - (DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond;
-
-                            ActGlobals.oFormActMain.AddCombatAction(newSwing);
+                            swing.Tags[SwingTag.BuffDuration] = (double)swing.Tags[SwingTag.BuffDuration] - (DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond;
+                            ActGlobals.oFormActMain.AddCombatAction(swing);
 
                             buffSwingHistory.Remove(swing);
                         }
@@ -106,16 +94,16 @@ namespace FFXIV_ACT_Helper_Plugin
                                 .Where(x => x.Group == BuffGroup.Medicated).Select(x => x.Id).FirstOrDefault() ?? "";
 
                             MasterSwing swing = new MasterSwing(SwingType.Buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, logComponents[3], name, "", name);
-                            swing.Tags.Add("Potency", 0);
+                            swing.Tags.Add(SwingTag.Potency, 0);
                             //swing.Tags.Add("Job", "");
-                            swing.Tags.Add("ActorID", logComponents[5]);
-                            swing.Tags.Add("TargetID", logComponents[7]);
-                            swing.Tags.Add("SkillID", item.SkillId);
-                            swing.Tags.Add("BuffID", medicatedBuffId);
-                            swing.Tags.Add("BuffDuration", double.Parse(logComponents[4]));
-                            swing.Tags.Add("BuffByte1", item.BuffByte);
-                            swing.Tags.Add("BuffByte2", "00");
-                            swing.Tags.Add("BuffByte3", "00");
+                            swing.Tags.Add(SwingTag.ActorID, logComponents[5]);
+                            swing.Tags.Add(SwingTag.TargetID, logComponents[7]);
+                            swing.Tags.Add(SwingTag.SkillID, item.SkillId);
+                            swing.Tags.Add(SwingTag.BuffID, medicatedBuffId);
+                            swing.Tags.Add(SwingTag.BuffDuration, double.Parse(logComponents[4]));
+                            swing.Tags.Add(SwingTag.BuffByte1, item.BuffByte);
+                            swing.Tags.Add(SwingTag.BuffByte2, "00");
+                            swing.Tags.Add(SwingTag.BuffByte3, "00");
 
                             buffSwingHistory.Add(swing);
                         }
@@ -124,7 +112,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     // Remove expired swings
                     foreach (var swing in Enumerable.Reverse(buffSwingHistory))
                     {
-                        if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags["BuffDuration"])
+                        if ((DateTime.Now - swing.Time).Ticks / TimeSpan.TicksPerSecond > (double)swing.Tags[SwingTag.BuffDuration])
                         {
                             buffSwingHistory.Remove(swing);
                         }

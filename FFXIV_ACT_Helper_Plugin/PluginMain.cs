@@ -66,7 +66,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 new PluginUpdater(this).UpdateCheckOnBackground();
             }
 
-            lblStatus.Text = "Plugin Started";
+            lblStatus.Text = Properties.Resources.MessagePluginInit;
         }
 
         public void DeInitPlugin()
@@ -74,7 +74,7 @@ namespace FFXIV_ACT_Helper_Plugin
             actEventHandler.Teardown();
             SaveSettings();
 
-            lblStatus.Text = "Plugin Exited";
+            lblStatus.Text = Properties.Resources.MessagePluginDeinit;
 
             Shared = null;
         }
@@ -256,8 +256,8 @@ namespace FFXIV_ACT_Helper_Plugin
             }
             else if (sender == checkBox3)
             {
-                label1.Text = Properties.Resources.HelpSimulateFFlogsDPSPerf
-                    + "\n\n" + string.Join("\n", ActGlobalsExtension.Bosses.Select(x => x.Zone).Distinct());
+                label1.Text = String.Format(Properties.Resources.HelpSimulateFFlogsDPSPerf, 
+                    string.Join(Environment.NewLine, ActGlobalsExtension.Bosses.Select(x => x.Zone).Distinct()));
             }
             else if (sender == checkBox4)
             {

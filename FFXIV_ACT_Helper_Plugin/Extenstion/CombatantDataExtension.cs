@@ -41,19 +41,18 @@ namespace FFXIV_ACT_Helper_Plugin
         private static Damage GetDamage(this CombatantData data)
         {
             var job = data.GetJob();
-            if (job == null || !data.IsAlly()) return null;
+            if (job == null || !data.IsAlly() || data.Name == null) return null;
 
-            var lastSwing = data.AllOut.Where(x => x.Key == "All").SelectMany(x => x.Value.Items).OrderByDescending(x => x.Time).FirstOrDefault();
-            var damage = damageCache.Where(x => x.Key == data.Name && x.Value.LastSwing == lastSwing).Select(x => x.Value).FirstOrDefault();
+            var key = data.Name.ToString();
+            var lastSwing = data.AllOut.ContainsKey(AttackType.All) ? data.AllOut[AttackType.All].Items.LastOrDefault() : null;
+            var damage = damageCache.ContainsKey(key) && damageCache[key].LastSwing == lastSwing ? damageCache[key] : null;
 
-            if (damage == null)
+            if (damage == null && lastSwing != null)
             {
                 // Attacks
-                var damageSwingTypes = new int[] { SwingType.Attack, SwingType.DamageSkill, SwingType.Dot };
-                var attacks = data.AllOut
-                    .Where(x => x.Key == "All")
-                    .SelectMany(x => x.Value.Items)
-                    .Where(x => x.Damage.Number > 0 && damageSwingTypes.Contains(x.SwingType))
+                var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
+                var attacks = damageItems
+                    .Where(x => x.Damage.Number > 0)
                     .ToList();
 
                 // Buff taken
@@ -170,7 +169,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     {
                         cdhDamageUpRate *= criticalDamageUpRate;
                     }
-                    if (attack.Tags.ContainsKey("DirectHit") && bool.Parse((string)attack.Tags["DirectHit"]))
+                    if (attack.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)attack.Tags[SwingTag.DirectHit]))
                     {
                         cdhDamageUpRate *= directHitDamageUpRate;
                     }
@@ -237,7 +236,14 @@ namespace FFXIV_ACT_Helper_Plugin
                     LastSwing = lastSwing
                 };
 
-                damageCache[data.Name] = damage;
+                if (damageCache.ContainsKey(key))
+                {
+                    damageCache[key] = damage;
+                }
+                else
+                {
+                    damageCache.Add(key, damage);
+                }
             }
 
             return damage;
@@ -253,7 +259,8 @@ namespace FFXIV_ACT_Helper_Plugin
                 buffKeys.AddRange(conflictBuffs.SelectMany(x => x.NameList));
             }
 
-            var swings = data.AllInc
+            var buffItems = data.Items[DamageTypeData.IncomingBuffDebuff].Items.ToList();
+            var swings = buffItems
                 .Where(x => buffKeys.Contains(x.Key))
                 .SelectMany(x => x.Value.Items)
                 .OrderBy(x => x.Time)
@@ -283,7 +290,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         lastSwing = null;
                     }
                 }
-                if (swing.Tags["BuffID"].Equals(buff.Id) && swing.Attacker != data.Name)
+                if (swing.Tags[SwingTag.BuffID].Equals(buff.Id) && swing.Attacker != data.Name)
                 {
                     if (lastSwing == null)
                     {
@@ -320,25 +327,22 @@ namespace FFXIV_ACT_Helper_Plugin
                 medicatedBuffBytes = medicatedBuffBytes.Skip(medicatedBuffBytes.Count - 5).Take(5).ToList();
             }
 
-            return data.AllInc
+            var buffItems = data.Items[DamageTypeData.IncomingBuffDebuff].Items.ToList();
+            return buffItems
                 .Where(x => medicatedKeys.Contains(x.Key))
                 .SelectMany(x => x.Value.Items)
-                .Where(x => x.Tags.ContainsKey("BuffByte1") && medicatedBuffBytes.Contains(x.Tags["BuffByte1"]))
+                .Where(x => x.Tags.ContainsKey(SwingTag.BuffByte1) && medicatedBuffBytes.Contains(x.Tags[SwingTag.BuffByte1]))
                 .Count();
         }
 
         public static bool IsAlly(this CombatantData data)
         {
-            return data.Parent.GetAllies().Where(x => x.Name == data.Name).Count() != 0;
+            return bool.Parse(data.GetColumnByName("Ally"));
         }
 
         public static Job GetJob(this CombatantData data)
         {
-            var jobName = data.AllOut
-                .SelectMany(x => x.Value.Items)
-                .Where(x => x.Tags.ContainsKey("Job"))
-                .Select(x => x.Tags["Job"].ToString())
-                .FirstOrDefault() ?? data.GetColumnByName("Job"); // If failed to get Job from Tag, get it from Column
+            var jobName = data.GetColumnByName("Job");
 
             var job = new Job(jobName);
             if (job.Role != Role.Unknown || PluginDebug.EnabledUnknownJob)
@@ -361,10 +365,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static int GetDirectHitCount(this CombatantData data)
         {
-            return data.AllOut
-                .Where(x => x.Key == "All")
-                .SelectMany(x => x.Value.Items)
-                .Where(x => x.Tags.ContainsKey("DirectHit") && bool.Parse((string)x.Tags["DirectHit"]))
+            var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
+            return damageItems
+                .Where(x => x.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)x.Tags[SwingTag.DirectHit]))
                 .Count();
         }
 
