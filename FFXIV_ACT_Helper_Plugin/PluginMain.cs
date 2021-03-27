@@ -205,6 +205,32 @@ namespace FFXIV_ACT_Helper_Plugin
                 Debug.WriteLine(e.Message);
             }
 
+            // Load skill data
+            try
+            {
+                string[] rows = Properties.Resources.Skills
+                    .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                var items = new List<Skill>();
+                foreach (var row in rows)
+                {
+                    string[] cols = row.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                    items.Add(new Skill
+                    {
+                        Id = cols[0],
+                        Name = cols[1],
+                        NameJa = cols[2],
+                        CriticalRate = int.Parse(cols[3]),
+                        DirectHitRate = int.Parse(cols[4]),
+                    });
+                }
+                ActGlobalsExtension.Skills = items;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
             // Load medicated item data
             try
             {

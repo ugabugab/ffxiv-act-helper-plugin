@@ -166,6 +166,54 @@ namespace FFXIV_ACT_Helper_Plugin
                             "Simulated FFLogs aDPS",
                             new CombatantData.ExportStringDataCallback(ADPSAsIntExportDataCallback)));
                 }
+                // rDPSPortions
+                if (!CombatantData.ColumnDefs.ContainsKey("rDPSPortions"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "rDPSPortions",
+                        new CombatantData.ColumnDef(
+                            "rDPSPortions",
+                            false,
+                            "TEXT",
+                            "rDPSPortions",
+                            new CombatantData.StringDataCallback(RDPSPortionsDataCallback),
+                            new CombatantData.StringDataCallback(RDPSPortionsDataCallback),
+                            new Comparison<CombatantData>(RDPSPortionsSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("rDPSPortions"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "rDPSPortions",
+                        new CombatantData.TextExportFormatter(
+                            "rDPSPortions",
+                            "rDPSPortions",
+                            "Simulated FFLogs rDPS portions",
+                            new CombatantData.ExportStringDataCallback(RDPSPortionsExportDataCallback)));
+                }
+                // aDPSPortions
+                if (!CombatantData.ColumnDefs.ContainsKey("aDPSPortions"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "aDPSPortions",
+                        new CombatantData.ColumnDef(
+                            "aDPSPortions",
+                            false,
+                            "TEXT",
+                            "aDPSPortions",
+                            new CombatantData.StringDataCallback(ADPSPortionsDataCallback),
+                            new CombatantData.StringDataCallback(ADPSPortionsDataCallback),
+                            new Comparison<CombatantData>(ADPSPortionsSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("aDPSPortions"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "aDPSPortions",
+                        new CombatantData.TextExportFormatter(
+                            "aDPSPortions",
+                            "aDPSPortions",
+                            "Simulated FFLogs aDPS portions",
+                            new CombatantData.ExportStringDataCallback(ADPSPortionsExportDataCallback)));
+                }
             }
             else
             {
@@ -212,6 +260,24 @@ namespace FFXIV_ACT_Helper_Plugin
                 if (CombatantData.ExportVariables.ContainsKey("ADPS"))
                 {
                     CombatantData.ExportVariables.Remove("ADPS");
+                }
+                // rDPSPortions
+                if (CombatantData.ColumnDefs.ContainsKey("rDPSPortions"))
+                {
+                    CombatantData.ColumnDefs.Remove("rDPSPortions");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("rDPSPortions"))
+                {
+                    CombatantData.ExportVariables.Remove("rDPSPortions");
+                }
+                // aDPSPortions
+                if (CombatantData.ColumnDefs.ContainsKey("aDPSPortions"))
+                {
+                    CombatantData.ColumnDefs.Remove("aDPSPortions");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("aDPSPortions"))
+                {
+                    CombatantData.ExportVariables.Remove("aDPSPortions");
                 }
             }
 
@@ -356,6 +422,77 @@ namespace FFXIV_ACT_Helper_Plugin
                 value = 0;
             }
             return value.ToString("#0");
+        }
+
+        // rDPSPortions
+        string RDPSPortionsDataCallback(CombatantData data)
+        {
+            var givenDPSGroup = data.GetRGivenDPSGroup();
+            var takenDPSGroup = data.GetRTakenDPSGroup();
+
+            string value = "";
+            if (takenDPSGroup != null && givenDPSGroup != null)
+            {
+                foreach (KeyValuePair<string, double> kv in givenDPSGroup.OrderBy(x => x.Key))
+                {
+                    if (value.Length > 0)
+                    {
+                        value += " | ";
+                    }
+                    value += kv.Key + " : " + "+" + (kv.Value).ToString("#,0.00");
+                }
+                foreach (KeyValuePair<string, double> kv in takenDPSGroup.OrderBy(x => x.Key))
+                {
+                    if (value.Length > 0)
+                    {
+                        value += " | ";
+                    }
+                    value += kv.Key + " : " + "-" + (kv.Value).ToString("#,0.00");
+                }
+            }
+
+            return value;
+        }
+
+        int RDPSPortionsSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("rDPSPortions").CompareAsDoubleTo(right.GetColumnByName("rDPSPortions"));
+        }
+
+        string RDPSPortionsExportDataCallback(CombatantData data, string extraFormat)
+        {
+            return data.GetColumnByName("rDPSPortions");
+        }
+
+        // aDPSPortions
+        string ADPSPortionsDataCallback(CombatantData data)
+        {
+            var takenDPSGroup = data.GetATakenDPSGroup();
+
+            string value = "";
+            if (takenDPSGroup != null && takenDPSGroup != null)
+            {
+                foreach (KeyValuePair<Buff, double> kv in takenDPSGroup.OrderBy(x => x.Key.Id))
+                {
+                    if (value.Length > 0)
+                    {
+                        value += " | ";
+                    }
+                    value += kv.Key.Name + " : " + "-" + (kv.Value).ToString("#,0.00");
+                }
+            }
+
+            return value;
+        }
+
+        int ADPSPortionsSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("aDPSPortions").CompareAsDoubleTo(right.GetColumnByName("aDPSPortions"));
+        }
+
+        string ADPSPortionsExportDataCallback(CombatantData data, string extraFormat)
+        {
+            return data.GetColumnByName("aDPSPortions");
         }
     }
 }

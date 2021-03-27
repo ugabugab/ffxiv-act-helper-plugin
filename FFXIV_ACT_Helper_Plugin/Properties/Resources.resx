@@ -122,7 +122,7 @@
     <value>..\Resources\Buffs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="HelpCountMedicatedBuffs" xml:space="preserve">
-    <value>When checked, ACT will count the use of medicated items (eg Tincture of Strength) and view "MedicatedCount" on Encounter.</value>
+    <value>When checked, ACT will count the use of medicated items (eg Tincture of Strength) and may view it on Encounter.</value>
   </data>
   <data name="HelpCountOnlyTheLatestAndHighQuality" xml:space="preserve">
     <value>When checked, ACT will ONLY count the use of the latest and highest quality medicated items. (As of patch 5.4, the "Grade 4 Tincture" series)</value>
@@ -131,10 +131,10 @@
     <value>Mouse-over an item to view a more detailed explanation.</value>
   </data>
   <data name="HelpEndCombatWhenRestartContent" xml:space="preserve">
-    <value>When checked, ACT will end current combat when the content restarts due to annihilation.</value>
+    <value>If checked, ACT will end current combat in the event the content restarted due to all party members are incapacitated.</value>
   </data>
   <data name="HelpSimulateFFlogsDPSPerf" xml:space="preserve">
-    <value>When checked, ACT will simulate FFLogs DPS perf and view "rPerf", "rDPS", "aPerf", and "aDPS" on Encounter.
+    <value>When checked, ACT will simulate FFLogs DPS perf and may view perf, source DPS and DPS portions (given/taken DPS) on Encounter.
 
 Note: the currently supported zones are as follows.
 
@@ -161,5 +161,8 @@ Note: the currently supported zones are as follows.
     <value>Error occurred while updating FFXIV ACT Helper Plugin: 
 
 {0}</value>
+  </data>
+  <data name="Skills" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Skills.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

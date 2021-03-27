@@ -53,6 +53,7 @@
     <Compile Include="Extenstion\CombatantDataExtension.cs" />
     <Compile Include="Extenstion\StringExtension.cs" />
     <Compile Include="Model\BossData.cs" />
+    <Compile Include="Model\Skill.cs" />
     <Compile Include="Model\Buff.cs" />
     <Compile Include="Model\Job.cs" />
     <Compile Include="Model\MedicatedItem.cs" />
@@ -85,6 +86,7 @@
     <EmbeddedResource Include="Resources\MedicatedItems.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Skills.txt" />
     <Content Include="Resources\Buffs.txt" />
     <EmbeddedResource Include="Resources\DebugPluginData.xml" />
     <EmbeddedResource Include="Resources\DebugBossData.xml" />

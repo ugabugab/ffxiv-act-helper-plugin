@@ -58,7 +58,8 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public bool IsConflict(Buff target)
         {
-            return (this.IsCard() && target.IsCard());
+            return Id == target.Id
+                || (this.IsCard() && target.IsCard());
         }
     }
 
@@ -81,5 +82,6 @@ namespace FFXIV_ACT_Helper_Plugin
         CardForMeleeDPSOrTank = 2,
         CardForRangedDPSOrHealer = 3,
         Embolden = 4,
+        Song = 5,
     }
 }

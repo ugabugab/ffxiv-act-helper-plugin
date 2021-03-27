@@ -63,17 +63,17 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         /// <summary>
         ///   49|Medicated|強化薬|1|1|30|0|0|0|1
         ///141|Battle Voice|バトルボイス|1|2|20|0|0|20|0
+        ///116|Life Surge|ライフサージ|1|1|5|0|100|0|0
         ///638|Vulnerability Up|被ダメージ上昇|2|1|15|5|0|0|0
         ///786|Battle Litany|バトルリタニー|1|2|20|0|10|0|0
+        ///851|Reassemble|整備|1|1|5|0|100|100|0
+        ///1177|Inner Release|原初の解放|1|1|10|0|100|100|0
         ///1185|Meditative Brotherhood|桃園結義：攻撃|1|2|15|5|0|0|0
         ///1213|Devotion|エギの加護|1|2|15|5|0|0|0
         ///1221|Chain Stratagem|連環計|2|1|15|0|10|0|0
         ///1297|Embolden|エンボルデン|1|2|20|10|0|0|4
         ///1454|Left Eye|竜の左眼|1|1|20|5|0|0|0
-        ///1822|Technical Finish|テクニカルフィニッシュ|1|2|20|5|0|0|0
-        ///1825|Devilment|攻めのタンゴ|1|1|20|0|20|20|0
-        ///1876|Lord Of Crowns|クラウンロード|1|1|15|8|0|0|2
-        ///1877|Lady Of  [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
+        ///1822|Technical Finish|テクニカ [残りの文字列は切り詰められました]&quot;; に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string Buffs {
             get {
@@ -82,7 +82,7 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   When checked, ACT will count the use of medicated items (eg Tincture of Strength) and view &quot;MedicatedCount&quot; on Encounter. に類似しているローカライズされた文字列を検索します。
+        ///   When checked, ACT will count the use of medicated items (eg Tincture of Strength) and may view it on Encounter. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HelpCountMedicatedBuffs {
             get {
@@ -109,7 +109,7 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   When checked, ACT will end current combat when the content restarts due to annihilation. に類似しているローカライズされた文字列を検索します。
+        ///   If checked, ACT will end current combat in the event the content restarted due to all party members are incapacitated. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HelpEndCombatWhenRestartContent {
             get {
@@ -118,7 +118,7 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   When checked, ACT will simulate FFLogs DPS perf and view &quot;rPerf&quot;, &quot;rDPS&quot;, &quot;aPerf&quot;, and &quot;aDPS&quot; on Encounter.
+        ///   When checked, ACT will simulate FFLogs DPS perf and may view perf, source DPS and DPS portions (given/taken DPS) on Encounter.
         ///
         ///Note: the currently supported zones are as follows.
         ///
@@ -199,6 +199,18 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         internal static string MessagePluginUpdateError {
             get {
                 return ResourceManager.GetString("MessagePluginUpdateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   53|Bootshine|連撃|100|0
+        ///2246|Assassinate|終撃|100|0
+        ///16463|Chaotic Cyclone|カオティックサイクロン|100|100
+        ///16465|Inner Chaos|インナーカオス|100|100 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Skills {
+            get {
+                return ResourceManager.GetString("Skills", resourceCulture);
             }
         }
     }

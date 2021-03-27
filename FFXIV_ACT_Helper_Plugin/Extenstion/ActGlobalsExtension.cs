@@ -16,6 +16,8 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static List<Buff> Buffs = new List<Buff>();
 
+        public static List<Skill> Skills = new List<Skill>();
+
         public static string ConvertActNameToClientName(string name)
         {
             return (name == ActGlobals.charName) ? MyName : name;

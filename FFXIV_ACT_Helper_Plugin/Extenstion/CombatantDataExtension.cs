@@ -25,11 +25,15 @@ namespace FFXIV_ACT_Helper_Plugin
             public BuffTaken BuffTaken { get; set; }
 
             public double Value { get; set; }
+
+            public MasterSwing Swing { get; set; }
         }
 
         private class BuffTaken
         {
             public Buff Buff { get; set; }
+
+            public string AttackType { get; set; }
 
             public string Attacker { get; set; }
 
@@ -47,7 +51,8 @@ namespace FFXIV_ACT_Helper_Plugin
             var lastSwing = data.AllOut.ContainsKey(AttackType.All) ? data.AllOut[AttackType.All].Items.LastOrDefault() : null;
             var damage = damageCache.ContainsKey(key) && damageCache[key].LastSwing == lastSwing ? damageCache[key] : null;
 
-            if (damage == null && lastSwing != null)
+            if (damage == null && lastSwing != null 
+                && data.Items[DamageTypeData.OutgoingDamage].Items.Count() > 0)
             {
                 // Attacks
                 var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
@@ -77,17 +82,21 @@ namespace FFXIV_ACT_Helper_Plugin
                     enemiesDebuffTakens.Add(enemy.Name, debuffTakens);
                 });
 
+                var criticalRate = Math.Max(0.01 * data.CritDamPerc, 0.05);
+                var directHitRate = 0.01 * data.GetDirectHitRate();
+
                 // Damage
                 var totalDamage = 0.0;
                 var buffTakenDamages = new List<BuffTakenDamage>();
-                var criticalRate = 0.01 * data.CritDamPerc;
-                var criticalDamageUpRate = 1.4 + Math.Max(criticalRate - 0.05, 0.0);
-                var directHitRate = 0.01 * data.GetDirectHitRate();
-                var directHitDamageUpRate = 1.25;
                 attacks.ForEach(attack =>
                 {
+                    //if (attack.Tags.ContainsKey(SwingTag.SkillID))
+                    //{
+                    //    Debug.WriteLine(attack.Tags[SwingTag.SkillID] + ":" + attack.AttackType);
+                    //}
                     totalDamage += attack.Damage.Number;
 
+                    var skill = ActGlobalsExtension.Skills.Where(x => x.NameList.Contains(attack.AttackType)).FirstOrDefault();
                     var damageUpRates = new Dictionary<BuffTaken, double>();
                     var criticalUpRates = new Dictionary<BuffTaken, double>();
                     var directHitUpRates = new Dictionary<BuffTaken, double>();
@@ -111,15 +120,24 @@ namespace FFXIV_ACT_Helper_Plugin
                                 break;
 
                             case BuffGroup.Embolden:
-                                var damageRate = buff.DamageRate - (int)((attack.Time - buffTaken.StartTime).TotalSeconds / 4) * 2;
-                                damageUpRate = 0.01 * (attack.DamageType.StartsWith("Magic") ? 0 : damageRate);
+                                if (buffTaken.Attacker == data.Name)
+                                {
+                                    // Apply only Magical attack
+                                    damageUpRate = 0.01 * (attack.DamageType.StartsWith("Magic") ? buff.DamageRate : 0);
+                                }
+                                else
+                                {
+                                    // Apply only physical attack and decrease by time
+                                    var damageRate = buff.DamageRate - (int)((attack.Time - buffTaken.StartTime).TotalSeconds / 4) * 2;
+                                    damageUpRate = 0.01 * (attack.DamageType.StartsWith("Magic") ? 0 : damageRate);
+                                }
                                 break;
 
                             default:
                                 damageUpRate = 0.01 * buff.DamageRate;
                                 break;
                         }
-                        if (damageUpRate > 0)
+                        if (damageUpRate > 0 && buffTaken.Attacker != data.Name)
                         {
                             damageUpRates.Add(buffTaken, 1.0 + damageUpRate);
                         }
@@ -149,34 +167,10 @@ namespace FFXIV_ACT_Helper_Plugin
                         totalDamageUpRate = damageUpRates.Values.Aggregate(((y, x) => y *= x));
                     }
 
-                    // (Cb - Cu)
-                    var totalCritialUpRate = 0.0;
-                    if (criticalUpRates.Count > 0)
-                    {
-                        totalCritialUpRate = criticalUpRates.Values.Sum();
-                    }
-
-                    // (Db - Cu)
-                    var totalDirectHitUpRate = 0.0;
-                    if (directHitUpRates.Count > 0)
-                    {
-                        totalDirectHitUpRate = directHitUpRates.Values.Sum();
-                    }
-
-                    // Mdc
-                    var cdhDamageUpRate = 1.0;
-                    if (attack.Critical)
-                    {
-                        cdhDamageUpRate *= criticalDamageUpRate;
-                    }
-                    if (attack.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)attack.Tags[SwingTag.DirectHit]))
-                    {
-                        cdhDamageUpRate *= directHitDamageUpRate;
-                    }
-
-                    // Damage
                     // L = N - (N / M)
                     var upDamage = attack.Damage.Number - attack.Damage.Number / totalDamageUpRate;
+
+                    // Damage
                     if (upDamage > 0)
                     {
                         foreach (KeyValuePair<BuffTaken, double> kv in damageUpRates)
@@ -185,21 +179,61 @@ namespace FFXIV_ACT_Helper_Plugin
                             {
                                 BuffTaken = kv.Key,
                                 // gi = L * (log mi / log M)
-                                Value = upDamage * Math.Log10(kv.Value) / Math.Log10(totalDamageUpRate)
+                                Value = upDamage * Math.Log10(kv.Value) / Math.Log10(totalDamageUpRate),
+                                Swing = attack
                             });
                         }
                     }
+
+                    // (Cb - Cu)
+                    var totalCritialUpRate = 0.0;
+                    if (criticalUpRates.Count > 0)
+                    {
+                        totalCritialUpRate = criticalUpRates.Values.Sum();
+                    }
+                    if (skill != null)
+                    {
+                        totalCritialUpRate += 0.01 * skill.CriticalRate;
+                    }
+
+                    // (Db - Cu)
+                    var totalDirectHitUpRate = 0.0;
+                    if (directHitUpRates.Count > 0)
+                    {
+                        totalDirectHitUpRate = directHitUpRates.Values.Sum();
+                    }
+                    if (skill != null)
+                    {
+                        totalDirectHitUpRate += 0.01 * skill.DirectHitRate;
+                    }
+
+                    // Mc
+                    var criticalDamageUpRate = 1.0;
+                    if (attack.Critical)
+                    {
+                        criticalDamageUpRate = 1.4 + criticalRate - 0.05;
+                    }
+
+                    // Md
+                    var directHitDamageupRate = 1.0;
+                    if (attack.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)attack.Tags[SwingTag.DirectHit]))
+                    {
+                        directHitDamageupRate = 1.25;
+                    }
+
+                    // Mdc
+                    var critDHDamageUpRate = criticalDamageUpRate * directHitDamageupRate;
 
                     // N' = (N / M)
                     var baseDamageIncludeCDH = attack.Damage.Number / totalDamageUpRate;
 
                     // (N' / Mdc)
-                    var baseDamage = baseDamageIncludeCDH / cdhDamageUpRate;
+                    var baseDamage = baseDamageIncludeCDH / critDHDamageUpRate;
 
                     // Critical
                     // Pc = (log Mc / log Mdc) * (N' - (N' / Mdc))
-                    var criticalUpDamage = Math.Log10(criticalDamageUpRate) / Math.Log10(cdhDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
-                    if (criticalUpDamage > 0)
+                    var criticalUpDamage = Math.Log10(criticalDamageUpRate) / Math.Log10(critDHDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
+                    if (criticalUpDamage > 0 && totalCritialUpRate < 1.0)
                     {
                         foreach (KeyValuePair<BuffTaken, double> kv in criticalUpRates)
                         {
@@ -207,15 +241,16 @@ namespace FFXIV_ACT_Helper_Plugin
                             {
                                 BuffTaken = kv.Key,
                                 // gi = (ci / Cb) * Pc
-                                Value = kv.Value / (totalCritialUpRate + criticalRate) * criticalUpDamage
+                                Value = kv.Value / (totalCritialUpRate + criticalRate) * criticalUpDamage,
+                                Swing = attack
                             });
                         }
                     }
 
                     // DirectHit
                     // Pd = (log 1.25 / log Mdc) * (N' - (N' / Mdc))
-                    var directHitUpDamage = Math.Log10(directHitDamageUpRate) / Math.Log10(cdhDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
-                    if (directHitUpDamage > 0)
+                    var directHitUpDamage = Math.Log10(directHitDamageupRate) / Math.Log10(critDHDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
+                    if (directHitUpDamage > 0 && totalDirectHitUpRate < 1.0)
                     {
                         foreach (KeyValuePair<BuffTaken, double> kv in directHitUpRates)
                         {
@@ -223,7 +258,8 @@ namespace FFXIV_ACT_Helper_Plugin
                             {
                                 BuffTaken = kv.Key,
                                 // gi = (di / Db) * Pd
-                                Value = kv.Value / (totalDirectHitUpRate + directHitRate) * directHitUpDamage
+                                Value = kv.Value / (totalDirectHitUpRate + directHitRate) * directHitUpDamage,
+                                Swing = attack
                             });
                         }
                     }
@@ -251,20 +287,24 @@ namespace FFXIV_ACT_Helper_Plugin
 
         private static List<BuffTaken> GetBuffTakens(this CombatantData data, Buff buff, Buff[] conflictBuffs = null)
         {
-            var buffTimes = new List<BuffTaken>();
+            var buffTakens = new List<BuffTaken>();
 
             var buffKeys = new List<string>(buff.NameList);
-            if (conflictBuffs != null)
-            {
-                buffKeys.AddRange(conflictBuffs.SelectMany(x => x.NameList));
-            }
+            var conflictBuffKeys = (conflictBuffs != null) ? conflictBuffs.SelectMany(x => x.NameList).ToList() : new List<string>();
 
             var buffItems = data.Items[DamageTypeData.IncomingBuffDebuff].Items.ToList();
+            //buffItems.SelectMany(x => x.Value.Items).ToList().ForEach(buffItem =>
+            //{
+            //    if (buffItem.Tags.ContainsKey(SwingTag.BuffID))
+            //    {
+            //        Debug.WriteLine(buffItem.Tags[SwingTag.BuffID] + ":" + buffItem.AttackType);
+            //    }
+            //});
             var swings = buffItems
-                .Where(x => buffKeys.Contains(x.Key))
-                .SelectMany(x => x.Value.Items)
-                .OrderBy(x => x.Time)
-                .ToList();
+            .Where(x => buffKeys.Concat(conflictBuffKeys).Contains(x.Key))
+            .SelectMany(x => x.Value.Items)
+            .OrderBy(x => x.Time)
+            .ToList();
 
             MasterSwing lastSwing = null;
             foreach (var swing in swings)
@@ -272,17 +312,18 @@ namespace FFXIV_ACT_Helper_Plugin
                 if (lastSwing != null)
                 {
                     var duration = Math.Min((swing.Time - lastSwing.Time).TotalSeconds, buff.Duration);
-                    if (buff.Group == BuffGroup.Embolden 
-                        && duration < buff.Duration 
-                        && swing.Attacker == lastSwing.Attacker)
+                    if ((duration < buff.Duration /*&& swing.Attacker == lastSwing.Attacker*/) // FIXME
+                        && (!conflictBuffKeys.Contains(swing.AttackType) 
+                            || buff.Group == BuffGroup.Embolden || buff.Group == BuffGroup.Song))
                     {
                         // skip
                     }
                     else
                     {
-                        buffTimes.Add(new BuffTaken()
+                        buffTakens.Add(new BuffTaken()
                         {
-                            Buff = new Buff(buff),
+                            Buff = buff,
+                            AttackType = lastSwing.AttackType,
                             Attacker = lastSwing.Attacker,
                             StartTime = lastSwing.Time,
                             EndTime = lastSwing.Time.AddSeconds(duration)
@@ -290,7 +331,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         lastSwing = null;
                     }
                 }
-                if (swing.Tags[SwingTag.BuffID].Equals(buff.Id) && swing.Attacker != data.Name)
+                if (swing.Tags[SwingTag.BuffID].Equals(buff.Id) /*&& swing.Attacker != data.Name*/)
                 {
                     if (lastSwing == null)
                     {
@@ -301,16 +342,17 @@ namespace FFXIV_ACT_Helper_Plugin
             if (lastSwing != null)
             {
                 var duration = Math.Min((data.EncEndTime - lastSwing.Time).TotalSeconds, buff.Duration);
-                buffTimes.Add(new BuffTaken()
+                buffTakens.Add(new BuffTaken()
                 {
-                    Buff = new Buff(buff),
+                    Buff = buff,
+                    AttackType = lastSwing.AttackType,
                     Attacker = lastSwing.Attacker,
                     StartTime = lastSwing.Time,
                     EndTime = lastSwing.Time.AddSeconds(duration)
                 });
             }
 
-            return buffTimes;
+            return buffTakens;
         }
 
         public static int GetMedicatedCount(this CombatantData data, bool isLastestOnly = false)
@@ -400,12 +442,10 @@ namespace FFXIV_ACT_Helper_Plugin
             var duration = data.GetDuration();
             if (damage == null || duration == -1) return -1;
 
-            var takenValue = damage.BuffTakenDamages
-                .Where(x => x.BuffTaken.Buff.Type == BuffType.Buff && x.BuffTaken.Buff.Target == BuffTarget.Solo)
-                .Select(x => x.Value)
-                .Sum();
+            var takenDPSGroup = data.GetATakenDPSGroup();
+            var takenDPS = takenDPSGroup.Values.Sum();
 
-            return (damage.Value - takenValue) / duration;
+            return (damage.Value / duration) - takenDPS;
         }
 
         public static double GetRDPS(this CombatantData data)
@@ -414,23 +454,94 @@ namespace FFXIV_ACT_Helper_Plugin
             var duration = data.GetDuration();
             if (damage == null || duration == -1) return -1;
 
-            var takenValue = damage.BuffTakenDamages.Select(x => x.Value).Sum();
+            var takenDPS = data.GetRTakenDPSGroup().Values.Sum();
+            var givenDPS = data.GetRGivenDPSGroup().Values.Sum();
 
-            var givenValue = 0.0;
+            return (damage.Value / duration) - takenDPS + givenDPS;
+        }
+
+        public static Dictionary<Buff, double> GetATakenDPSGroup(this CombatantData data)
+        {
+            var damage = data.GetDamage();
+            var duration = data.GetDuration();
+            if (damage == null || duration == -1) return null;
+
+            var group = new Dictionary<Buff, double>();
+            damage.BuffTakenDamages.ForEach(x =>
+            {
+                if (x.BuffTaken.Buff.Type == BuffType.Buff
+                    && x.BuffTaken.Buff.Target == BuffTarget.Solo
+                    && x.BuffTaken.Attacker != data.Name)
+                {
+                    if (group.ContainsKey(x.BuffTaken.Buff))
+                    {
+                        group[x.BuffTaken.Buff] += x.Value / duration;
+                    }
+                    else
+                    {
+                        group.Add(x.BuffTaken.Buff, x.Value / duration);
+                    }
+                }
+            });
+
+            return group;
+        }
+
+        public static Dictionary<string, double> GetRTakenDPSGroup(this CombatantData data)
+        {
+            var damage = data.GetDamage();
+            var duration = data.GetDuration();
+            if (damage == null || duration == -1) return null;
+
+            var group = new Dictionary<string, double>();
+            damage.BuffTakenDamages.ForEach(x =>
+            {
+                if (x.BuffTaken.Attacker != data.Name)
+                {
+                    if (group.ContainsKey(x.BuffTaken.AttackType))
+                    {
+                        group[x.BuffTaken.AttackType] += x.Value / duration;
+                    }
+                    else
+                    {
+                        group.Add(x.BuffTaken.AttackType, x.Value / duration);
+                    }
+                }
+            });
+
+            return group;
+        }
+
+        public static Dictionary<string, double> GetRGivenDPSGroup(this CombatantData data)
+        {
+            var duration = data.GetDuration();
+            if (duration == -1) return null;
+
+            var group = new Dictionary<string, double>();
             var allies = data.Parent.GetAllies().Where(x => x.Name != data.Name).ToList();
             allies.ForEach(ally =>
             {
                 var allyDamage = ally.GetDamage();
                 if (allyDamage != null)
                 {
-                    givenValue += allyDamage.BuffTakenDamages
-                    .Where(x => x.BuffTaken.Attacker == data.Name)
-                    .Select(x => x.Value)
-                    .Sum();
+                    allyDamage.BuffTakenDamages.OrderBy(x => x.Swing.Time).ToList().ForEach(x =>
+                    {
+                        if (x.BuffTaken.Attacker == data.Name && x.Value > 0)
+                        {
+                            if (group.ContainsKey(x.BuffTaken.AttackType))
+                            {
+                                group[x.BuffTaken.AttackType] += x.Value / duration;
+                            }
+                            else
+                            {
+                                group.Add(x.BuffTaken.AttackType, x.Value / duration);
+                            }
+                        }
+                    });
                 }
             });
 
-            return (damage.Value - takenValue + givenValue) / duration;
+            return group;
         }
 
         public static int GetAPerf(this CombatantData data)
