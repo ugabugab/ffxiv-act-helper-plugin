@@ -118,6 +118,24 @@ namespace FFXIV_ACT_Helper_Plugin
                         }
                     }
                 }
+
+                // Support for E12S
+                // e.g. 37|2021-03-28T21:39:03.1810000+09:00|4000E366|Eden's Promise|00006EF7|1|63981880|0|10000|0||-0.01531982|-75.02869|75|-3.101517||3a3b657ca7975aec6240260b79b6c26c
+                if (logComponents[0] == "37")
+                {
+                    var boss = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetBoss();
+                    if (boss != null && boss.Id == 76 && boss.Difficulty == BossDifficulty.Savage
+                        && boss.NameList.Contains(logComponents[3]) && int.Parse(logComponents[5]) <= 1)
+                    {
+                        MasterSwing swing = new MasterSwing(SwingType.Buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, AttackType.Invincible, logComponents[3], "", logComponents[3]);
+                        swing.Tags.Add(SwingTag.Potency, 0);
+                        swing.Tags.Add(SwingTag.ActorID, logComponents[2]);
+                        swing.Tags.Add(SwingTag.TargetID, logComponents[2]);
+                        swing.Tags.Add(SwingTag.BuffDuration, -1.0);
+
+                        ActGlobals.oFormActMain.AddCombatAction(swing);
+                    }
+                }
             }
             catch (Exception e)
             {

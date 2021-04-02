@@ -9,6 +9,9 @@ namespace FFXIV_ACT_Helper_Plugin
     [XmlRoot("data")]
     public class BossData
     {
+        [XmlElement("version")]
+        public string Version { get; set; }
+
         [XmlElement("timestamp")]
         public string Timestamp { get; set; }
 
@@ -19,6 +22,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
     public class Boss
     {
+        [XmlElement("id")]
+        public int Id { get; set; }
+
         [XmlElement("name")]
         public string Name { get; set; }
 
@@ -27,6 +33,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
         [XmlElement("zone")]
         public string Zone { get; set; }
+
+        [XmlElement("difficulty")]
+        public string Difficulty { get; set; }
 
         [XmlArray("rPercentiles")]
         [XmlArrayItem("percentile")]
@@ -83,5 +92,12 @@ namespace FFXIV_ACT_Helper_Plugin
 
         [XmlElement("endTime")]
         public int EndTime { get; set; }
+    }
+
+    public static class BossDifficulty
+    {
+        public static string None = "";
+        public static string Normal = "100";
+        public static string Savage = "101";
     }
 }

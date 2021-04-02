@@ -355,12 +355,18 @@ namespace FFXIV_ACT_Helper_Plugin
         // aDPS
         string ADPSCellDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null 
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "-";
+
             var value = data.GetADPS();
             return value > 0 ? value.ToString("#,0.00") : "-";
         }
 
         string ADPSSqlDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "0.0";
+
             var value = data.GetADPS();
             return value > 0 ? value.ToString() : "0.0";
         }
@@ -374,7 +380,7 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             if (double.TryParse(data.GetColumnByName("aDPS"), out double value) == false)
             {
-                value = 0;
+                return "-";
             }
             return value.ToString();
         }
@@ -383,7 +389,7 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             if (double.TryParse(data.GetColumnByName("aDPS"), out double value) == false)
             {
-                value = 0;
+                return "-";
             }
             return value.ToString("#0");
         }
@@ -391,12 +397,18 @@ namespace FFXIV_ACT_Helper_Plugin
         // rDPS
         string RDPSCellDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "-";
+
             var value = data.GetRDPS();
             return value > 0 ? value.ToString("#,0.00") : "-";
         }
 
         string RDPSSqlDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "0.0";
+
             var value = data.GetRDPS();
             return value > 0 ? value.ToString() : "0.0";
         }
@@ -410,7 +422,7 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             if (double.TryParse(data.GetColumnByName("rDPS"), out double value) == false)
             {
-                value = 0;
+                return "-";
             }
             return value.ToString();
         }
@@ -419,7 +431,7 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             if (double.TryParse(data.GetColumnByName("rDPS"), out double value) == false)
             {
-                value = 0;
+                return "-";
             }
             return value.ToString("#0");
         }
@@ -427,13 +439,16 @@ namespace FFXIV_ACT_Helper_Plugin
         // rDPSPortions
         string RDPSPortionsDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "";
+
             var givenDPSGroup = data.GetRGivenDPSGroup();
             var takenDPSGroup = data.GetRTakenDPSGroup();
 
             string value = "";
             if (takenDPSGroup != null && givenDPSGroup != null)
             {
-                foreach (KeyValuePair<string, double> kv in givenDPSGroup.OrderBy(x => x.Key))
+                foreach (KeyValuePair<string, double> kv in givenDPSGroup.OrderByDescending(x => Math.Abs(x.Value)))
                 {
                     if (value.Length > 0)
                     {
@@ -441,7 +456,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     }
                     value += kv.Key + " : " + "+" + (kv.Value).ToString("#,0.00");
                 }
-                foreach (KeyValuePair<string, double> kv in takenDPSGroup.OrderBy(x => x.Key))
+                foreach (KeyValuePair<string, double> kv in takenDPSGroup.OrderByDescending(x => Math.Abs(x.Value)))
                 {
                     if (value.Length > 0)
                     {
@@ -467,18 +482,21 @@ namespace FFXIV_ACT_Helper_Plugin
         // aDPSPortions
         string ADPSPortionsDataCallback(CombatantData data)
         {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "";
+
             var takenDPSGroup = data.GetATakenDPSGroup();
 
             string value = "";
             if (takenDPSGroup != null && takenDPSGroup != null)
             {
-                foreach (KeyValuePair<Buff, double> kv in takenDPSGroup.OrderBy(x => x.Key.Id))
+                foreach (KeyValuePair<string, double> kv in takenDPSGroup.OrderByDescending(x => Math.Abs(x.Value)))
                 {
                     if (value.Length > 0)
                     {
                         value += " | ";
                     }
-                    value += kv.Key.Name + " : " + "-" + (kv.Value).ToString("#,0.00");
+                    value += kv.Key + " : " + "-" + (kv.Value).ToString("#,0.00");
                 }
             }
 

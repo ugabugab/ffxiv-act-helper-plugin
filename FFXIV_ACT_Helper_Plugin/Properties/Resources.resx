@@ -121,6 +121,13 @@
   <data name="Buffs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Buffs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="HelpCalculateRDSPADPSForAllZones" xml:space="preserve">
+    <value>When checked, ACT will calculate rDPS/aDPS for all zones.
+
+Cautions.
+- Performance may be degraded.
+- The values may significantly differ from those in the FFLogs.</value>
+  </data>
   <data name="HelpCountMedicatedBuffs" xml:space="preserve">
     <value>When checked, ACT will count the use of medicated items (eg Tincture of Strength) and may view it on Encounter.</value>
   </data>
@@ -137,7 +144,6 @@
     <value>When checked, ACT will simulate FFLogs DPS perf and may view perf, source DPS and DPS portions (given/taken DPS) on Encounter.
 
 Note: the currently supported zones are as follows.
-
 {0}</value>
   </data>
   <data name="MedicatedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">

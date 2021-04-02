@@ -58,6 +58,7 @@ namespace FFXIV_ACT_Helper_Plugin
     public static class AttackType
     {
         public static string All = "All";
+        public static string Invincible = "Invincible";
     }
 
     public static class SwingType

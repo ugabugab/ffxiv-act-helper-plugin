@@ -33,13 +33,11 @@ namespace FFXIV_ACT_Helper_Plugin
         {
             public Buff Buff { get; set; }
 
-            public string AttackType { get; set; }
-
-            public string Attacker { get; set; }
-
             public DateTime StartTime { get; set; }
 
             public DateTime EndTime { get; set; }
+
+            public MasterSwing Swing { get; set; }
         }
 
         private static Damage GetDamage(this CombatantData data)
@@ -54,11 +52,8 @@ namespace FFXIV_ACT_Helper_Plugin
             if (damage == null && lastSwing != null 
                 && data.Items[DamageTypeData.OutgoingDamage].Items.Count() > 0)
             {
-                // Attacks
-                var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
-                var attacks = damageItems
-                    .Where(x => x.Damage.Number > 0)
-                    .ToList();
+                var allies = data.Parent.GetAllies().Select(x => x.Name).ToList();
+                var enemies = data.Parent.Items.Select(x => x.Value).Where(x => !allies.Contains(x.Name)).ToList();
 
                 // Buff taken
                 var buffTakens = new List<BuffTaken>();
@@ -70,8 +65,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
                 // Enemies debuff taken
                 var enemiesDebuffTakens = new Dictionary<string, List<BuffTaken>>();
-                var allies = data.Parent.GetAllies().Select(x => x.Name).ToList();
-                data.Parent.Items.Select(x => x.Value).Where(x => !allies.Contains(x.Name)).ToList().ForEach(enemy =>
+                enemies.ForEach(enemy =>
                 {
                     var debuffTakens = new List<BuffTaken>();
                     ActGlobalsExtension.Buffs.Where(x => x.Type == BuffType.Debuff).ToList().ForEach(debuff =>
@@ -82,18 +76,49 @@ namespace FFXIV_ACT_Helper_Plugin
                     enemiesDebuffTakens.Add(enemy.Name, debuffTakens);
                 });
 
+                // Enemies invincible
+                var enemiesInvincibles = new Dictionary<string, List<BuffTaken>>();
+                enemies.ForEach(enemy =>
+                {
+                    var invincibleTakens = new List<BuffTaken>();
+                    var invicibleSwings = enemy.AllInc.Where(x => x.Key == AttackType.Invincible).SelectMany(x => x.Value.Items).ToList();
+                    invicibleSwings.ForEach(swing =>
+                    {
+                        var duration = (double)swing.Tags.GetValue(SwingTag.BuffDuration, 0);
+                        var invincible = new BuffTaken()
+                        { 
+                            StartTime = swing.Time,
+                            EndTime = duration == -1 ? data.EndTime : swing.Time.AddSeconds(duration),
+                            Swing = swing
+                        };
+                        invincibleTakens.Add(invincible);
+                    });
+                    enemiesInvincibles.Add(enemy.Name, invincibleTakens);
+                });
+
+                // Attacks
+                var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
+                var attacks = damageItems.Where(x => x.Damage.Number > 0).ToList();
+
                 var criticalRate = Math.Max(0.01 * data.CritDamPerc, 0.05);
                 var directHitRate = 0.01 * data.GetDirectHitRate();
 
                 // Damage
                 var totalDamage = 0.0;
                 var buffTakenDamages = new List<BuffTakenDamage>();
-                attacks.ForEach(attack =>
+                foreach(var attack in attacks)
                 {
-                    //if (attack.Tags.ContainsKey(SwingTag.SkillID))
-                    //{
-                    //    Debug.WriteLine(attack.Tags[SwingTag.SkillID] + ":" + attack.AttackType);
-                    //}
+                    //Debug.WriteLine(attack.Tags.GetValue(SwingTag.SkillID) + ":" + attack.AttackType);
+                    var actorID = (string)attack.Tags.GetValue(SwingTag.ActorID, "");
+                    var targetId = (string)attack.Tags.GetValue(SwingTag.TargetID, "");
+
+                    var enemyInvincibles = enemiesInvincibles
+                        .Where(x => x.Key == attack.Victim).SelectMany(x => x.Value).Where(x => (string)x.Swing.Tags.GetValue(SwingTag.TargetID) == targetId).ToList();
+                    if (enemyInvincibles.Where(x => x.StartTime <= attack.Time && x.EndTime >= attack.Time).Any())
+                    {
+                        continue;
+                    }
+
                     totalDamage += attack.Damage.Number;
 
                     var skill = ActGlobalsExtension.Skills.Where(x => x.NameList.Contains(attack.AttackType)).FirstOrDefault();
@@ -101,8 +126,10 @@ namespace FFXIV_ACT_Helper_Plugin
                     var criticalUpRates = new Dictionary<BuffTaken, double>();
                     var directHitUpRates = new Dictionary<BuffTaken, double>();
 
-                    var enemyDebuffTakens = enemiesDebuffTakens.Where(x => x.Key == attack.Victim).Select(x => x.Value).FirstOrDefault();
-                    buffTakens.Concat(enemyDebuffTakens).Where(x => x.StartTime <= attack.Time && x.EndTime >= attack.Time).ToList()
+                    var attackerBuffTakens = buffTakens.Where(x => (string)x.Swing.Tags.GetValue(SwingTag.TargetID) == actorID).ToList();
+                    var victimDebuffTakens = enemiesDebuffTakens
+                        .Where(x => x.Key == attack.Victim).SelectMany(x => x.Value).Where(x => (string)x.Swing.Tags.GetValue(SwingTag.TargetID) == targetId).ToList();
+                    attackerBuffTakens.Concat(victimDebuffTakens).Where(x => x.StartTime <= attack.Time && x.EndTime >= attack.Time).ToList()
                     .ForEach(buffTaken =>
                     {
                         var buff = buffTaken.Buff;
@@ -120,7 +147,7 @@ namespace FFXIV_ACT_Helper_Plugin
                                 break;
 
                             case BuffGroup.Embolden:
-                                if (buffTaken.Attacker == data.Name)
+                                if (buffTaken.Swing.Attacker == data.Name)
                                 {
                                     // Apply only Magical attack
                                     damageUpRate = 0.01 * (attack.DamageType.StartsWith("Magic") ? buff.DamageRate : 0);
@@ -137,7 +164,7 @@ namespace FFXIV_ACT_Helper_Plugin
                                 damageUpRate = 0.01 * buff.DamageRate;
                                 break;
                         }
-                        if (damageUpRate > 0 && buffTaken.Attacker != data.Name)
+                        if (damageUpRate > 0 && buffTaken.Swing.Attacker != data.Name)
                         {
                             damageUpRates.Add(buffTaken, 1.0 + damageUpRate);
                         }
@@ -185,27 +212,8 @@ namespace FFXIV_ACT_Helper_Plugin
                         }
                     }
 
-                    // (Cb - Cu)
-                    var totalCritialUpRate = 0.0;
-                    if (criticalUpRates.Count > 0)
-                    {
-                        totalCritialUpRate = criticalUpRates.Values.Sum();
-                    }
-                    if (skill != null)
-                    {
-                        totalCritialUpRate += 0.01 * skill.CriticalRate;
-                    }
-
-                    // (Db - Cu)
-                    var totalDirectHitUpRate = 0.0;
-                    if (directHitUpRates.Count > 0)
-                    {
-                        totalDirectHitUpRate = directHitUpRates.Values.Sum();
-                    }
-                    if (skill != null)
-                    {
-                        totalDirectHitUpRate += 0.01 * skill.DirectHitRate;
-                    }
+                    // N' = (N / M)
+                    var baseDamageIncludeCDH = attack.Damage.Number / totalDamageUpRate;
 
                     // Mc
                     var criticalDamageUpRate = 1.0;
@@ -216,23 +224,33 @@ namespace FFXIV_ACT_Helper_Plugin
 
                     // Md
                     var directHitDamageupRate = 1.0;
-                    if (attack.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)attack.Tags[SwingTag.DirectHit]))
+                    if (bool.Parse((string)attack.Tags.GetValue(SwingTag.DirectHit, "false")))
                     {
                         directHitDamageupRate = 1.25;
                     }
 
-                    // Mdc
+                    // Mdc = Mc * Md
                     var critDHDamageUpRate = criticalDamageUpRate * directHitDamageupRate;
-
-                    // N' = (N / M)
-                    var baseDamageIncludeCDH = attack.Damage.Number / totalDamageUpRate;
 
                     // (N' / Mdc)
                     var baseDamage = baseDamageIncludeCDH / critDHDamageUpRate;
 
-                    // Critical
+                    // (Cb - Cu)
+                    var totalCritialUpRate = 0.0;
+                    if (criticalUpRates.Count > 0)
+                    {
+                        totalCritialUpRate = criticalUpRates.Values.Sum();
+                    }
+                    if (skill != null)
+                    {
+                        // Apply skill-based increases
+                        totalCritialUpRate += 0.01 * skill.CriticalRate;
+                    }
+
                     // Pc = (log Mc / log Mdc) * (N' - (N' / Mdc))
                     var criticalUpDamage = Math.Log10(criticalDamageUpRate) / Math.Log10(critDHDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
+
+                    // Critical
                     if (criticalUpDamage > 0 && totalCritialUpRate < 1.0)
                     {
                         foreach (KeyValuePair<BuffTaken, double> kv in criticalUpRates)
@@ -247,9 +265,22 @@ namespace FFXIV_ACT_Helper_Plugin
                         }
                     }
 
-                    // DirectHit
+                    // (Db - Cu)
+                    var totalDirectHitUpRate = 0.0;
+                    if (directHitUpRates.Count > 0)
+                    {
+                        totalDirectHitUpRate = directHitUpRates.Values.Sum();
+                    }
+                    if (skill != null)
+                    {
+                        // Apply skill-based increases
+                        totalDirectHitUpRate += 0.01 * skill.DirectHitRate;
+                    }
+
                     // Pd = (log 1.25 / log Mdc) * (N' - (N' / Mdc))
                     var directHitUpDamage = Math.Log10(directHitDamageupRate) / Math.Log10(critDHDamageUpRate) * (baseDamageIncludeCDH - baseDamage);
+
+                    // DirectHit
                     if (directHitUpDamage > 0 && totalDirectHitUpRate < 1.0)
                     {
                         foreach (KeyValuePair<BuffTaken, double> kv in directHitUpRates)
@@ -263,7 +294,7 @@ namespace FFXIV_ACT_Helper_Plugin
                             });
                         }
                     }
-                });
+                }
 
                 damage = new Damage()
                 {
@@ -295,26 +326,19 @@ namespace FFXIV_ACT_Helper_Plugin
             var buffItems = data.Items[DamageTypeData.IncomingBuffDebuff].Items.ToList();
             //buffItems.SelectMany(x => x.Value.Items).ToList().ForEach(buffItem =>
             //{
-            //    if (buffItem.Tags.ContainsKey(SwingTag.BuffID))
-            //    {
-            //        Debug.WriteLine(buffItem.Tags[SwingTag.BuffID] + ":" + buffItem.AttackType);
-            //    }
+            //    Debug.WriteLine(buffItem.Tags.GetValue(SwingTag.BuffID) + ":" + buffItem.AttackType);
             //});
-            var swings = buffItems
-            .Where(x => buffKeys.Concat(conflictBuffKeys).Contains(x.Key))
-            .SelectMany(x => x.Value.Items)
-            .OrderBy(x => x.Time)
-            .ToList();
-
-            MasterSwing lastSwing = null;
+            var swings = buffItems.Where(x => buffKeys.Concat(conflictBuffKeys).Contains(x.Key)).SelectMany(x => x.Value.Items).OrderBy(x => x.Time).ToList();
+            var lastSwings = new Dictionary<string, MasterSwing>();
             foreach (var swing in swings)
             {
+                var targetId = (string)swing.Tags.GetValue(SwingTag.TargetID, "");
+
+                var lastSwing = lastSwings.GetValue(targetId);
                 if (lastSwing != null)
                 {
                     var duration = Math.Min((swing.Time - lastSwing.Time).TotalSeconds, buff.Duration);
-                    if ((duration < buff.Duration /*&& swing.Attacker == lastSwing.Attacker*/) // FIXME
-                        && (!conflictBuffKeys.Contains(swing.AttackType) 
-                            || buff.Group == BuffGroup.Embolden || buff.Group == BuffGroup.Song))
+                    if (duration < buff.Duration && buff.IsContinuous)
                     {
                         // skip
                     }
@@ -323,33 +347,37 @@ namespace FFXIV_ACT_Helper_Plugin
                         buffTakens.Add(new BuffTaken()
                         {
                             Buff = buff,
-                            AttackType = lastSwing.AttackType,
-                            Attacker = lastSwing.Attacker,
                             StartTime = lastSwing.Time,
-                            EndTime = lastSwing.Time.AddSeconds(duration)
+                            EndTime = lastSwing.Time.AddSeconds(duration),
+                            Swing = swing
                         });
                         lastSwing = null;
+                        lastSwings.Remove(targetId);
                     }
                 }
-                if (swing.Tags[SwingTag.BuffID].Equals(buff.Id) /*&& swing.Attacker != data.Name*/)
+
+                var buffId = (string)swing.Tags.GetValue(SwingTag.BuffID, "");
+                if (buffId == buff.Id)
                 {
                     if (lastSwing == null)
                     {
-                        lastSwing = swing;
+                        lastSwings.Add(targetId, swing);
                     }
                 }
             }
-            if (lastSwing != null)
+            if (lastSwings.Count > 0)
             {
-                var duration = Math.Min((data.EncEndTime - lastSwing.Time).TotalSeconds, buff.Duration);
-                buffTakens.Add(new BuffTaken()
+                foreach (KeyValuePair<string, MasterSwing> kv in lastSwings)
                 {
-                    Buff = buff,
-                    AttackType = lastSwing.AttackType,
-                    Attacker = lastSwing.Attacker,
-                    StartTime = lastSwing.Time,
-                    EndTime = lastSwing.Time.AddSeconds(duration)
-                });
+                    var duration = Math.Min((data.EncEndTime - kv.Value.Time).TotalSeconds, buff.Duration);
+                    buffTakens.Add(new BuffTaken()
+                    {
+                        Buff = buff,
+                        StartTime = kv.Value.Time,
+                        EndTime = kv.Value.Time.AddSeconds(duration),
+                        Swing = kv.Value
+                    });
+                }
             }
 
             return buffTakens;
@@ -373,7 +401,7 @@ namespace FFXIV_ACT_Helper_Plugin
             return buffItems
                 .Where(x => medicatedKeys.Contains(x.Key))
                 .SelectMany(x => x.Value.Items)
-                .Where(x => x.Tags.ContainsKey(SwingTag.BuffByte1) && medicatedBuffBytes.Contains(x.Tags[SwingTag.BuffByte1]))
+                .Where(x => medicatedBuffBytes.Contains((string)x.Tags.GetValue(SwingTag.BuffByte1)))
                 .Count();
         }
 
@@ -384,33 +412,13 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static Job GetJob(this CombatantData data)
         {
-            var jobName = data.GetColumnByName("Job");
-
-            var job = new Job(jobName);
-            if (job.Role != Role.Unknown || PluginDebug.EnabledUnknownJob)
-            {
-                return job;
-            }
-
-            return null;
-        }
-
-        public static Boss GetBoss(this CombatantData data)
-        {
-            var allies = data.Parent.GetAllies().Select(x => x.Name).ToList();
-            var enemies = data.Parent.Items.Values.Select(x => x.Name).Where(x => !allies.Contains(x)).ToList();
-            return ActGlobalsExtension.Bosses
-                .Where(x => x.Zone == data.Parent.ZoneName || x.Zone == "*")
-                .Where(x => x.NameList.Intersect(enemies).Count() != 0 || x.NameList.Contains("*"))
-                .FirstOrDefault();
+            return new Job(data.GetColumnByName("Job"));
         }
 
         public static int GetDirectHitCount(this CombatantData data)
         {
             var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
-            return damageItems
-                .Where(x => x.Tags.ContainsKey(SwingTag.DirectHit) && bool.Parse((string)x.Tags[SwingTag.DirectHit]))
-                .Count();
+            return damageItems.Where(x => bool.Parse((string)x.Tags.GetValue(SwingTag.DirectHit, "false"))).Count();
         }
 
         public static double GetDirectHitRate(this CombatantData data)
@@ -418,32 +426,13 @@ namespace FFXIV_ACT_Helper_Plugin
             return (double)data.GetDirectHitCount() / data.Swings * 100;
         }
 
-        public static double GetDuration(this CombatantData data)
-        {
-            var boss = data.GetBoss();
-            if (boss == null) return -1;
-
-            var totalDuration = data.Parent.Duration.TotalSeconds;
-            var duration = totalDuration;
-            foreach (var exclusionPeriod in boss.ExclusionPeriods)
-            {
-                if (totalDuration > exclusionPeriod.StartTime)
-                {
-                    duration -= (Math.Min(totalDuration, exclusionPeriod.EndTime) - exclusionPeriod.StartTime);
-                }
-            }
-
-            return duration;
-        }
-
         public static double GetADPS(this CombatantData data)
         {
             var damage = data.GetDamage();
-            var duration = data.GetDuration();
-            if (damage == null || duration == -1) return -1;
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (damage == null || duration < 0) return -1;
 
-            var takenDPSGroup = data.GetATakenDPSGroup();
-            var takenDPS = takenDPSGroup.Values.Sum();
+            var takenDPS = data.GetATakenDPSGroup().Values.Sum();
 
             return (damage.Value / duration) - takenDPS;
         }
@@ -451,8 +440,8 @@ namespace FFXIV_ACT_Helper_Plugin
         public static double GetRDPS(this CombatantData data)
         {
             var damage = data.GetDamage();
-            var duration = data.GetDuration();
-            if (damage == null || duration == -1) return -1;
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (damage == null || duration < 0) return -1;
 
             var takenDPS = data.GetRTakenDPSGroup().Values.Sum();
             var givenDPS = data.GetRGivenDPSGroup().Values.Sum();
@@ -460,26 +449,26 @@ namespace FFXIV_ACT_Helper_Plugin
             return (damage.Value / duration) - takenDPS + givenDPS;
         }
 
-        public static Dictionary<Buff, double> GetATakenDPSGroup(this CombatantData data)
+        public static Dictionary<string, double> GetATakenDPSGroup(this CombatantData data)
         {
             var damage = data.GetDamage();
-            var duration = data.GetDuration();
-            if (damage == null || duration == -1) return null;
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (damage == null || duration < 0) return null;
 
-            var group = new Dictionary<Buff, double>();
+            var group = new Dictionary<string, double>();
             damage.BuffTakenDamages.ForEach(x =>
             {
                 if (x.BuffTaken.Buff.Type == BuffType.Buff
                     && x.BuffTaken.Buff.Target == BuffTarget.Solo
-                    && x.BuffTaken.Attacker != data.Name)
+                    && x.BuffTaken.Swing.Attacker != data.Name)
                 {
-                    if (group.ContainsKey(x.BuffTaken.Buff))
+                    if (group.ContainsKey(x.BuffTaken.Swing.AttackType))
                     {
-                        group[x.BuffTaken.Buff] += x.Value / duration;
+                        group[x.BuffTaken.Swing.AttackType] += x.Value / duration;
                     }
                     else
                     {
-                        group.Add(x.BuffTaken.Buff, x.Value / duration);
+                        group.Add(x.BuffTaken.Swing.AttackType, x.Value / duration);
                     }
                 }
             });
@@ -490,21 +479,21 @@ namespace FFXIV_ACT_Helper_Plugin
         public static Dictionary<string, double> GetRTakenDPSGroup(this CombatantData data)
         {
             var damage = data.GetDamage();
-            var duration = data.GetDuration();
-            if (damage == null || duration == -1) return null;
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (damage == null || duration < 0) return null;
 
             var group = new Dictionary<string, double>();
             damage.BuffTakenDamages.ForEach(x =>
             {
-                if (x.BuffTaken.Attacker != data.Name)
+                if (x.BuffTaken.Swing.Attacker != data.Name)
                 {
-                    if (group.ContainsKey(x.BuffTaken.AttackType))
+                    if (group.ContainsKey(x.BuffTaken.Swing.AttackType))
                     {
-                        group[x.BuffTaken.AttackType] += x.Value / duration;
+                        group[x.BuffTaken.Swing.AttackType] += x.Value / duration;
                     }
                     else
                     {
-                        group.Add(x.BuffTaken.AttackType, x.Value / duration);
+                        group.Add(x.BuffTaken.Swing.AttackType, x.Value / duration);
                     }
                 }
             });
@@ -514,8 +503,8 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static Dictionary<string, double> GetRGivenDPSGroup(this CombatantData data)
         {
-            var duration = data.GetDuration();
-            if (duration == -1) return null;
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (duration < 0) return null;
 
             var group = new Dictionary<string, double>();
             var allies = data.Parent.GetAllies().Where(x => x.Name != data.Name).ToList();
@@ -526,15 +515,15 @@ namespace FFXIV_ACT_Helper_Plugin
                 {
                     allyDamage.BuffTakenDamages.OrderBy(x => x.Swing.Time).ToList().ForEach(x =>
                     {
-                        if (x.BuffTaken.Attacker == data.Name && x.Value > 0)
+                        if (x.BuffTaken.Swing.Attacker == data.Name && x.Value > 0)
                         {
-                            if (group.ContainsKey(x.BuffTaken.AttackType))
+                            if (group.ContainsKey(x.BuffTaken.Swing.AttackType))
                             {
-                                group[x.BuffTaken.AttackType] += x.Value / duration;
+                                group[x.BuffTaken.Swing.AttackType] += x.Value / duration;
                             }
                             else
                             {
-                                group.Add(x.BuffTaken.AttackType, x.Value / duration);
+                                group.Add(x.BuffTaken.Swing.AttackType, x.Value / duration);
                             }
                         }
                     });
@@ -546,32 +535,26 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static int GetAPerf(this CombatantData data)
         {
-            var boss = data.GetBoss();
+            var boss = data.Parent.GetBoss();
             var job = data.GetJob();
             if (boss == null || job == null) return -1;
 
             var aDPS = data.GetADPS();
             var aPercentile = boss.APercentiles.Where(x => x.Job == job.Name).FirstOrDefault();
-            if (aDPS == -1 || aPercentile == null)
-            {
-                return -1;
-            }
+            if (aDPS == -1 || aPercentile == null) return -1;
 
             return CalculatePerf(aDPS, aPercentile);
         }
 
         public static int GetRPerf(this CombatantData data)
         {
-            var boss = data.GetBoss();
+            var boss = data.Parent.GetBoss();
             var job = data.GetJob();
             if (boss == null || job == null) return -1;
 
             var rDPS = data.GetRDPS();
             var rPercentile = boss.RPercentiles.Where(x => x.Job == job.Name).FirstOrDefault();
-            if (rDPS == -1 || rPercentile == null)
-            {
-                return -1;
-            }
+            if (rDPS == -1 || rPercentile == null) return -1;
 
             return CalculatePerf(rDPS, rPercentile);
         }

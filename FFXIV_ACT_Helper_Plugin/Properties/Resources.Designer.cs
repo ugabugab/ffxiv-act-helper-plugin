@@ -82,6 +82,19 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
+        ///   When checked, ACT will calculate rDPS/aDPS for all zones.
+        ///
+        ///Cautions.
+        ///- Performance may be degraded.
+        ///- The values may significantly differ from those in the FFLogs. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string HelpCalculateRDSPADPSForAllZones {
+            get {
+                return ResourceManager.GetString("HelpCalculateRDSPADPSForAllZones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   When checked, ACT will count the use of medicated items (eg Tincture of Strength) and may view it on Encounter. に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HelpCountMedicatedBuffs {
@@ -121,7 +134,6 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         ///   When checked, ACT will simulate FFLogs DPS perf and may view perf, source DPS and DPS portions (given/taken DPS) on Encounter.
         ///
         ///Note: the currently supported zones are as follows.
-        ///
         ///{0} に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string HelpSimulateFFlogsDPSPerf {

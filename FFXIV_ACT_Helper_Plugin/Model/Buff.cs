@@ -27,21 +27,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public BuffGroup Group { get; set; }
 
-        public Buff() {}
-
-        public Buff(Buff source)
-        {
-            this.Id = source.Id;
-            this.Name = source.Name;
-            this.NameJa = source.NameJa;
-            this.Type = source.Type;
-            this.Target = source.Target;
-            this.Duration = source.Duration;
-            this.DamageRate = source.DamageRate;
-            this.CriticalRate = source.CriticalRate;
-            this.DirectHitRate = source.DirectHitRate;
-            this.Group = source.Group;
-        }
+        public bool IsContinuous { get; set; }
 
         public string[] NameList
         {
@@ -82,6 +68,5 @@ namespace FFXIV_ACT_Helper_Plugin
         CardForMeleeDPSOrTank = 2,
         CardForRangedDPSOrHealer = 3,
         Embolden = 4,
-        Song = 5,
     }
 }

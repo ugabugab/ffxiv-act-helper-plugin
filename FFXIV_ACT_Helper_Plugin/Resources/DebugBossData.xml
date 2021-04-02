@@ -2,9 +2,11 @@
 <data>
   <bosses>
     <boss>
+      <id>0</id>
       <name>*</name>
       <nameJa>*</nameJa>
       <zone>*</zone>
+      <difficulty/>
       <rPercentiles>
         <percentile>
           <job>Ast</job>
@@ -524,5 +526,6 @@
       <exclusionPeriods/>
     </boss>
   </bosses>
+  <version>1.2</version>
   <timestamp>2021-01-01 00:00:00+00:00</timestamp>
 </data>

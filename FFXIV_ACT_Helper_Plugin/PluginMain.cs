@@ -38,6 +38,8 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public bool EnabledCountOnlyTheLatestAndHighQuality => this.checkBox4.Checked;
 
+        public bool EnabledCalculateRDPSADPSForALlZones => this.checkBox5.Checked;
+
         public PluginMain()
         {
             InitializeComponent();
@@ -91,6 +93,7 @@ namespace FFXIV_ACT_Helper_Plugin
             xmlSettings.AddControlSetting(checkBox2.Name, checkBox2);
             xmlSettings.AddControlSetting(checkBox3.Name, checkBox3);
             xmlSettings.AddControlSetting(checkBox4.Name, checkBox4);
+            xmlSettings.AddControlSetting(checkBox5.Name, checkBox5);
 
             if (File.Exists(settingsFile))
             {
@@ -121,10 +124,12 @@ namespace FFXIV_ACT_Helper_Plugin
         void SaveSettings()
         {
             FileStream fs = new FileStream(settingsFile, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            XmlTextWriter xWriter = new XmlTextWriter(fs, Encoding.UTF8);
-            xWriter.Formatting = Formatting.Indented;
-            xWriter.Indentation = 1;
-            xWriter.IndentChar = '\t';
+            XmlTextWriter xWriter = new XmlTextWriter(fs, Encoding.UTF8)
+            {
+                Formatting = Formatting.Indented,
+                Indentation = 1,
+                IndentChar = '\t'
+            };
             xWriter.WriteStartDocument(true);
             xWriter.WriteStartElement("Config");    // <Config>
             xWriter.WriteStartElement("SettingsSerializer");    // <Config><SettingsSerializer>
@@ -195,7 +200,8 @@ namespace FFXIV_ACT_Helper_Plugin
                         DamageRate = int.Parse(cols[6]),
                         CriticalRate = int.Parse(cols[7]),
                         DirectHitRate = int.Parse(cols[8]),
-                        Group = (BuffGroup)int.Parse(cols[9])
+                        Group = (BuffGroup)int.Parse(cols[9]),
+                        IsContinuous = int.Parse(cols[10]) != 0
                     });
                 }
                 ActGlobalsExtension.Buffs = items;
@@ -283,11 +289,15 @@ namespace FFXIV_ACT_Helper_Plugin
             else if (sender == checkBox3)
             {
                 label1.Text = String.Format(Properties.Resources.HelpSimulateFFlogsDPSPerf, 
-                    string.Join(Environment.NewLine, ActGlobalsExtension.Bosses.Select(x => x.Zone).Distinct()));
+                    string.Join(Environment.NewLine, ActGlobalsExtension.Bosses.Select(x => "- " + x.Zone).Distinct()));
             }
             else if (sender == checkBox4)
             {
                 label1.Text = Properties.Resources.HelpCountOnlyTheLatestAndHighQuality;
+            }
+            else if (sender == checkBox5)
+            {
+                label1.Text = Properties.Resources.HelpCalculateRDSPADPSForAllZones;
             }
         }
 
@@ -296,7 +306,8 @@ namespace FFXIV_ACT_Helper_Plugin
             if (sender == checkBox1
                 || sender == checkBox2
                 || sender == checkBox3
-                || sender == checkBox4)
+                || sender == checkBox4
+                || sender == checkBox5)
             {
                 label1.Text = Properties.Resources.HelpEmpty;
             }

@@ -51,6 +51,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extenstion\ActGlobalsExtension.cs" />
     <Compile Include="Extenstion\CombatantDataExtension.cs" />
+    <Compile Include="Extenstion\EncounterDataExtension.cs" />
+    <Compile Include="Extenstion\IDictionaryExtension.cs" />
     <Compile Include="Extenstion\StringExtension.cs" />
     <Compile Include="Model\BossData.cs" />
     <Compile Include="Model\Skill.cs" />
