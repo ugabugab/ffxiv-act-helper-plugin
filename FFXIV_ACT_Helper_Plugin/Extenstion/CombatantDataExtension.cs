@@ -81,7 +81,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 enemies.ForEach(enemy =>
                 {
                     var invincibleTakens = new List<BuffTaken>();
-                    var invicibleSwings = enemy.AllInc.Where(x => x.Key == AttackType.Invincible).SelectMany(x => x.Value.Items).ToList();
+                    var invicibleSwings = enemy.AllInc.Where(x => x.Key == AttackType.WalkingDead).SelectMany(x => x.Value.Items).ToList();
                     invicibleSwings.ForEach(swing =>
                     {
                         var duration = (double)swing.Tags.GetValue(SwingTag.BuffDuration, 0);
@@ -120,6 +120,11 @@ namespace FFXIV_ACT_Helper_Plugin
                     }
 
                     totalDamage += attack.Damage.Number;
+
+                    if (attack.Attacker == "Limit Break")
+                    {
+                        continue;
+                    }
 
                     var skill = ActGlobalsExtension.Skills.Where(x => x.NameList.Contains(attack.AttackType)).FirstOrDefault();
                     var damageUpRates = new Dictionary<BuffTaken, double>();

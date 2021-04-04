@@ -50,8 +50,8 @@ namespace FFXIV_ACT_Helper_Plugin
                 // End combat when restarted content
                 if (PluginMain.Shared.EnabledEndCombatWhenRestartContent)
                 {
-                    // e.g. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
-                    if (logComponents[0] == "33" && logComponents[3] == "40000006")
+                    // e.g. 36|2021-04-03T00:56:34.5320000+09:00|0000|2|6b09eaac147276ef6797f3ebe8b87cec
+                    if (logComponents[0] == "36" && logComponents[2] == "0000" && logComponents[3] == "2")
                     {
                         if (ActGlobals.oFormActMain.InCombat)
                         {
@@ -127,9 +127,8 @@ namespace FFXIV_ACT_Helper_Plugin
                     if (boss != null && boss.Id == 76 && boss.Difficulty == BossDifficulty.Savage
                         && boss.NameList.Contains(logComponents[3]) && int.Parse(logComponents[5]) <= 1)
                     {
-                        MasterSwing swing = new MasterSwing(SwingType.Buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, AttackType.Invincible, logComponents[3], "", logComponents[3]);
+                        MasterSwing swing = new MasterSwing(SwingType.Buff, false, Dnum.Unknown, DateTime.Parse(logComponents[1]), 0, AttackType.WalkingDead, "Unknown", "", logComponents[3]);
                         swing.Tags.Add(SwingTag.Potency, 0);
-                        swing.Tags.Add(SwingTag.ActorID, logComponents[2]);
                         swing.Tags.Add(SwingTag.TargetID, logComponents[2]);
                         swing.Tags.Add(SwingTag.BuffDuration, -1.0);
 
