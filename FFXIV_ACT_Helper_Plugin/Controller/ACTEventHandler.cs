@@ -50,15 +50,28 @@ namespace FFXIV_ACT_Helper_Plugin
                 // End combat when restarted content
                 if (PluginMain.Shared.EnabledEndCombatWhenRestartContent)
                 {
-                    // e.g. 36|2021-04-03T00:56:34.5320000+09:00|0000|2|6b09eaac147276ef6797f3ebe8b87cec
-                    if (logComponents[0] == "36" && logComponents[2] == "0000" && logComponents[3] == "2")
+                    if (ActGlobals.oFormActMain.InCombat)
                     {
-                        if (ActGlobals.oFormActMain.InCombat)
+                        // e.g. 33|2021-01-23T16:34:42.9370000+09:00|8003757B|40000006|14E3|14|00|00|4f1194ca3def5c41059c5e69ffc7689a
+                        if (logComponents[0] == "33" && logComponents[3] == "40000006")
                         {
-                            // Normally EndCombat function argument should be True.
-                            // see: https://advancedcombattracker.com/apidoc/html/M_Advanced_Combat_Tracker_FormActMain_EndCombat.htm
-                            //ActGlobals.oFormActMain.EndCombat(false);
                             ActGlobals.oFormActMain.EndCombat(true);
+                        }
+
+                        // Support for E12S
+                        // e.g. 36|2021-04-03T00:56:34.5320000+09:00|0000|2|6b09eaac147276ef6797f3ebe8b87cec
+                        if (logComponents[0] == "36" && logComponents[2] == "0000" && logComponents[3] == "2")
+                        {
+                            var boss = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetBoss();
+                            if (boss != null && boss.Id == 76 && boss.Difficulty == BossDifficulty.Savage)
+                            {
+                                var data = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Items
+                                    .Where(x => boss.NameList.Contains(x.Key)).Select(x => x.Value).FirstOrDefault();
+                                if (data != null && data.AllInc.ContainsKey(AttackType.WalkingDead))
+                                {
+                                    ActGlobals.oFormActMain.EndCombat(true);
+                                }
+                            }
                         }
                     }
                 }
