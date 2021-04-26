@@ -454,6 +454,15 @@ namespace FFXIV_ACT_Helper_Plugin
             return (damage.Value / duration) - takenDPS + givenDPS;
         }
 
+        public static double GetPDPS(this CombatantData data)
+        {
+            var damage = data.GetDamage();
+            var duration = data.Parent.GetBossDuration().TotalSeconds;
+            if (damage == null || duration < 0) return -1;
+
+            return (damage.Value / duration);
+        }
+
         public static Dictionary<string, double> GetATakenDPSGroup(this CombatantData data)
         {
             var damage = data.GetDamage();

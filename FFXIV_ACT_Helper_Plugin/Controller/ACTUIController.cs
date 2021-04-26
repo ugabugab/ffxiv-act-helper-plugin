@@ -98,6 +98,40 @@ namespace FFXIV_ACT_Helper_Plugin
                             "Simulated FFLogs aDPS Perf",
                             new CombatantData.ExportStringDataCallback(APerfExportDataCallback)));
                 }
+                // pDPS
+                if (!CombatantData.ColumnDefs.ContainsKey("pDPS"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "pDPS",
+                        new CombatantData.ColumnDef(
+                            "pDPS",
+                            true,
+                            "DOUBLE",
+                            "pDPS",
+                            new CombatantData.StringDataCallback(PDPSCellDataCallback),
+                            new CombatantData.StringDataCallback(PDPSSqlDataCallback),
+                            new Comparison<CombatantData>(PDPSSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("pdps"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "pdps",
+                        new CombatantData.TextExportFormatter(
+                            "pdps",
+                            "pdps",
+                            "Simulated FFLogs pDPS",
+                            new CombatantData.ExportStringDataCallback(PDPSAsDoubleExportDataCallback)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("PDPS"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "PDPS",
+                        new CombatantData.TextExportFormatter(
+                            "PDPS",
+                            "PDPS",
+                            "Simulated FFLogs pDPS",
+                            new CombatantData.ExportStringDataCallback(PDPSAsIntExportDataCallback)));
+                }
                 // rDPS
                 if (!CombatantData.ColumnDefs.ContainsKey("rDPS"))
                 {
@@ -260,6 +294,19 @@ namespace FFXIV_ACT_Helper_Plugin
                 if (CombatantData.ExportVariables.ContainsKey("ADPS"))
                 {
                     CombatantData.ExportVariables.Remove("ADPS");
+                }
+                // pDPS
+                if (CombatantData.ColumnDefs.ContainsKey("pDPS"))
+                {
+                    CombatantData.ColumnDefs.Remove("pDPS");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("pdps"))
+                {
+                    CombatantData.ExportVariables.Remove("pdps");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("PDPS"))
+                {
+                    CombatantData.ExportVariables.Remove("PDPS");
                 }
                 // rDPSPortions
                 if (CombatantData.ColumnDefs.ContainsKey("rDPSPortions"))
@@ -430,6 +477,48 @@ namespace FFXIV_ACT_Helper_Plugin
         string RDPSAsIntExportDataCallback(CombatantData data, string extraFormat)
         {
             if (double.TryParse(data.GetColumnByName("rDPS"), out double value) == false)
+            {
+                return "-";
+            }
+            return value.ToString("#0");
+        }
+
+        // pDPS
+        string PDPSCellDataCallback(CombatantData data)
+        {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "-";
+
+            var value = data.GetPDPS();
+            return value > 0 ? value.ToString("#,0.00") : "-";
+        }
+
+        string PDPSSqlDataCallback(CombatantData data)
+        {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "0.0";
+
+            var value = data.GetPDPS();
+            return value > 0 ? value.ToString() : "0.0";
+        }
+
+        int PDPSSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("pDPS").CompareAsDoubleTo(right.GetColumnByName("pDPS"));
+        }
+
+        string PDPSAsDoubleExportDataCallback(CombatantData data, string extraFormat)
+        {
+            if (double.TryParse(data.GetColumnByName("pDPS"), out double value) == false)
+            {
+                return "-";
+            }
+            return value.ToString();
+        }
+
+        string PDPSAsIntExportDataCallback(CombatantData data, string extraFormat)
+        {
+            if (double.TryParse(data.GetColumnByName("pDPS"), out double value) == false)
             {
                 return "-";
             }
