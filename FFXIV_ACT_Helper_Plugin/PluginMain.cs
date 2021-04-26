@@ -147,7 +147,7 @@ namespace FFXIV_ACT_Helper_Plugin
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(this.bossDataFile));
-                new WebClient().DownloadFile("https://ugabugab.com/ffxiv-act-helper-plugin/boss_data.xml", this.bossDataFile);
+                new WebClient().DownloadFile("https://ugabugab.github.io/ffxiv-act-helper-plugin/data/boss_data.xml", this.bossDataFile);
             }
             catch (Exception e)
             {

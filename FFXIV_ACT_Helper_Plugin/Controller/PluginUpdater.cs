@@ -49,7 +49,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 {
                     using (WebClient client = new WebClient())
                     {
-                        var data = Encoding.Default.GetString(client.DownloadData("https://ugabugab.com/ffxiv-act-helper-plugin/plugin_data.xml"));
+                        var data = Encoding.Default.GetString(client.DownloadData("https://ugabugab.github.io/ffxiv-act-helper-plugin/data/plugin_data.xml"));
                         stream = new MemoryStream(Encoding.UTF8.GetBytes(data));
                     }
                 }
