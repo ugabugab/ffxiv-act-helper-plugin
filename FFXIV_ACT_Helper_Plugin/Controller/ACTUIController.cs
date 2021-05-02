@@ -48,7 +48,7 @@ namespace FFXIV_ACT_Helper_Plugin
                 }
             }
 
-            if (PluginMain.Shared.EnabledSimulateFFLogsDPSPerf)
+            if (PluginMain.Shared.EnabledSimulateFFLogsParses)
             {
                 // rPerf
                 if (!CombatantData.ColumnDefs.ContainsKey("rPerf"))
@@ -248,6 +248,64 @@ namespace FFXIV_ACT_Helper_Plugin
                             "Simulated FFLogs aDPS portions",
                             new CombatantData.ExportStringDataCallback(ADPSPortionsExportDataCallback)));
                 }
+                // hPerf
+                if (!CombatantData.ColumnDefs.ContainsKey("hPerf"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "hPerf",
+                        new CombatantData.ColumnDef(
+                            "hPerf",
+                            false,
+                            "INT",
+                            "hPerf",
+                            new CombatantData.StringDataCallback(HPerfCellDataCallback),
+                            new CombatantData.StringDataCallback(HPerfSqlDataCallback),
+                            new Comparison<CombatantData>(HPerfSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("hPerf"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "hPerf",
+                        new CombatantData.TextExportFormatter(
+                            "hPerf",
+                            "hPerf",
+                            "Simulated FFLogs HPS Perf",
+                            new CombatantData.ExportStringDataCallback(HPerfExportDataCallback)));
+                }
+                // pHPS
+                if (!CombatantData.ColumnDefs.ContainsKey("pHPS"))
+                {
+                    CombatantData.ColumnDefs.Add(
+                        "pHPS",
+                        new CombatantData.ColumnDef(
+                            "pHPS",
+                            false,
+                            "DOUBLE",
+                            "pHPS",
+                            new CombatantData.StringDataCallback(PHPSCellDataCallback),
+                            new CombatantData.StringDataCallback(PHPSSqlDataCallback),
+                            new Comparison<CombatantData>(PHPSSortComparer)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("phps"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "phps",
+                        new CombatantData.TextExportFormatter(
+                            "phps",
+                            "phps",
+                            "Simulated FFLogs pHPS",
+                            new CombatantData.ExportStringDataCallback(PHPSAsDoubleExportDataCallback)));
+                }
+                if (!CombatantData.ExportVariables.ContainsKey("PHPS"))
+                {
+                    CombatantData.ExportVariables.Add(
+                        "PHPS",
+                        new CombatantData.TextExportFormatter(
+                            "PHPS",
+                            "PHPS",
+                            "Simulated FFLogs pHPS",
+                            new CombatantData.ExportStringDataCallback(PHPSAsIntExportDataCallback)));
+                }
             }
             else
             {
@@ -325,6 +383,28 @@ namespace FFXIV_ACT_Helper_Plugin
                 if (CombatantData.ExportVariables.ContainsKey("aDPSPortions"))
                 {
                     CombatantData.ExportVariables.Remove("aDPSPortions");
+                }
+                // hPerf
+                if (CombatantData.ColumnDefs.ContainsKey("hPerf"))
+                {
+                    CombatantData.ColumnDefs.Remove("hPerf");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("hPerf"))
+                {
+                    CombatantData.ExportVariables.Remove("hPerf");
+                }
+                // pHPS
+                if (CombatantData.ColumnDefs.ContainsKey("pHPS"))
+                {
+                    CombatantData.ColumnDefs.Remove("pHPS");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("phps"))
+                {
+                    CombatantData.ExportVariables.Remove("phps");
+                }
+                if (CombatantData.ExportVariables.ContainsKey("PHPS"))
+                {
+                    CombatantData.ExportVariables.Remove("PHPS");
                 }
             }
 
@@ -600,6 +680,71 @@ namespace FFXIV_ACT_Helper_Plugin
         string ADPSPortionsExportDataCallback(CombatantData data, string extraFormat)
         {
             return data.GetColumnByName("aDPSPortions");
+        }
+
+        // hPerf
+        string HPerfCellDataCallback(CombatantData data)
+        {
+            var value = data.GetHPerf();
+            return value > 0 ? value.ToString() : "-";
+        }
+
+        string HPerfSqlDataCallback(CombatantData data)
+        {
+            var value = data.GetHPerf();
+            return value > 0 ? value.ToString() : "0";
+        }
+
+        int HPerfSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("hPerf").CompareAsIntTo(right.GetColumnByName("hPerf"));
+        }
+
+        string HPerfExportDataCallback(CombatantData data, string extraFormat)
+        {
+            return data.GetColumnByName("hPerf");
+        }
+
+        // pHPS
+        string PHPSCellDataCallback(CombatantData data)
+        {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "-";
+
+            var value = data.GetPHPS();
+            return value > 0 ? value.ToString("#,0.00") : "-";
+        }
+
+        string PHPSSqlDataCallback(CombatantData data)
+        {
+            if (data.Parent.GetBoss() == null
+                && !PluginMain.Shared.EnabledCalculateRDPSADPSForALlZones) return "0.0";
+
+            var value = data.GetPHPS();
+            return value > 0 ? value.ToString() : "0.0";
+        }
+
+        int PHPSSortComparer(CombatantData left, CombatantData right)
+        {
+            return left.GetColumnByName("pHPS").CompareAsDoubleTo(right.GetColumnByName("pHPS"));
+        }
+
+        string PHPSAsDoubleExportDataCallback(CombatantData data, string extraFormat)
+        {
+            if (double.TryParse(data.GetColumnByName("pHPS"), out double value) == false)
+            {
+                return "-";
+            }
+            return value.ToString();
+        }
+
+        string PHPSAsIntExportDataCallback(CombatantData data, string extraFormat)
+        {
+            if (double.TryParse(data.GetColumnByName("pHPS"), out double value) == false)
+            {
+                return "-";
+            }
+            return value.ToString("#0");
         }
     }
 }

@@ -82,15 +82,15 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   When checked, ACT will calculate rDPS/aDPS for all zones.
+        ///   When checked, ACT will calculate FFLogs DPS/HPS for all zones.
         ///
         ///Cautions.
         ///- Performance may be degraded.
         ///- The values may significantly differ from those in the FFLogs. に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string HelpCalculateRDSPADPSForAllZones {
+        internal static string HelpCalculateFFLogsDPSHPSForAllZones {
             get {
-                return ResourceManager.GetString("HelpCalculateRDSPADPSForAllZones", resourceCulture);
+                return ResourceManager.GetString("HelpCalculateFFLogsDPSHPSForAllZones", resourceCulture);
             }
         }
         
@@ -131,14 +131,14 @@ namespace FFXIV_ACT_Helper_Plugin.Properties {
         }
         
         /// <summary>
-        ///   When checked, ACT will simulate FFLogs DPS perf and may view perf, source DPS and DPS portions (given/taken DPS) on Encounter.
+        ///   When checked, ACT will simulate FFLogs parses and may view perf, source DPS/HPS and DPS portions (given/taken DPS) on Encounter.
         ///
         ///Note: the currently supported zones are as follows.
         ///{0} に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string HelpSimulateFFlogsDPSPerf {
+        internal static string HelpSimulateFFlogsParses {
             get {
-                return ResourceManager.GetString("HelpSimulateFFlogsDPSPerf", resourceCulture);
+                return ResourceManager.GetString("HelpSimulateFFlogsParses", resourceCulture);
             }
         }
         

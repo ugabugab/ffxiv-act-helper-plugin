@@ -18,6 +18,8 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static List<Skill> Skills = new List<Skill>();
 
+        public static Dictionary<string, Actor> CurrentActors = new Dictionary<string, Actor>();
+
         public static string ConvertActNameToClientName(string name)
         {
             return (name == ActGlobals.charName) ? MyName : name;

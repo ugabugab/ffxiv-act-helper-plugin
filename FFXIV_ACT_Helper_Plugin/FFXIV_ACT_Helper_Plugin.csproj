@@ -53,7 +53,9 @@
     <Compile Include="Extenstion\CombatantDataExtension.cs" />
     <Compile Include="Extenstion\EncounterDataExtension.cs" />
     <Compile Include="Extenstion\IDictionaryExtension.cs" />
+    <Compile Include="Extenstion\DnumExtension.cs" />
     <Compile Include="Extenstion\StringExtension.cs" />
+    <Compile Include="Model\Actor.cs" />
     <Compile Include="Model\BossData.cs" />
     <Compile Include="Model\Skill.cs" />
     <Compile Include="Model\Buff.cs" />

@@ -34,7 +34,7 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public bool EnabledCountMedicatedBuffs => this.checkBox2.Checked;
 
-        public bool EnabledSimulateFFLogsDPSPerf => this.checkBox3.Checked;
+        public bool EnabledSimulateFFLogsParses => this.checkBox3.Checked;
 
         public bool EnabledCountOnlyTheLatestAndHighQuality => this.checkBox4.Checked;
 
@@ -288,7 +288,7 @@ namespace FFXIV_ACT_Helper_Plugin
             }
             else if (sender == checkBox3)
             {
-                label1.Text = String.Format(Properties.Resources.HelpSimulateFFlogsDPSPerf, 
+                label1.Text = String.Format(Properties.Resources.HelpSimulateFFlogsParses, 
                     string.Join(Environment.NewLine, ActGlobalsExtension.Bosses.Select(x => "- " + x.Zone).Distinct()));
             }
             else if (sender == checkBox4)
@@ -297,7 +297,7 @@ namespace FFXIV_ACT_Helper_Plugin
             }
             else if (sender == checkBox5)
             {
-                label1.Text = Properties.Resources.HelpCalculateRDSPADPSForAllZones;
+                label1.Text = Properties.Resources.HelpCalculateFFLogsDPSHPSForAllZones;
             }
         }
 

@@ -45,6 +45,10 @@ namespace FFXIV_ACT_Helper_Plugin
         [XmlArrayItem("percentile")]
         public List<Percentile> APercentiles { get; set; }
 
+        [XmlArray("hPercentiles")]
+        [XmlArrayItem("percentile")]
+        public List<Percentile> HPercentiles { get; set; }
+
         [XmlArray("exclusionPeriods")]
         [XmlArrayItem("exclusionPeriod")]
         public List<ExclusionPeriod> ExclusionPeriods { get; set; }

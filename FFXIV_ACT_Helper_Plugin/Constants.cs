@@ -58,7 +58,6 @@ namespace FFXIV_ACT_Helper_Plugin
     public static class AttackType
     {
         public static string All = "All";
-        public static string WalkingDead = "Walking Dead";
     }
 
     public static class SwingType
@@ -69,6 +68,12 @@ namespace FFXIV_ACT_Helper_Plugin
         public static int Hot = 11;
         public static int Dot = 20;
         public static int Buff = 21;
+    }
+
+    public static class DamageType
+    {
+        public static string Absorb = "Absorb";
+        public static string DamageShield = "DamageShield";
     }
 
     public static class SwingTag
@@ -84,5 +89,7 @@ namespace FFXIV_ACT_Helper_Plugin
         public static string BuffByte2 = "BuffByte2";
         public static string BuffByte3 = "BuffByte3";
         public static string DirectHit = "DirectHit";
+        public static string Overheal = "overheal";
+        public static string Overkill = "overkill";
     }
 }

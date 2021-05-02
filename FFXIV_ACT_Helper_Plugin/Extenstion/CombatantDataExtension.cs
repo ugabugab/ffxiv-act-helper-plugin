@@ -11,6 +11,8 @@ namespace FFXIV_ACT_Helper_Plugin
     {
         private static Dictionary<string, Damage> damageCache = new Dictionary<string, Damage>();
 
+        private static Dictionary<string, Healing> healingCache = new Dictionary<string, Healing>();
+
         private class Damage
         {
             public double Value { get; set; }
@@ -38,6 +40,13 @@ namespace FFXIV_ACT_Helper_Plugin
             public DateTime EndTime { get; set; }
 
             public MasterSwing Swing { get; set; }
+        }
+
+        private class Healing
+        {
+            public double Value { get; set; }
+
+            public MasterSwing LastSwing { get; set; }
         }
 
         private static Damage GetDamage(this CombatantData data)
@@ -76,26 +85,6 @@ namespace FFXIV_ACT_Helper_Plugin
                     enemiesDebuffTakens.Add(enemy.Name, debuffTakens);
                 });
 
-                // Enemies invincible
-                var enemiesInvincibles = new Dictionary<string, List<BuffTaken>>();
-                enemies.ForEach(enemy =>
-                {
-                    var invincibleTakens = new List<BuffTaken>();
-                    var invicibleSwings = enemy.AllInc.Where(x => x.Key == AttackType.WalkingDead).SelectMany(x => x.Value.Items).ToList();
-                    invicibleSwings.ForEach(swing =>
-                    {
-                        var duration = (double)swing.Tags.GetValue(SwingTag.BuffDuration, 0);
-                        var invincible = new BuffTaken()
-                        { 
-                            StartTime = swing.Time,
-                            EndTime = duration == -1 ? data.EndTime : swing.Time.AddSeconds(duration),
-                            Swing = swing
-                        };
-                        invincibleTakens.Add(invincible);
-                    });
-                    enemiesInvincibles.Add(enemy.Name, invincibleTakens);
-                });
-
                 // Attacks
                 var damageItems = data.Items[DamageTypeData.OutgoingDamage].Items[AttackType.All].Items.ToList();
                 var attacks = damageItems.Where(x => x.Damage.Number > 0).ToList();
@@ -108,18 +97,12 @@ namespace FFXIV_ACT_Helper_Plugin
                 var buffTakenDamages = new List<BuffTakenDamage>();
                 foreach(var attack in attacks)
                 {
-                    //Debug.WriteLine(attack.Tags.GetValue(SwingTag.SkillID) + ":" + attack.AttackType);
                     var actorID = (string)attack.Tags.GetValue(SwingTag.ActorID, "");
                     var targetId = (string)attack.Tags.GetValue(SwingTag.TargetID, "");
 
-                    var enemyInvincibles = enemiesInvincibles
-                        .Where(x => x.Key == attack.Victim).SelectMany(x => x.Value).Where(x => (string)x.Swing.Tags.GetValue(SwingTag.TargetID) == targetId).ToList();
-                    if (enemyInvincibles.Where(x => x.StartTime <= attack.Time && x.EndTime >= attack.Time).Any())
-                    {
-                        continue;
-                    }
+                    var damageValue = attack.Damage.Number - long.Parse((string)attack.Tags.GetValue(SwingTag.Overkill, "0"));
 
-                    totalDamage += attack.Damage.Number;
+                    totalDamage += damageValue;
 
                     if (attack.Attacker == "Limit Break")
                     {
@@ -200,7 +183,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     }
 
                     // L = N - (N / M)
-                    var upDamage = attack.Damage.Number - attack.Damage.Number / totalDamageUpRate;
+                    var upDamage = damageValue - damageValue / totalDamageUpRate;
 
                     // Damage
                     if (upDamage > 0)
@@ -218,7 +201,7 @@ namespace FFXIV_ACT_Helper_Plugin
                     }
 
                     // N' = (N / M)
-                    var baseDamageIncludeCDH = attack.Damage.Number / totalDamageUpRate;
+                    var baseDamageIncludeCDH = damageValue / totalDamageUpRate;
 
                     // Mc
                     var criticalDamageUpRate = 1.0;
@@ -321,6 +304,43 @@ namespace FFXIV_ACT_Helper_Plugin
             return damage;
         }
 
+        private static Healing GetHealing(this CombatantData data)
+        {
+            var job = data.GetJob();
+            if (job == null || !data.IsAlly() || data.Name == null) return null;
+
+            var key = data.Name.ToString();
+            var lastSwing = data.AllOut.ContainsKey(AttackType.All) ? data.AllOut[AttackType.All].Items.LastOrDefault() : null;
+            var healing = healingCache.ContainsKey(key) && healingCache[key].LastSwing == lastSwing ? healingCache[key] : null;
+
+            if (healing == null && lastSwing != null
+                && data.Items[DamageTypeData.OutgoingHealing].Items.Count() > 0)
+            {
+                // Attacks
+                var healingItems = data.Items[DamageTypeData.OutgoingHealing].Items[AttackType.All].Items.ToList();
+                var attacks = healingItems.Where(x => x.Damage.Number > 0).ToList();
+
+                var totalHealing = attacks.Select(x => x.Damage.Number - long.Parse((string)x.Tags.GetValue(SwingTag.Overheal, "0"))).Sum();
+
+                healing = new Healing()
+                {
+                    Value = totalHealing,
+                    LastSwing = lastSwing
+                };
+
+                if (healingCache.ContainsKey(key))
+                {
+                    healingCache[key] = healing;
+                }
+                else
+                {
+                    healingCache.Add(key, healing);
+                }
+            }
+
+            return healing;
+        }
+
         private static List<BuffTaken> GetBuffTakens(this CombatantData data, Buff buff, Buff[] conflictBuffs = null)
         {
             var buffTakens = new List<BuffTaken>();
@@ -386,6 +406,54 @@ namespace FFXIV_ACT_Helper_Plugin
             }
 
             return buffTakens;
+        }
+
+        private static int CalculatePerf(double value, Percentile percentile)
+        {
+            var perfTable = new Dictionary<int, int>()
+            {
+                { 99, percentile.Perf99 },
+                { 95, percentile.Perf95 },
+                { 75, percentile.Perf75 },
+                { 50, percentile.Perf50 },
+                { 25, percentile.Perf25 },
+                { 10, percentile.Perf10 },
+                { 1, percentile.Perf1 },
+            };
+
+            var p0 = 0.0;
+            var p1 = 100.0;
+            var d0 = 0.0;
+            var d1 = Double.MaxValue;
+
+            foreach (var x in perfTable)
+            {
+                if (value >= x.Value)
+                {
+                    p0 = x.Key;
+                    d0 = x.Value;
+                    break;
+                }
+                p1 = x.Key;
+                d1 = x.Value;
+            }
+
+            var perf = 1.0;
+
+            if (d0 != d1) // Avoid division by zero
+            {
+                perf = p0 + ((value - d0) / ((d1 - d0) / (p1 - p0)));
+                perf = Math.Round(perf, MidpointRounding.AwayFromZero);
+                perf = Math.Max(perf, 1.0);
+            }
+
+            return (int)perf;
+        }
+
+        public static void ClearCache()
+        {
+            damageCache.Clear();
+            healingCache.Clear();
         }
 
         public static int GetMedicatedCount(this CombatantData data, bool isLastestOnly = false)
@@ -461,6 +529,15 @@ namespace FFXIV_ACT_Helper_Plugin
             if (damage == null || duration < 0) return -1;
 
             return (damage.Value / duration);
+        }
+
+        public static double GetPHPS(this CombatantData data)
+        {
+            var healing = data.GetHealing();
+            var duration = data.Parent.Duration.TotalSeconds;//data.Parent.GetBossDuration().TotalSeconds;
+            if (healing == null || duration < 0) return -1;
+
+            return (healing.Value / duration);
         }
 
         public static Dictionary<string, double> GetATakenDPSGroup(this CombatantData data)
@@ -573,46 +650,17 @@ namespace FFXIV_ACT_Helper_Plugin
             return CalculatePerf(rDPS, rPercentile);
         }
 
-        private static int CalculatePerf(double dps, Percentile percentile)
+        public static int GetHPerf(this CombatantData data)
         {
-            var perfTable = new Dictionary<int, int>()
-            {
-                { 99, percentile.Perf99 },
-                { 95, percentile.Perf95 },
-                { 75, percentile.Perf75 },
-                { 50, percentile.Perf50 },
-                { 25, percentile.Perf25 },
-                { 10, percentile.Perf10 },
-                { 1, percentile.Perf1 },
-            };
+            var boss = data.Parent.GetBoss();
+            var job = data.GetJob();
+            if (boss == null || job == null) return -1;
 
-            var p0 = 0.0;
-            var p1 = 100.0;
-            var d0 = 0.0;
-            var d1 = Double.MaxValue;
+            var pHPS = data.GetPHPS();
+            var hPercentile = boss.HPercentiles.Where(x => x.Job == job.Name).FirstOrDefault();
+            if (pHPS == -1 || hPercentile == null) return -1;
 
-            foreach (var x in perfTable)
-            {
-                if (dps >= x.Value)
-                {
-                    p0 = x.Key;
-                    d0 = x.Value;
-                    break;
-                }
-                p1 = x.Key;
-                d1 = x.Value;
-            }
-
-            var perf = 1.0;
-
-            if (d0 != d1) // Avoid division by zero
-            {
-                perf = p0 + ((dps - d0) / ((d1 - d0) / (p1 - p0)));
-                perf = Math.Round(perf, MidpointRounding.AwayFromZero);
-                perf = Math.Max(perf, 1.0);
-            }
-
-            return (int)perf;
+            return CalculatePerf(pHPS, hPercentile);
         }
     }
 }

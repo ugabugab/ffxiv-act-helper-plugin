@@ -75,9 +75,9 @@
             this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox3.Location = new System.Drawing.Point(17, 81);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(161, 16);
+            this.checkBox3.Size = new System.Drawing.Size(148, 16);
             this.checkBox3.TabIndex = 2;
-            this.checkBox3.Text = "Simulate FFLogs DPS Perf";
+            this.checkBox3.Text = "Simulate FFLogs parses";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.OnCheckedChange);
             this.checkBox3.MouseLeave += new System.EventHandler(this.OnMouseLeave);
@@ -120,9 +120,9 @@
             this.checkBox5.AutoSize = true;
             this.checkBox5.Location = new System.Drawing.Point(34, 104);
             this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(203, 16);
+            this.checkBox5.Size = new System.Drawing.Size(235, 16);
             this.checkBox5.TabIndex = 5;
-            this.checkBox5.Text = "Calculate rDPS/aDPS for all zones";
+            this.checkBox5.Text = "Calculate FFLogs DPS/HPS for all zones";
             this.checkBox5.UseVisualStyleBackColor = true;
             this.checkBox5.CheckedChanged += new System.EventHandler(this.OnCheckedChange);
             this.checkBox5.MouseLeave += new System.EventHandler(this.OnMouseLeave);
