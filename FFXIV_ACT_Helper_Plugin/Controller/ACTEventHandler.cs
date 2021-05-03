@@ -10,6 +10,9 @@ namespace FFXIV_ACT_Helper_Plugin
     class ACTEventHandler
     {
         List<MasterSwing> buffSwingHistory;
+        
+        string[] emergencyTacticsNames = { "Emergency Tactics", "応急戦術" };
+        string[] e12sBossNames = { "Eden's Promise", "プロミス・オブ・エデン" };
 
         public void Setup()
         {
@@ -90,7 +93,6 @@ namespace FFXIV_ACT_Helper_Plugin
                         }
 
                         // support for Emergency Tactics
-                        var emergencyTacticsNames = new string[] { "Emergency Tactics", "応急戦術" };
                         if (emergencyTacticsNames.Contains(actionInfo.theAttackType))
                         {
                             var emergencyTacticsBuff = ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.GetAllies()
@@ -257,9 +259,7 @@ namespace FFXIV_ACT_Helper_Plugin
                         // Support for E12S
                         if (ActGlobals.oFormActMain.InCombat && logComponents[2] == "0000" && logComponents[3] == "2")
                         {
-                            var e12sBoss = ActGlobalsExtension.Bosses.Where(x => x.Id == 76 && x.Difficulty == BossDifficulty.Savage).FirstOrDefault();
-                            if (e12sBoss != null
-                                && ActGlobalsExtension.CurrentActors.Values.Where(x => e12sBoss.NameList.Contains(x.Name) && x.Hp <= 1).Any())
+                            if (ActGlobalsExtension.CurrentActors.Values.Where(x => e12sBossNames.Contains(x.Name) && x.Hp <= 1).Any())
                             {
                                 ActGlobals.oFormActMain.EndCombat(true);
                             }
@@ -278,6 +278,15 @@ namespace FFXIV_ACT_Helper_Plugin
                     if (long.TryParse(logComponents[7], out long actorMp)) actor.Mp = actorMp;
                     if (long.TryParse(logComponents[8], out long actorMaxMp)) actor.MaxMp = actorMaxMp;
                     ActGlobalsExtension.CurrentActors[actor.Id] = actor;
+
+                    // Support for E12S
+                    if (e12sBossNames.Contains(actor.Name) && actor.Hp <= 1)
+                    {
+                        if (!ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Tags.ContainsKey(EncounterTag.EndTime))
+                        {
+                            ActGlobals.oFormActMain.ActiveZone.ActiveEncounter.Tags[EncounterTag.EndTime] = logInfo.detectedTime;
+                        }
+                    }
                 }
                 // e.g. 38|2021-04-24T23:20:37.4140000+09:00|1024B79F|Hoge Fuga|004A4A25|88344|88344|10000|10000|197|0|539.3408|322.6061|-19.50564|-2.613231|0600|70|0||da6f6b8f2442147780d67917209e55ef
                 else if (logComponents[0] == "38")

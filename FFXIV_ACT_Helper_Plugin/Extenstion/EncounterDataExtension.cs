@@ -20,7 +20,9 @@ namespace FFXIV_ACT_Helper_Plugin
 
         public static TimeSpan GetBossDuration(this EncounterData data)
         {
-            var totalDuration = data.Duration.TotalSeconds;
+            var startTime = data.StartTime;
+            var endTime = data.Tags.ContainsKey(EncounterTag.EndTime) ? (DateTime)data.Tags[EncounterTag.EndTime] : data.EndTime;
+            var totalDuration = (endTime - startTime).TotalSeconds;
             var duration = totalDuration;
 
             var boss = data.GetBoss();

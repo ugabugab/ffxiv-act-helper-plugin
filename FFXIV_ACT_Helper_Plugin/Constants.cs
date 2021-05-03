@@ -76,6 +76,11 @@ namespace FFXIV_ACT_Helper_Plugin
         public static string DamageShield = "DamageShield";
     }
 
+    public static class EncounterTag
+    {
+        public static string EndTime = "EndTime";
+    }
+
     public static class SwingTag
     {
         public static string Potency = "Potency";
