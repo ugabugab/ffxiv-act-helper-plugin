@@ -2521,12 +2521,12 @@
         <percentile>
           <job>Mch</job>
           <perf1>0</perf1>
-          <perf10>75</perf10>
-          <perf25>102</perf25>
+          <perf10>76</perf10>
+          <perf25>105</perf25>
           <perf50>138</perf50>
-          <perf75>182</perf75>
-          <perf95>285</perf95>
-          <perf99>353</perf99>
+          <perf75>180</perf75>
+          <perf95>281</perf95>
+          <perf99>350</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-05-08 04:02:03+09:00</timestamp>
+  <timestamp>2021-05-08 16:01:23+09:00</timestamp>
 </data>
