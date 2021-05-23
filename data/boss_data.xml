@@ -2570,13 +2570,13 @@
         </percentile>
         <percentile>
           <job>Sam</job>
-          <perf1>39</perf1>
-          <perf10>82</perf10>
-          <perf25>109</perf25>
+          <perf1>43</perf1>
+          <perf10>80</perf10>
+          <perf25>108</perf25>
           <perf50>152</perf50>
-          <perf75>223</perf75>
-          <perf95>336</perf95>
-          <perf99>499</perf99>
+          <perf75>222</perf75>
+          <perf95>339</perf95>
+          <perf99>489</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -4129,13 +4129,13 @@
         </percentile>
         <percentile>
           <job>Mnk</job>
-          <perf1>178</perf1>
-          <perf10>260</perf10>
+          <perf1>170</perf1>
+          <perf10>259</perf10>
           <perf25>294</perf25>
-          <perf50>351</perf50>
-          <perf75>435</perf75>
-          <perf95>597</perf95>
-          <perf99>718</perf99>
+          <perf50>350</perf50>
+          <perf75>434</perf75>
+          <perf95>595</perf95>
+          <perf99>721</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-05-23 03:59:46+09:00</timestamp>
+  <timestamp>2021-05-23 16:00:45+09:00</timestamp>
 </data>
