@@ -5243,12 +5243,12 @@
         <percentile>
           <job>Smn</job>
           <perf1>-1722520</perf1>
-          <perf10>489</perf10>
-          <perf25>584</perf25>
-          <perf50>705</perf50>
+          <perf10>486</perf10>
+          <perf25>583</perf25>
+          <perf50>704</perf50>
           <perf75>835</perf75>
-          <perf95>1023</perf95>
-          <perf99>1171</perf99>
+          <perf95>1021</perf95>
+          <perf99>1173</perf99>
         </percentile>
         <percentile>
           <job>War</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-05-26 04:00:43+09:00</timestamp>
+  <timestamp>2021-05-26 16:01:56+09:00</timestamp>
 </data>
