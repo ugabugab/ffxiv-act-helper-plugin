@@ -535,12 +535,12 @@
         <percentile>
           <job>Ast</job>
           <perf1>2756</perf1>
-          <perf10>7246</perf10>
-          <perf25>8881</perf25>
-          <perf50>10627</perf50>
-          <perf75>12167</perf75>
-          <perf95>14076</perf95>
-          <perf99>15062</perf99>
+          <perf10>7265</perf10>
+          <perf25>8882</perf25>
+          <perf50>10607</perf50>
+          <perf75>12141</perf75>
+          <perf95>14018</perf95>
+          <perf99>15004</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -635,12 +635,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>4864</perf1>
-          <perf10>9721</perf10>
-          <perf25>10913</perf25>
-          <perf50>11993</perf50>
-          <perf75>12819</perf75>
-          <perf95>13586</perf95>
-          <perf99>13921</perf99>
+          <perf10>9748</perf10>
+          <perf25>10915</perf25>
+          <perf50>12003</perf50>
+          <perf75>12817</perf75>
+          <perf95>13574</perf95>
+          <perf99>13905</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -1291,12 +1291,12 @@
         <percentile>
           <job>Gnb</job>
           <perf1>3066</perf1>
-          <perf10>8325</perf10>
-          <perf25>9673</perf25>
-          <perf50>11367</perf50>
-          <perf75>12560</perf75>
-          <perf95>13847</perf95>
-          <perf99>14518</perf99>
+          <perf10>8405</perf10>
+          <perf25>9665</perf25>
+          <perf50>11405</perf50>
+          <perf75>12618</perf75>
+          <perf95>13895</perf95>
+          <perf99>14533</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
@@ -1683,12 +1683,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>5706</perf1>
-          <perf10>10213</perf10>
-          <perf25>11163</perf25>
-          <perf50>12054</perf50>
-          <perf75>12797</perf75>
-          <perf95>13536</perf95>
-          <perf99>13847</perf99>
+          <perf10>10233</perf10>
+          <perf25>11167</perf25>
+          <perf50>12059</perf50>
+          <perf75>12800</perf75>
+          <perf95>13547</perf95>
+          <perf99>13848</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -1815,12 +1815,12 @@
         <percentile>
           <job>Gnb</job>
           <perf1>5513</perf1>
-          <perf10>10836</perf10>
-          <perf25>11732</perf25>
-          <perf50>12628</perf50>
-          <perf75>13437</perf75>
-          <perf95>14368</perf95>
-          <perf99>14757</perf99>
+          <perf10>10851</perf10>
+          <perf25>11725</perf25>
+          <perf50>12616</perf50>
+          <perf75>13426</perf75>
+          <perf95>14352</perf95>
+          <perf99>14752</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
@@ -2309,12 +2309,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>3420</perf1>
-          <perf10>9993</perf10>
-          <perf25>11706</perf25>
-          <perf50>13938</perf50>
-          <perf75>15959</perf75>
-          <perf95>17849</perf95>
-          <perf99>18591</perf99>
+          <perf10>10094</perf10>
+          <perf25>11798</perf25>
+          <perf50>14052</perf50>
+          <perf75>15956</perf75>
+          <perf95>17884</perf95>
+          <perf99>18619</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -2922,12 +2922,12 @@
         <percentile>
           <job>Rdm</job>
           <perf1>12338</perf1>
-          <perf10>18933</perf10>
-          <perf25>20136</perf25>
-          <perf50>21297</perf50>
-          <perf75>22266</perf75>
-          <perf95>23375</perf95>
-          <perf99>23980</perf99>
+          <perf10>18926</perf10>
+          <perf25>20106</perf25>
+          <perf50>21286</perf50>
+          <perf75>22257</perf75>
+          <perf95>23336</perf95>
+          <perf99>23915</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-05-29 04:06:06+09:00</timestamp>
+  <timestamp>2021-05-29 16:05:55+09:00</timestamp>
 </data>
