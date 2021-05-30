@@ -223,12 +223,12 @@
         <percentile>
           <job>Drg</job>
           <perf1>3399</perf1>
-          <perf10>8478</perf10>
-          <perf25>11799</perf25>
-          <perf50>16368</perf50>
-          <perf75>19216</perf75>
-          <perf95>21800</perf95>
-          <perf99>23044</perf99>
+          <perf10>8489</perf10>
+          <perf25>11885</perf25>
+          <perf50>16422</perf50>
+          <perf75>19321</perf75>
+          <perf95>21802</perf95>
+          <perf99>23065</perf99>
         </percentile>
         <percentile>
           <job>Drk</job>
@@ -283,11 +283,11 @@
         <percentile>
           <job>Pld</job>
           <perf1>2159</perf1>
-          <perf10>6359</perf10>
-          <perf25>8350</perf25>
-          <perf50>10613</perf50>
-          <perf75>12057</perf75>
-          <perf95>13564</perf95>
+          <perf10>6326</perf10>
+          <perf25>8373</perf25>
+          <perf50>10627</perf50>
+          <perf75>12054</perf75>
+          <perf95>13576</perf95>
           <perf99>14366</perf99>
         </percentile>
         <percentile>
@@ -365,12 +365,12 @@
         <percentile>
           <job>Blm</job>
           <perf1>41</perf1>
-          <perf10>93</perf10>
+          <perf10>92</perf10>
           <perf25>132</perf25>
-          <perf50>181</perf50>
-          <perf75>250</perf75>
+          <perf50>184</perf50>
+          <perf75>248</perf75>
           <perf95>338</perf95>
-          <perf99>454</perf99>
+          <perf99>452</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -514,13 +514,13 @@
         </percentile>
         <percentile>
           <job>Whm</job>
-          <perf1>2118</perf1>
-          <perf10>4390</perf10>
-          <perf25>5461</perf25>
-          <perf50>6652</perf50>
-          <perf75>7886</perf75>
-          <perf95>9612</perf95>
-          <perf99>10810</perf99>
+          <perf1>1747</perf1>
+          <perf10>4325</perf10>
+          <perf25>5459</perf25>
+          <perf50>6659</perf50>
+          <perf75>7891</perf75>
+          <perf95>9591</perf95>
+          <perf99>10807</perf99>
         </percentile>
       </hPercentiles>
       <exclusionPeriods/>
@@ -535,22 +535,22 @@
         <percentile>
           <job>Ast</job>
           <perf1>2756</perf1>
-          <perf10>7265</perf10>
-          <perf25>8882</perf25>
-          <perf50>10607</perf50>
-          <perf75>12141</perf75>
-          <perf95>14018</perf95>
-          <perf99>15004</perf99>
+          <perf10>7259</perf10>
+          <perf25>8869</perf25>
+          <perf50>10614</perf50>
+          <perf75>12146</perf75>
+          <perf95>14025</perf95>
+          <perf99>15014</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
           <perf1>5546</perf1>
-          <perf10>15906</perf10>
-          <perf25>18088</perf25>
-          <perf50>20185</perf50>
-          <perf75>21928</perf75>
-          <perf95>23504</perf95>
-          <perf99>24341</perf99>
+          <perf10>15877</perf10>
+          <perf25>18086</perf25>
+          <perf50>20202</perf50>
+          <perf75>21926</perf75>
+          <perf95>23518</perf95>
+          <perf99>24552</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -597,10 +597,10 @@
           <perf1>4369</perf1>
           <perf10>10042</perf10>
           <perf25>11069</perf25>
-          <perf50>12042</perf50>
-          <perf75>12814</perf75>
-          <perf95>13640</perf95>
-          <perf99>14028</perf99>
+          <perf50>12031</perf50>
+          <perf75>12826</perf75>
+          <perf95>13636</perf95>
+          <perf99>14034</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
@@ -717,22 +717,22 @@
         <percentile>
           <job>Blm</job>
           <perf1>5669</perf1>
-          <perf10>16255</perf10>
+          <perf10>16214</perf10>
           <perf25>18469</perf25>
-          <perf50>20583</perf50>
-          <perf75>22410</perf75>
-          <perf95>24148</perf95>
-          <perf99>25210</perf99>
+          <perf50>20607</perf50>
+          <perf75>22409</perf75>
+          <perf95>24160</perf95>
+          <perf99>25343</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
           <perf1>3173</perf1>
-          <perf10>15337</perf10>
-          <perf25>17111</perf25>
-          <perf50>18703</perf50>
-          <perf75>19789</perf75>
-          <perf95>20697</perf95>
-          <perf99>21184</perf99>
+          <perf10>15340</perf10>
+          <perf25>17114</perf25>
+          <perf50>18705</perf50>
+          <perf75>19795</perf75>
+          <perf95>20719</perf95>
+          <perf99>21202</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
@@ -747,12 +747,12 @@
         <percentile>
           <job>Drg</job>
           <perf1>7829</perf1>
-          <perf10>16249</perf10>
-          <perf25>18052</perf25>
-          <perf50>19849</perf50>
-          <perf75>21328</perf75>
-          <perf95>22930</perf95>
-          <perf99>23941</perf99>
+          <perf10>16252</perf10>
+          <perf25>18086</perf25>
+          <perf50>19874</perf50>
+          <perf75>21358</perf75>
+          <perf95>22954</perf95>
+          <perf99>23916</perf99>
         </percentile>
         <percentile>
           <job>Drk</job>
@@ -827,12 +827,12 @@
         <percentile>
           <job>Sam</job>
           <perf1>7217</perf1>
-          <perf10>17194</perf10>
-          <perf25>19288</perf25>
-          <perf50>21305</perf50>
-          <perf75>22887</perf75>
-          <perf95>24668</perf95>
-          <perf99>25816</perf99>
+          <perf10>17176</perf10>
+          <perf25>19286</perf25>
+          <perf50>21307</perf50>
+          <perf75>22879</perf75>
+          <perf95>24678</perf95>
+          <perf99>25795</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -901,10 +901,10 @@
           <perf1>0</perf1>
           <perf10>207</perf10>
           <perf25>245</perf25>
-          <perf50>293</perf50>
+          <perf50>292</perf50>
           <perf75>345</perf75>
-          <perf95>424</perf95>
-          <perf99>486</perf99>
+          <perf95>425</perf95>
+          <perf99>488</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
@@ -930,11 +930,11 @@
           <job>Drk</job>
           <perf1>432</perf1>
           <perf10>1053</perf10>
-          <perf25>1374</perf25>
+          <perf25>1371</perf25>
           <perf50>1768</perf50>
           <perf75>2117</perf75>
-          <perf95>2625</perf95>
-          <perf99>2986</perf99>
+          <perf95>2626</perf95>
+          <perf99>2991</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -979,12 +979,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>142</perf1>
-          <perf10>490</perf10>
-          <perf25>723</perf25>
-          <perf50>1027</perf50>
-          <perf75>1293</perf75>
-          <perf95>1640</perf95>
-          <perf99>1882</perf99>
+          <perf10>491</perf10>
+          <perf25>726</perf25>
+          <perf50>1029</perf50>
+          <perf75>1297</perf75>
+          <perf95>1643</perf95>
+          <perf99>1880</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -1002,9 +1002,9 @@
           <perf10>194</perf10>
           <perf25>231</perf25>
           <perf50>284</perf50>
-          <perf75>355</perf75>
-          <perf95>508</perf95>
-          <perf99>677</perf99>
+          <perf75>356</perf75>
+          <perf95>510</perf95>
+          <perf99>676</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -1139,12 +1139,12 @@
         <percentile>
           <job>Mnk</job>
           <perf1>3182</perf1>
-          <perf10>10514</perf10>
-          <perf25>13785</perf25>
-          <perf50>17573</perf50>
-          <perf75>20377</perf75>
-          <perf95>22753</perf95>
-          <perf99>23575</perf99>
+          <perf10>10446</perf10>
+          <perf25>13641</perf25>
+          <perf50>17495</perf50>
+          <perf75>20314</perf75>
+          <perf95>22715</perf95>
+          <perf99>23571</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -1231,12 +1231,12 @@
         <percentile>
           <job>Ast</job>
           <perf1>0</perf1>
-          <perf10>2836</perf10>
+          <perf10>2883</perf10>
           <perf25>4345</perf25>
           <perf50>6508</perf50>
-          <perf75>9013</perf75>
-          <perf95>11212</perf95>
-          <perf99>12155</perf99>
+          <perf75>9063</perf75>
+          <perf95>11261</perf95>
+          <perf99>12164</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -1361,12 +1361,12 @@
         <percentile>
           <job>Sch</job>
           <perf1>0</perf1>
-          <perf10>3784</perf10>
-          <perf25>5454</perf25>
-          <perf50>7690</perf50>
-          <perf75>10250</perf75>
-          <perf95>12528</perf95>
-          <perf99>13169</perf99>
+          <perf10>3685</perf10>
+          <perf25>5327</perf25>
+          <perf50>7614</perf50>
+          <perf75>10231</perf75>
+          <perf95>12355</perf95>
+          <perf99>13096</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -1404,11 +1404,11 @@
           <job>Ast</job>
           <perf1>1398</perf1>
           <perf10>3512</perf10>
-          <perf25>4367</perf25>
-          <perf50>5473</perf50>
-          <perf75>6648</perf75>
-          <perf95>8210</perf95>
-          <perf99>9682</perf99>
+          <perf25>4378</perf25>
+          <perf50>5490</perf50>
+          <perf75>6675</perf75>
+          <perf95>8385</perf95>
+          <perf99>9727</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -1453,22 +1453,22 @@
         <percentile>
           <job>Drk</job>
           <perf1>100</perf1>
-          <perf10>346</perf10>
-          <perf25>584</perf25>
-          <perf50>1181</perf50>
-          <perf75>1581</perf75>
-          <perf95>2220</perf95>
-          <perf99>2772</perf99>
+          <perf10>337</perf10>
+          <perf25>557</perf25>
+          <perf50>1166</perf50>
+          <perf75>1569</perf75>
+          <perf95>2205</perf95>
+          <perf99>2738</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
           <perf1>194</perf1>
-          <perf10>437</perf10>
-          <perf25>593</perf25>
-          <perf50>1264</perf50>
-          <perf75>1767</perf75>
-          <perf95>2155</perf95>
-          <perf99>2348</perf99>
+          <perf10>439</perf10>
+          <perf25>610</perf25>
+          <perf50>1270</perf50>
+          <perf75>1784</perf75>
+          <perf95>2185</perf95>
+          <perf99>2381</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
@@ -1634,11 +1634,11 @@
           <job>Drk</job>
           <perf1>6396</perf1>
           <perf10>9968</perf10>
-          <perf25>10883</perf25>
+          <perf25>10873</perf25>
           <perf50>11685</perf50>
-          <perf75>12360</perf75>
-          <perf95>13105</perf95>
-          <perf99>13426</perf99>
+          <perf75>12356</perf75>
+          <perf95>13104</perf95>
+          <perf99>13425</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -1713,22 +1713,22 @@
         <percentile>
           <job>Sch</job>
           <perf1>2799</perf1>
-          <perf10>8138</perf10>
-          <perf25>9557</perf25>
-          <perf50>11016</perf50>
+          <perf10>8098</perf10>
+          <perf25>9546</perf25>
+          <perf50>11003</perf50>
           <perf75>12327</perf75>
-          <perf95>14081</perf95>
-          <perf99>14908</perf99>
+          <perf95>14051</perf95>
+          <perf99>14909</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
           <perf1>12785</perf1>
-          <perf10>18133</perf10>
-          <perf25>19384</perf25>
-          <perf50>20772</perf50>
-          <perf75>21850</perf75>
-          <perf95>22930</perf95>
-          <perf99>23464</perf99>
+          <perf10>18123</perf10>
+          <perf25>19385</perf25>
+          <perf50>20775</perf50>
+          <perf75>21849</perf75>
+          <perf95>22948</perf95>
+          <perf99>23463</perf99>
         </percentile>
         <percentile>
           <job>War</job>
@@ -1855,12 +1855,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>5903</perf1>
-          <perf10>10563</perf10>
-          <perf25>11531</perf25>
-          <perf50>12446</perf50>
-          <perf75>13230</perf75>
-          <perf95>14087</perf95>
-          <perf99>14485</perf99>
+          <perf10>10561</perf10>
+          <perf25>11534</perf25>
+          <perf50>12444</perf50>
+          <perf75>13216</perf75>
+          <perf95>14072</perf95>
+          <perf99>14487</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -1927,12 +1927,12 @@
         <percentile>
           <job>Ast</job>
           <perf1>1673</perf1>
-          <perf10>7972</perf10>
-          <perf25>9016</perf25>
+          <perf10>7977</perf10>
+          <perf25>9020</perf25>
           <perf50>10172</perf50>
-          <perf75>11389</perf75>
-          <perf95>13343</perf95>
-          <perf99>14804</perf99>
+          <perf75>11371</perf75>
+          <perf95>13314</perf95>
+          <perf99>14713</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -2237,12 +2237,12 @@
         <percentile>
           <job>Sch</job>
           <perf1>1661</perf1>
-          <perf10>3513</perf10>
-          <perf25>5518</perf25>
-          <perf50>7799</perf50>
-          <perf75>10416</perf75>
+          <perf10>3425</perf10>
+          <perf25>5370</perf25>
+          <perf50>7640</perf50>
+          <perf75>10379</perf75>
           <perf95>12763</perf95>
-          <perf99>13881</perf99>
+          <perf99>13880</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -2299,42 +2299,42 @@
         <percentile>
           <job>Brd</job>
           <perf1>1999</perf1>
-          <perf10>8821</perf10>
-          <perf25>12447</perf25>
-          <perf50>15169</perf50>
-          <perf75>17400</perf75>
-          <perf95>19489</perf95>
-          <perf99>20312</perf99>
+          <perf10>8873</perf10>
+          <perf25>12610</perf25>
+          <perf50>15338</perf50>
+          <perf75>17490</perf75>
+          <perf95>19565</perf95>
+          <perf99>20323</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
           <perf1>3420</perf1>
-          <perf10>10094</perf10>
-          <perf25>11798</perf25>
+          <perf10>10003</perf10>
+          <perf25>11756</perf25>
           <perf50>14052</perf50>
-          <perf75>15956</perf75>
-          <perf95>17884</perf95>
-          <perf99>18619</perf99>
+          <perf75>15839</perf75>
+          <perf95>17895</perf95>
+          <perf99>18830</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
           <perf1>4133</perf1>
-          <perf10>10062</perf10>
-          <perf25>12999</perf25>
-          <perf50>16709</perf50>
-          <perf75>19738</perf75>
-          <perf95>22300</perf95>
-          <perf99>23221</perf99>
+          <perf10>9999</perf10>
+          <perf25>12910</perf25>
+          <perf50>16424</perf50>
+          <perf75>19683</perf75>
+          <perf95>22312</perf95>
+          <perf99>23209</perf99>
         </percentile>
         <percentile>
           <job>Drk</job>
           <perf1>3109</perf1>
-          <perf10>7221</perf10>
-          <perf25>8861</perf25>
-          <perf50>10472</perf50>
-          <perf75>11821</perf75>
-          <perf95>13630</perf95>
-          <perf99>14090</perf99>
+          <perf10>7270</perf10>
+          <perf25>8851</perf25>
+          <perf50>10403</perf50>
+          <perf75>11832</perf75>
+          <perf95>13481</perf95>
+          <perf99>14064</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -2359,12 +2359,12 @@
         <percentile>
           <job>Mnk</job>
           <perf1>7801</perf1>
-          <perf10>10257</perf10>
-          <perf25>14193</perf25>
-          <perf50>16409</perf50>
+          <perf10>10351</perf10>
+          <perf25>13712</perf25>
+          <perf50>16229</perf50>
           <perf75>19759</perf75>
-          <perf95>22819</perf95>
-          <perf99>24841</perf99>
+          <perf95>22720</perf95>
+          <perf99>24740</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -2379,12 +2379,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>3951</perf1>
-          <perf10>7525</perf10>
-          <perf25>8910</perf25>
-          <perf50>10729</perf50>
-          <perf75>12190</perf75>
-          <perf95>13567</perf95>
-          <perf99>14293</perf99>
+          <perf10>7520</perf10>
+          <perf25>8995</perf25>
+          <perf50>10866</perf50>
+          <perf75>12181</perf75>
+          <perf95>13464</perf95>
+          <perf99>14285</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -2409,12 +2409,12 @@
         <percentile>
           <job>Sch</job>
           <perf1>1417</perf1>
-          <perf10>3292</perf10>
-          <perf25>5165</perf25>
-          <perf50>7404</perf50>
-          <perf75>9931</perf75>
-          <perf95>12305</perf95>
-          <perf99>13520</perf99>
+          <perf10>3271</perf10>
+          <perf25>5132</perf25>
+          <perf50>7229</perf50>
+          <perf75>9935</perf75>
+          <perf95>12295</perf95>
+          <perf99>13517</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -2439,12 +2439,12 @@
         <percentile>
           <job>Whm</job>
           <perf1>117</perf1>
-          <perf10>4060</perf10>
-          <perf25>6056</perf25>
-          <perf50>8390</perf50>
-          <perf75>10518</perf75>
-          <perf95>13053</perf95>
-          <perf99>14255</perf99>
+          <perf10>4068</perf10>
+          <perf25>6177</perf25>
+          <perf50>8570</perf50>
+          <perf75>10680</perf75>
+          <perf95>13063</perf95>
+          <perf99>14237</perf99>
         </percentile>
       </aPercentiles>
       <hPercentiles>
@@ -2511,12 +2511,12 @@
         <percentile>
           <job>Gnb</job>
           <perf1>207</perf1>
-          <perf10>404</perf10>
-          <perf25>541</perf25>
-          <perf50>1179</perf50>
-          <perf75>1444</perf75>
-          <perf95>1685</perf95>
-          <perf99>1930</perf99>
+          <perf10>396</perf10>
+          <perf25>529</perf25>
+          <perf50>1178</perf50>
+          <perf75>1434</perf75>
+          <perf95>1684</perf95>
+          <perf99>1931</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
@@ -2541,11 +2541,11 @@
         <percentile>
           <job>Nin</job>
           <perf1>44</perf1>
-          <perf10>101</perf10>
-          <perf25>139</perf25>
-          <perf50>206</perf50>
+          <perf10>100</perf10>
+          <perf25>140</perf25>
+          <perf50>200</perf50>
           <perf75>278</perf75>
-          <perf95>416</perf95>
+          <perf95>408</perf95>
           <perf99>509</perf99>
         </percentile>
         <percentile>
@@ -2971,13 +2971,13 @@
         </percentile>
         <percentile>
           <job>Whm</job>
-          <perf1>4175</perf1>
-          <perf10>8607</perf10>
-          <perf25>9798</perf25>
-          <perf50>11083</perf50>
-          <perf75>12354</perf75>
-          <perf95>14085</perf95>
-          <perf99>15060</perf99>
+          <perf1>4003</perf1>
+          <perf10>8588</perf10>
+          <perf25>9782</perf25>
+          <perf50>11073</perf50>
+          <perf75>12336</perf75>
+          <perf95>14064</perf95>
+          <perf99>15027</perf99>
         </percentile>
       </aPercentiles>
       <hPercentiles>
@@ -3004,12 +3004,12 @@
         <percentile>
           <job>Brd</job>
           <perf1>0</perf1>
-          <perf10>231</perf10>
-          <perf25>261</perf25>
+          <perf10>230</perf10>
+          <perf25>260</perf25>
           <perf50>300</perf50>
-          <perf75>343</perf75>
-          <perf95>412</perf95>
-          <perf99>464</perf99>
+          <perf75>344</perf75>
+          <perf95>414</perf95>
+          <perf99>465</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
@@ -3034,12 +3034,12 @@
         <percentile>
           <job>Drk</job>
           <perf1>590</perf1>
-          <perf10>1278</perf10>
-          <perf25>1445</perf25>
-          <perf50>1668</perf50>
-          <perf75>1925</perf75>
-          <perf95>2342</perf95>
-          <perf99>2618</perf99>
+          <perf10>1282</perf10>
+          <perf25>1450</perf25>
+          <perf50>1672</perf50>
+          <perf75>1929</perf75>
+          <perf95>2337</perf95>
+          <perf99>2617</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -3095,11 +3095,11 @@
           <job>Rdm</job>
           <perf1>0</perf1>
           <perf10>209</perf10>
-          <perf25>241</perf25>
-          <perf50>285</perf50>
+          <perf25>239</perf25>
+          <perf50>284</perf50>
           <perf75>339</perf75>
-          <perf95>444</perf95>
-          <perf99>575</perf99>
+          <perf95>448</perf95>
+          <perf99>576</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -3114,32 +3114,32 @@
         <percentile>
           <job>Sch</job>
           <perf1>7229</perf1>
-          <perf10>12634</perf10>
-          <perf25>14008</perf25>
-          <perf50>15606</perf50>
-          <perf75>17035</perf75>
-          <perf95>19255</perf95>
-          <perf99>20992</perf99>
+          <perf10>12652</perf10>
+          <perf25>14026</perf25>
+          <perf50>15618</perf50>
+          <perf75>17042</perf75>
+          <perf95>19304</perf95>
+          <perf99>21003</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
           <perf1>564</perf1>
-          <perf10>913</perf10>
-          <perf25>1040</perf25>
-          <perf50>1180</perf50>
-          <perf75>1321</perf75>
-          <perf95>1526</perf95>
-          <perf99>1669</perf99>
+          <perf10>911</perf10>
+          <perf25>1039</perf25>
+          <perf50>1176</perf50>
+          <perf75>1317</perf75>
+          <perf95>1525</perf95>
+          <perf99>1665</perf99>
         </percentile>
         <percentile>
           <job>War</job>
           <perf1>769</perf1>
-          <perf10>1791</perf10>
+          <perf10>1785</perf10>
           <perf25>2130</perf25>
-          <perf50>2511</perf50>
-          <perf75>2913</perf75>
-          <perf95>3494</perf95>
-          <perf99>4006</perf99>
+          <perf50>2512</perf50>
+          <perf75>2910</perf75>
+          <perf95>3480</perf95>
+          <perf99>4011</perf99>
         </percentile>
         <percentile>
           <job>Whm</job>
@@ -3217,12 +3217,12 @@
         <percentile>
           <job>Drg</job>
           <perf1>570</perf1>
-          <perf10>8051</perf10>
-          <perf25>10103</perf25>
-          <perf50>12434</perf50>
-          <perf75>14498</perf75>
-          <perf95>16114</perf95>
-          <perf99>16939</perf99>
+          <perf10>8000</perf10>
+          <perf25>10174</perf25>
+          <perf50>12450</perf50>
+          <perf75>14574</perf75>
+          <perf95>16295</perf95>
+          <perf99>17005</perf99>
         </percentile>
         <percentile>
           <job>Drk</job>
@@ -3237,22 +3237,22 @@
         <percentile>
           <job>Gnb</job>
           <perf1>3011</perf1>
-          <perf10>6093</perf10>
-          <perf25>7362</perf25>
-          <perf50>8437</perf50>
-          <perf75>9365</perf75>
-          <perf95>10214</perf95>
-          <perf99>10767</perf99>
+          <perf10>6167</perf10>
+          <perf25>7420</perf25>
+          <perf50>8433</perf50>
+          <perf75>9352</perf75>
+          <perf95>10231</perf95>
+          <perf99>10860</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
           <perf1>5312</perf1>
-          <perf10>9049</perf10>
-          <perf25>10624</perf25>
-          <perf50>12392</perf50>
-          <perf75>14105</perf75>
-          <perf95>15790</perf95>
-          <perf99>16500</perf99>
+          <perf10>9052</perf10>
+          <perf25>10622</perf25>
+          <perf50>12455</perf50>
+          <perf75>14119</perf75>
+          <perf95>15599</perf95>
+          <perf99>16210</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
@@ -3530,13 +3530,13 @@
         </percentile>
         <percentile>
           <job>Blm</job>
-          <perf1>46</perf1>
-          <perf10>76</perf10>
-          <perf25>114</perf25>
+          <perf1>42</perf1>
+          <perf10>78</perf10>
+          <perf25>116</perf25>
           <perf50>159</perf50>
           <perf75>204</perf75>
-          <perf95>277</perf95>
-          <perf99>353</perf99>
+          <perf95>276</perf95>
+          <perf99>354</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -3621,12 +3621,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>31</perf1>
-          <perf10>214</perf10>
-          <perf25>371</perf25>
-          <perf50>651</perf50>
-          <perf75>892</perf75>
-          <perf95>1238</perf95>
-          <perf99>1599</perf99>
+          <perf10>201</perf10>
+          <perf25>365</perf25>
+          <perf50>638</perf50>
+          <perf75>890</perf75>
+          <perf95>1228</perf95>
+          <perf99>1579</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -3664,8 +3664,8 @@
           <perf10>148</perf10>
           <perf25>202</perf25>
           <perf50>282</perf50>
-          <perf75>365</perf75>
-          <perf95>488</perf95>
+          <perf75>366</perf75>
+          <perf95>492</perf95>
           <perf99>624</perf99>
         </percentile>
         <percentile>
@@ -3680,13 +3680,13 @@
         </percentile>
         <percentile>
           <job>Whm</job>
-          <perf1>1711</perf1>
-          <perf10>3722</perf10>
-          <perf25>4476</perf25>
-          <perf50>5251</perf50>
-          <perf75>6142</perf75>
-          <perf95>7360</perf95>
-          <perf99>8861</perf99>
+          <perf1>883</perf1>
+          <perf10>3699</perf10>
+          <perf25>4463</perf25>
+          <perf50>5244</perf50>
+          <perf75>6141</perf75>
+          <perf95>7343</perf95>
+          <perf99>8896</perf99>
         </percentile>
       </hPercentiles>
       <exclusionPeriods>
@@ -3716,22 +3716,22 @@
         <percentile>
           <job>Blm</job>
           <perf1>14668</perf1>
-          <perf10>19567</perf10>
-          <perf25>20652</perf25>
-          <perf50>21717</perf50>
-          <perf75>22632</perf75>
-          <perf95>23644</perf95>
-          <perf99>24308</perf99>
+          <perf10>19560</perf10>
+          <perf25>20642</perf25>
+          <perf50>21714</perf50>
+          <perf75>22631</perf75>
+          <perf95>23642</perf95>
+          <perf99>24322</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
           <perf1>14461</perf1>
-          <perf10>18912</perf10>
-          <perf25>19730</perf25>
-          <perf50>20576</perf50>
+          <perf10>18887</perf10>
+          <perf25>19735</perf25>
+          <perf50>20581</perf50>
           <perf75>21202</perf75>
-          <perf95>21886</perf95>
-          <perf99>22246</perf99>
+          <perf95>21894</perf95>
+          <perf99>22259</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
@@ -3947,23 +3947,23 @@
         </percentile>
         <percentile>
           <job>Mch</job>
-          <perf1>14759</perf1>
-          <perf10>19340</perf10>
-          <perf25>20431</perf25>
-          <perf50>21305</perf50>
-          <perf75>21886</perf75>
+          <perf1>15188</perf1>
+          <perf10>19341</perf10>
+          <perf25>20441</perf25>
+          <perf50>21313</perf50>
+          <perf75>21887</perf75>
           <perf95>22470</perf95>
-          <perf99>22806</perf99>
+          <perf99>22826</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
           <perf1>14337</perf1>
-          <perf10>19521</perf10>
-          <perf25>20532</perf25>
-          <perf50>21518</perf50>
-          <perf75>22322</perf75>
-          <perf95>23253</perf95>
-          <perf99>23773</perf99>
+          <perf10>19508</perf10>
+          <perf25>20511</perf25>
+          <perf50>21502</perf50>
+          <perf75>22294</perf75>
+          <perf95>23265</perf95>
+          <perf99>23784</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -3988,12 +3988,12 @@
         <percentile>
           <job>Rdm</job>
           <perf1>14018</perf1>
-          <perf10>18855</perf10>
-          <perf25>19923</perf25>
-          <perf50>20896</perf50>
-          <perf75>21730</perf75>
-          <perf95>22671</perf95>
-          <perf99>23181</perf99>
+          <perf10>18859</perf10>
+          <perf25>19930</perf25>
+          <perf50>20894</perf50>
+          <perf75>21727</perf75>
+          <perf95>22658</perf95>
+          <perf99>23161</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -4080,12 +4080,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>192</perf1>
-          <perf10>350</perf10>
-          <perf25>498</perf25>
-          <perf50>751</perf50>
-          <perf75>1046</perf75>
-          <perf95>1473</perf95>
-          <perf99>1769</perf99>
+          <perf10>351</perf10>
+          <perf25>500</perf25>
+          <perf50>750</perf50>
+          <perf75>1039</perf75>
+          <perf95>1468</perf95>
+          <perf99>1750</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -4100,12 +4100,12 @@
         <percentile>
           <job>Drk</job>
           <perf1>518</perf1>
-          <perf10>1094</perf10>
-          <perf25>1418</perf25>
-          <perf50>1837</perf50>
-          <perf75>2195</perf75>
-          <perf95>2707</perf95>
-          <perf99>3045</perf99>
+          <perf10>1084</perf10>
+          <perf25>1415</perf25>
+          <perf50>1839</perf50>
+          <perf75>2193</perf75>
+          <perf95>2703</perf95>
+          <perf99>3033</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -4164,8 +4164,8 @@
           <perf25>245</perf25>
           <perf50>271</perf50>
           <perf75>301</perf75>
-          <perf95>360</perf95>
-          <perf99>444</perf99>
+          <perf95>361</perf95>
+          <perf99>439</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -4180,22 +4180,22 @@
         <percentile>
           <job>Sch</job>
           <perf1>4904</perf1>
-          <perf10>15082</perf10>
-          <perf25>16345</perf25>
-          <perf50>17734</perf50>
-          <perf75>19127</perf75>
-          <perf95>21155</perf95>
-          <perf99>22881</perf99>
+          <perf10>15084</perf10>
+          <perf25>16339</perf25>
+          <perf50>17728</perf50>
+          <perf75>19124</perf75>
+          <perf95>21166</perf95>
+          <perf99>22867</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
           <perf1>520</perf1>
           <perf10>923</perf10>
-          <perf25>1053</perf25>
-          <perf50>1203</perf50>
-          <perf75>1364</perf75>
-          <perf95>1611</perf95>
-          <perf99>1794</perf99>
+          <perf25>1056</perf25>
+          <perf50>1204</perf50>
+          <perf75>1365</perf75>
+          <perf95>1609</perf95>
+          <perf99>1799</perf99>
         </percentile>
         <percentile>
           <job>War</job>
@@ -4210,12 +4210,12 @@
         <percentile>
           <job>Whm</job>
           <perf1>8869</perf1>
-          <perf10>14677</perf10>
-          <perf25>16146</perf25>
-          <perf50>17742</perf50>
-          <perf75>19273</perf75>
-          <perf95>21525</perf95>
-          <perf99>23270</perf99>
+          <perf10>14690</perf10>
+          <perf25>16145</perf25>
+          <perf50>17741</perf50>
+          <perf75>19262</perf75>
+          <perf95>21500</perf95>
+          <perf99>23204</perf99>
         </percentile>
       </hPercentiles>
       <exclusionPeriods/>
@@ -4280,12 +4280,12 @@
         <percentile>
           <job>Drk</job>
           <perf1>7871</perf1>
-          <perf10>10746</perf10>
-          <perf25>11390</perf25>
+          <perf10>10738</perf10>
+          <perf25>11394</perf25>
           <perf50>11947</perf50>
-          <perf75>12386</perf75>
-          <perf95>12929</perf95>
-          <perf99>13198</perf99>
+          <perf75>12385</perf75>
+          <perf95>12919</perf95>
+          <perf99>13196</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -4319,13 +4319,13 @@
         </percentile>
         <percentile>
           <job>Nin</job>
-          <perf1>14986</perf1>
-          <perf10>19557</perf10>
-          <perf25>20637</perf25>
-          <perf50>21596</perf50>
-          <perf75>22271</perf75>
-          <perf95>23005</perf95>
-          <perf99>23469</perf99>
+          <perf1>15591</perf1>
+          <perf10>19559</perf10>
+          <perf25>20615</perf25>
+          <perf50>21600</perf50>
+          <perf75>22270</perf75>
+          <perf95>23009</perf95>
+          <perf99>23471</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -4380,11 +4380,11 @@
         <percentile>
           <job>War</job>
           <perf1>7245</perf1>
-          <perf10>11005</perf10>
-          <perf25>11637</perf25>
-          <perf50>12233</perf50>
-          <perf75>12727</perf75>
-          <perf95>13308</perf95>
+          <perf10>11020</perf10>
+          <perf25>11636</perf25>
+          <perf50>12235</perf50>
+          <perf75>12729</perf75>
+          <perf95>13304</perf95>
           <perf99>13530</perf99>
         </percentile>
         <percentile>
@@ -4402,22 +4402,22 @@
         <percentile>
           <job>Ast</job>
           <perf1>3091</perf1>
-          <perf10>6794</perf10>
-          <perf25>7662</perf25>
-          <perf50>8590</perf50>
-          <perf75>9462</perf75>
-          <perf95>10723</perf95>
-          <perf99>11495</perf99>
+          <perf10>6803</perf10>
+          <perf25>7672</perf25>
+          <perf50>8608</perf50>
+          <perf75>9461</perf75>
+          <perf95>10724</perf95>
+          <perf99>11489</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
           <perf1>15504</perf1>
-          <perf10>19756</perf10>
-          <perf25>20977</perf25>
-          <perf50>22125</perf50>
-          <perf75>23039</perf75>
+          <perf10>19759</perf10>
+          <perf25>20958</perf25>
+          <perf50>22131</perf50>
+          <perf75>23044</perf75>
           <perf95>24184</perf95>
-          <perf99>24901</perf99>
+          <perf99>24899</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -4512,12 +4512,12 @@
         <percentile>
           <job>Rdm</job>
           <perf1>14512</perf1>
-          <perf10>18704</perf10>
-          <perf25>19706</perf25>
-          <perf50>20715</perf50>
-          <perf75>21552</perf75>
-          <perf95>22438</perf95>
-          <perf99>22918</perf99>
+          <perf10>18706</perf10>
+          <perf25>19694</perf25>
+          <perf50>20713</perf50>
+          <perf75>21539</perf75>
+          <perf95>22422</perf95>
+          <perf99>22948</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -4532,12 +4532,12 @@
         <percentile>
           <job>Sch</job>
           <perf1>3241</perf1>
-          <perf10>7330</perf10>
-          <perf25>8265</perf25>
-          <perf50>9299</perf50>
-          <perf75>10303</perf75>
-          <perf95>11650</perf95>
-          <perf99>12712</perf99>
+          <perf10>7327</perf10>
+          <perf25>8267</perf25>
+          <perf50>9297</perf50>
+          <perf75>10304</perf75>
+          <perf95>11652</perf95>
+          <perf99>12729</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -4624,12 +4624,12 @@
         <percentile>
           <job>Drk</job>
           <perf1>430</perf1>
-          <perf10>1025</perf10>
-          <perf25>1426</perf25>
-          <perf50>1851</perf50>
-          <perf75>2254</perf75>
-          <perf95>2727</perf95>
-          <perf99>2998</perf99>
+          <perf10>1015</perf10>
+          <perf25>1428</perf25>
+          <perf50>1855</perf50>
+          <perf75>2256</perf75>
+          <perf95>2730</perf95>
+          <perf99>2989</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -4819,22 +4819,22 @@
         <percentile>
           <job>Gnb</job>
           <perf1>5131</perf1>
-          <perf10>9914</perf10>
-          <perf25>11073</perf25>
-          <perf50>12101</perf50>
-          <perf75>12945</perf75>
-          <perf95>13871</perf95>
-          <perf99>14262</perf99>
+          <perf10>9906</perf10>
+          <perf25>11056</perf25>
+          <perf50>12099</perf50>
+          <perf75>12949</perf75>
+          <perf95>13859</perf95>
+          <perf99>14257</perf99>
         </percentile>
         <percentile>
           <job>Mch</job>
           <perf1>4089</perf1>
-          <perf10>15528</perf10>
-          <perf25>17308</perf25>
-          <perf50>18967</perf50>
-          <perf75>20314</perf75>
-          <perf95>21725</perf95>
-          <perf99>22316</perf99>
+          <perf10>15545</perf10>
+          <perf25>17355</perf25>
+          <perf50>18996</perf50>
+          <perf75>20354</perf75>
+          <perf95>21729</perf95>
+          <perf99>22325</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
@@ -4879,22 +4879,22 @@
         <percentile>
           <job>Sam</job>
           <perf1>5801</perf1>
-          <perf10>16292</perf10>
-          <perf25>18364</perf25>
-          <perf50>20386</perf50>
+          <perf10>16280</perf10>
+          <perf25>18338</perf25>
+          <perf50>20372</perf50>
           <perf75>21981</perf75>
-          <perf95>23571</perf95>
-          <perf99>24366</perf99>
+          <perf95>23585</perf95>
+          <perf99>24350</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
           <perf1>0</perf1>
-          <perf10>5792</perf10>
-          <perf25>7544</perf25>
-          <perf50>9427</perf50>
-          <perf75>11113</perf75>
-          <perf95>12943</perf95>
-          <perf99>13807</perf99>
+          <perf10>5849</perf10>
+          <perf25>7559</perf25>
+          <perf50>9432</perf50>
+          <perf75>11102</perf75>
+          <perf95>12917</perf95>
+          <perf99>13769</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -4961,12 +4961,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>4008</perf1>
-          <perf10>12740</perf10>
-          <perf25>14446</perf25>
-          <perf50>15917</perf50>
-          <perf75>17182</perf75>
-          <perf95>18580</perf95>
-          <perf99>19337</perf99>
+          <perf10>12788</perf10>
+          <perf25>14484</perf25>
+          <perf50>15944</perf50>
+          <perf75>17195</perf75>
+          <perf95>18587</perf95>
+          <perf99>19341</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -5021,12 +5021,12 @@
         <percentile>
           <job>Nin</job>
           <perf1>7427</perf1>
-          <perf10>15902</perf10>
-          <perf25>17631</perf25>
-          <perf50>19256</perf50>
-          <perf75>20671</perf75>
-          <perf95>22326</perf95>
-          <perf99>23193</perf99>
+          <perf10>15901</perf10>
+          <perf25>17614</perf25>
+          <perf50>19228</perf50>
+          <perf75>20628</perf75>
+          <perf95>22297</perf95>
+          <perf99>23169</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -5071,12 +5071,12 @@
         <percentile>
           <job>Smn</job>
           <perf1>2234</perf1>
-          <perf10>15650</perf10>
-          <perf25>17570</perf25>
-          <perf50>19555</perf50>
-          <perf75>21082</perf75>
-          <perf95>22693</perf95>
-          <perf99>23533</perf99>
+          <perf10>15684</perf10>
+          <perf25>17590</perf25>
+          <perf50>19568</perf50>
+          <perf75>21077</perf75>
+          <perf95>22675</perf95>
+          <perf99>23545</perf99>
         </percentile>
         <percentile>
           <job>War</job>
@@ -5103,12 +5103,12 @@
         <percentile>
           <job>Ast</job>
           <perf1>1779</perf1>
-          <perf10>7021</perf10>
-          <perf25>7902</perf25>
-          <perf50>8929</perf50>
-          <perf75>9928</perf75>
-          <perf95>11448</perf95>
-          <perf99>12686</perf99>
+          <perf10>7020</perf10>
+          <perf25>7917</perf25>
+          <perf50>8930</perf50>
+          <perf75>9937</perf75>
+          <perf95>11452</perf95>
+          <perf99>12700</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -5203,12 +5203,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>223</perf1>
-          <perf10>507</perf10>
-          <perf25>707</perf25>
-          <perf50>953</perf50>
-          <perf75>1208</perf75>
-          <perf95>1597</perf95>
-          <perf99>1885</perf99>
+          <perf10>506</perf10>
+          <perf25>705</perf25>
+          <perf50>949</perf50>
+          <perf75>1204</perf75>
+          <perf95>1602</perf95>
+          <perf99>1892</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -5318,12 +5318,12 @@
         <percentile>
           <job>Blm</job>
           <perf1>4104</perf1>
-          <perf10>6816</perf10>
-          <perf25>7589</perf25>
-          <perf50>8280</perf50>
-          <perf75>8926</perf75>
-          <perf95>9732</perf95>
-          <perf99>10350</perf99>
+          <perf10>6822</perf10>
+          <perf25>7596</perf25>
+          <perf50>8276</perf50>
+          <perf75>8923</perf75>
+          <perf95>9721</perf95>
+          <perf99>10406</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -5338,12 +5338,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>3696</perf1>
-          <perf10>6112</perf10>
-          <perf25>6902</perf25>
-          <perf50>7481</perf50>
-          <perf75>7988</perf75>
-          <perf95>8753</perf95>
-          <perf99>9377</perf99>
+          <perf10>6084</perf10>
+          <perf25>6899</perf25>
+          <perf50>7483</perf50>
+          <perf75>7994</perf75>
+          <perf95>8785</perf95>
+          <perf99>9361</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -5398,12 +5398,12 @@
         <percentile>
           <job>Nin</job>
           <perf1>3034</perf1>
-          <perf10>6024</perf10>
-          <perf25>6749</perf25>
-          <perf50>7301</perf50>
-          <perf75>7842</perf75>
-          <perf95>8522</perf95>
-          <perf99>9140</perf99>
+          <perf10>5959</perf10>
+          <perf25>6707</perf25>
+          <perf50>7303</perf50>
+          <perf75>7845</perf75>
+          <perf95>8534</perf95>
+          <perf99>9138</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -5428,12 +5428,12 @@
         <percentile>
           <job>Sam</job>
           <perf1>3879</perf1>
-          <perf10>6392</perf10>
+          <perf10>6390</perf10>
           <perf25>7002</perf25>
-          <perf50>7665</perf50>
-          <perf75>8196</perf75>
-          <perf95>9348</perf95>
-          <perf99>10164</perf99>
+          <perf50>7662</perf50>
+          <perf75>8191</perf75>
+          <perf95>9307</perf95>
+          <perf99>10200</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -5550,12 +5550,12 @@
         <percentile>
           <job>Mch</job>
           <perf1>3822</perf1>
-          <perf10>6310</perf10>
-          <perf25>6989</perf25>
-          <perf50>7480</perf50>
-          <perf75>7894</perf75>
-          <perf95>8457</perf95>
-          <perf99>8877</perf99>
+          <perf10>6313</perf10>
+          <perf25>6991</perf25>
+          <perf50>7491</perf50>
+          <perf75>7893</perf75>
+          <perf95>8449</perf95>
+          <perf99>8858</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-05-30 04:09:45+09:00</timestamp>
+  <timestamp>2021-05-30 15:58:27+09:00</timestamp>
 </data>
