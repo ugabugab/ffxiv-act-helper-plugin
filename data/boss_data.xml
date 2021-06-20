@@ -3806,12 +3806,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>7710</perf1>
-          <perf10>11479</perf10>
-          <perf25>12140</perf25>
-          <perf50>12767</perf50>
-          <perf75>13234</perf75>
-          <perf95>13717</perf95>
-          <perf99>13985</perf99>
+          <perf10>11475</perf10>
+          <perf25>12151</perf25>
+          <perf50>12774</perf50>
+          <perf75>13236</perf75>
+          <perf95>13721</perf95>
+          <perf99>13994</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-06-20 03:56:02+09:00</timestamp>
+  <timestamp>2021-06-20 15:55:52+09:00</timestamp>
 </data>
