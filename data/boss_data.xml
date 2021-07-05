@@ -312,13 +312,13 @@
         </percentile>
         <percentile>
           <job>Sch</job>
-          <perf1>6</perf1>
-          <perf10>3008</perf10>
-          <perf25>4676</perf25>
-          <perf50>7239</perf50>
-          <perf75>9445</perf75>
-          <perf95>12136</perf95>
-          <perf99>13303</perf99>
+          <perf1>14</perf1>
+          <perf10>2928</perf10>
+          <perf25>4593</perf25>
+          <perf50>7246</perf50>
+          <perf75>9450</perf75>
+          <perf95>12138</perf95>
+          <perf99>13106</perf99>
         </percentile>
         <percentile>
           <job>Smn</job>
@@ -727,22 +727,22 @@
         <percentile>
           <job>Brd</job>
           <perf1>11243</perf1>
-          <perf10>16552</perf10>
-          <perf25>17992</perf25>
-          <perf50>19986</perf50>
-          <perf75>20734</perf75>
-          <perf95>21322</perf95>
-          <perf99>21644</perf99>
+          <perf10>16679</perf10>
+          <perf25>18186</perf25>
+          <perf50>20085</perf50>
+          <perf75>20767</perf75>
+          <perf95>21385</perf95>
+          <perf99>21876</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
-          <perf1>7355</perf1>
-          <perf10>14373</perf10>
-          <perf25>16296</perf25>
-          <perf50>18114</perf50>
-          <perf75>19063</perf75>
-          <perf95>19874</perf95>
-          <perf99>20429</perf99>
+          <perf1>10058</perf1>
+          <perf10>14684</perf10>
+          <perf25>16551</perf25>
+          <perf50>18388</perf50>
+          <perf75>19189</perf75>
+          <perf95>19924</perf95>
+          <perf99>20635</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -2309,12 +2309,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>1984</perf1>
-          <perf10>10279</perf10>
-          <perf25>12056</perf25>
+          <perf10>10268</perf10>
+          <perf25>12074</perf25>
           <perf50>14236</perf50>
-          <perf75>16082</perf75>
-          <perf95>17825</perf95>
-          <perf99>19088</perf99>
+          <perf75>16094</perf75>
+          <perf95>17785</perf95>
+          <perf99>18546</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -2922,12 +2922,12 @@
         <percentile>
           <job>Rdm</job>
           <perf1>13950</perf1>
-          <perf10>19727</perf10>
-          <perf25>21234</perf25>
-          <perf50>22559</perf50>
-          <perf75>23682</perf75>
-          <perf95>24748</perf95>
-          <perf99>25160</perf99>
+          <perf10>20065</perf10>
+          <perf25>21525</perf25>
+          <perf50>22921</perf50>
+          <perf75>23910</perf75>
+          <perf95>24815</perf95>
+          <perf99>25301</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -4909,12 +4909,12 @@
         <percentile>
           <job>War</job>
           <perf1>5966</perf1>
-          <perf10>10436</perf10>
-          <perf25>11500</perf25>
-          <perf50>12396</perf50>
-          <perf75>13114</perf75>
-          <perf95>13793</perf95>
-          <perf99>14147</perf99>
+          <perf10>10395</perf10>
+          <perf25>11498</perf25>
+          <perf50>12403</perf50>
+          <perf75>13120</perf75>
+          <perf95>13810</perf95>
+          <perf99>14171</perf99>
         </percentile>
         <percentile>
           <job>Whm</job>
@@ -5652,11 +5652,11 @@
         <percentile>
           <job>Ast</job>
           <perf1>2255</perf1>
-          <perf10>3952</perf10>
-          <perf25>4545</perf25>
-          <perf50>5429</perf50>
-          <perf75>6045</perf75>
-          <perf95>7273</perf95>
+          <perf10>3951</perf10>
+          <perf25>4546</perf25>
+          <perf50>5433</perf50>
+          <perf75>6074</perf75>
+          <perf95>7344</perf95>
           <perf99>7995</perf99>
         </percentile>
         <percentile>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-07-05 03:57:01+09:00</timestamp>
+  <timestamp>2021-07-05 15:59:11+09:00</timestamp>
 </data>
