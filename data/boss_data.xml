@@ -283,12 +283,12 @@
         <percentile>
           <job>Pld</job>
           <perf1>3126</perf1>
-          <perf10>5795</perf10>
-          <perf25>7917</perf25>
-          <perf50>10304</perf50>
-          <perf75>12045</perf75>
-          <perf95>13625</perf95>
-          <perf99>14527</perf99>
+          <perf10>6163</perf10>
+          <perf25>8016</perf25>
+          <perf50>10470</perf50>
+          <perf75>12183</perf75>
+          <perf95>13585</perf95>
+          <perf99>14520</perf99>
         </percentile>
         <percentile>
           <job>Rdm</job>
@@ -2368,13 +2368,13 @@
         </percentile>
         <percentile>
           <job>Nin</job>
-          <perf1>4598</perf1>
-          <perf10>10585</perf10>
-          <perf25>13167</perf25>
-          <perf50>17126</perf50>
-          <perf75>19062</perf75>
-          <perf95>22036</perf95>
-          <perf99>23407</perf99>
+          <perf1>6026</perf1>
+          <perf10>9955</perf10>
+          <perf25>13005</perf25>
+          <perf50>17110</perf50>
+          <perf75>19035</perf75>
+          <perf95>21991</perf95>
+          <perf99>23482</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-08-02 03:56:37+09:00</timestamp>
+  <timestamp>2021-08-02 15:56:38+09:00</timestamp>
 </data>
