@@ -5763,11 +5763,11 @@
           <job>Rdm</job>
           <perf1>52</perf1>
           <perf10>113</perf10>
-          <perf25>149</perf25>
+          <perf25>148</perf25>
           <perf50>197</perf50>
-          <perf75>262</perf75>
-          <perf95>395</perf95>
-          <perf99>519</perf99>
+          <perf75>265</perf75>
+          <perf95>392</perf95>
+          <perf99>520</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-08-05 04:02:28+09:00</timestamp>
+  <timestamp>2021-08-05 16:00:56+09:00</timestamp>
 </data>
