@@ -3611,11 +3611,11 @@
         <percentile>
           <job>Nin</job>
           <perf1>34</perf1>
-          <perf10>89</perf10>
-          <perf25>134</perf25>
-          <perf50>190</perf50>
-          <perf75>244</perf75>
-          <perf95>367</perf95>
+          <perf10>88</perf10>
+          <perf25>132</perf25>
+          <perf50>193</perf50>
+          <perf75>245</perf75>
+          <perf95>371</perf95>
           <perf99>459</perf99>
         </percentile>
         <percentile>
@@ -3660,13 +3660,13 @@
         </percentile>
         <percentile>
           <job>Smn</job>
-          <perf1>69</perf1>
+          <perf1>53</perf1>
           <perf10>160</perf10>
-          <perf25>213</perf25>
-          <perf50>291</perf50>
-          <perf75>385</perf75>
-          <perf95>538</perf95>
-          <perf99>636</perf99>
+          <perf25>211</perf25>
+          <perf50>293</perf50>
+          <perf75>384</perf75>
+          <perf95>530</perf95>
+          <perf99>619</perf99>
         </percentile>
         <percentile>
           <job>War</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-08-18 04:00:48+09:00</timestamp>
+  <timestamp>2021-08-18 16:01:11+09:00</timestamp>
 </data>
