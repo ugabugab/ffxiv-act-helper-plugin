@@ -2995,10 +2995,10 @@
           <job>Blm</job>
           <perf1>156</perf1>
           <perf10>254</perf10>
-          <perf25>320</perf25>
-          <perf50>374</perf50>
-          <perf75>433</perf75>
-          <perf95>525</perf95>
+          <perf25>318</perf25>
+          <perf50>370</perf50>
+          <perf75>427</perf75>
+          <perf95>518</perf95>
           <perf99>594</perf99>
         </percentile>
         <percentile>
@@ -3631,12 +3631,12 @@
         <percentile>
           <job>Rdm</job>
           <perf1>34</perf1>
-          <perf10>65</perf10>
+          <perf10>69</perf10>
           <perf25>96</perf25>
-          <perf50>136</perf50>
+          <perf50>139</perf50>
           <perf75>213</perf75>
           <perf95>372</perf95>
-          <perf99>749</perf99>
+          <perf99>782</perf99>
         </percentile>
         <percentile>
           <job>Sam</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-08-24 03:58:52+09:00</timestamp>
+  <timestamp>2021-08-24 16:00:04+09:00</timestamp>
 </data>
