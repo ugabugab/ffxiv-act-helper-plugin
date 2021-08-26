@@ -4759,12 +4759,12 @@
         <percentile>
           <job>Ast</job>
           <perf1>211</perf1>
-          <perf10>5372</perf10>
-          <perf25>6972</perf25>
-          <perf50>8736</perf50>
-          <perf75>10612</perf75>
-          <perf95>12634</perf95>
-          <perf99>13575</perf99>
+          <perf10>5326</perf10>
+          <perf25>6979</perf25>
+          <perf50>8764</perf50>
+          <perf75>10613</perf75>
+          <perf95>12631</perf95>
+          <perf99>13581</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -5812,17 +5812,17 @@
         <percentile>
           <job>Whm</job>
           <perf1>2433</perf1>
-          <perf10>4503</perf10>
-          <perf25>5161</perf25>
-          <perf50>5906</perf50>
-          <perf75>6630</perf75>
-          <perf95>7663</perf95>
-          <perf99>8432</perf99>
+          <perf10>4466</perf10>
+          <perf25>5149</perf25>
+          <perf50>5917</perf50>
+          <perf75>6659</perf75>
+          <perf95>7692</perf95>
+          <perf99>8421</perf99>
         </percentile>
       </hPercentiles>
       <exclusionPeriods/>
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-08-26 03:59:03+09:00</timestamp>
+  <timestamp>2021-08-26 15:58:17+09:00</timestamp>
 </data>
