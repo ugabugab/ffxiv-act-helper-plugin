@@ -737,12 +737,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>9114</perf1>
-          <perf10>15886</perf10>
-          <perf25>17658</perf25>
-          <perf50>18621</perf50>
-          <perf75>19291</perf75>
-          <perf95>20083</perf95>
-          <perf99>20953</perf99>
+          <perf10>15810</perf10>
+          <perf25>17561</perf25>
+          <perf50>18549</perf50>
+          <perf75>19283</perf75>
+          <perf95>20047</perf95>
+          <perf99>20991</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-09-04 03:59:02+09:00</timestamp>
+  <timestamp>2021-09-04 16:01:27+09:00</timestamp>
 </data>
