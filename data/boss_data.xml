@@ -3601,12 +3601,12 @@
         <percentile>
           <job>Mnk</job>
           <perf1>48</perf1>
-          <perf10>72</perf10>
-          <perf25>97</perf25>
-          <perf50>146</perf50>
-          <perf75>208</perf75>
-          <perf95>286</perf95>
-          <perf99>338</perf99>
+          <perf10>70</perf10>
+          <perf25>93</perf25>
+          <perf50>145</perf50>
+          <perf75>202</perf75>
+          <perf95>289</perf95>
+          <perf99>391</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-09-12 04:00:35+09:00</timestamp>
+  <timestamp>2021-09-12 16:01:43+09:00</timestamp>
 </data>
