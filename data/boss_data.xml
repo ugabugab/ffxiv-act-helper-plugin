@@ -2832,11 +2832,11 @@
         <percentile>
           <job>Brd</job>
           <perf1>14091</perf1>
-          <perf10>18337</perf10>
-          <perf25>19819</perf25>
+          <perf10>18441</perf10>
+          <perf25>19905</perf25>
           <perf50>20744</perf50>
           <perf75>21330</perf75>
-          <perf95>22128</perf95>
+          <perf95>22126</perf95>
           <perf99>22256</perf99>
         </percentile>
         <percentile>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-09-15 04:02:17+09:00</timestamp>
+  <timestamp>2021-09-15 16:04:02+09:00</timestamp>
 </data>
