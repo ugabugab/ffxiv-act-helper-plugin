@@ -1613,12 +1613,12 @@
         <percentile>
           <job>Dnc</job>
           <perf1>12367</perf1>
-          <perf10>18615</perf10>
-          <perf25>20324</perf25>
-          <perf50>21546</perf50>
-          <perf75>22184</perf75>
-          <perf95>22897</perf95>
-          <perf99>23339</perf99>
+          <perf10>18540</perf10>
+          <perf25>20259</perf25>
+          <perf50>21413</perf50>
+          <perf75>22145</perf75>
+          <perf95>22770</perf95>
+          <perf99>23314</perf99>
         </percentile>
         <percentile>
           <job>Drg</job>
@@ -3716,12 +3716,12 @@
         <percentile>
           <job>Blm</job>
           <perf1>16235</perf1>
-          <perf10>19552</perf10>
-          <perf25>21215</perf25>
-          <perf50>22621</perf50>
-          <perf75>24107</perf75>
-          <perf95>25162</perf95>
-          <perf99>25737</perf99>
+          <perf10>19415</perf10>
+          <perf25>21161</perf25>
+          <perf50>22480</perf50>
+          <perf75>23824</perf75>
+          <perf95>24982</perf95>
+          <perf99>25373</perf99>
         </percentile>
         <percentile>
           <job>Brd</job>
@@ -3968,12 +3968,12 @@
         <percentile>
           <job>Nin</job>
           <perf1>17492</perf1>
-          <perf10>19736</perf10>
-          <perf25>20584</perf25>
-          <perf50>22106</perf50>
-          <perf75>22937</perf75>
-          <perf95>23649</perf95>
-          <perf99>24436</perf99>
+          <perf10>19796</perf10>
+          <perf25>20608</perf25>
+          <perf50>22109</perf50>
+          <perf75>22926</perf75>
+          <perf95>23640</perf95>
+          <perf99>24429</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -5590,9 +5590,9 @@
         <percentile>
           <job>Rdm</job>
           <perf1>2824</perf1>
-          <perf10>6300</perf10>
-          <perf25>7111</perf25>
-          <perf50>7718</perf50>
+          <perf10>6254</perf10>
+          <perf25>7100</perf25>
+          <perf50>7711</perf50>
           <perf75>8312</perf75>
           <perf95>9034</perf95>
           <perf99>9448</perf99>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-10-03 04:07:39+09:00</timestamp>
+  <timestamp>2021-10-03 16:07:33+09:00</timestamp>
 </data>
