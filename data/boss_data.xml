@@ -2993,12 +2993,12 @@
         </percentile>
         <percentile>
           <job>Blm</job>
-          <perf1>170</perf1>
-          <perf10>255</perf10>
-          <perf25>295</perf25>
-          <perf50>348</perf50>
-          <perf75>406</perf75>
-          <perf95>509</perf95>
+          <perf1>193</perf1>
+          <perf10>254</perf10>
+          <perf25>297</perf25>
+          <perf50>349</perf50>
+          <perf75>413</perf75>
+          <perf95>505</perf95>
           <perf99>543</perf99>
         </percentile>
         <percentile>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-10-04 04:07:52+09:00</timestamp>
+  <timestamp>2021-10-04 16:06:35+09:00</timestamp>
 </data>
