@@ -1522,13 +1522,13 @@
         </percentile>
         <percentile>
           <job>Sam</job>
-          <perf1>28</perf1>
+          <perf1>23</perf1>
           <perf10>58</perf10>
-          <perf25>89</perf25>
-          <perf50>150</perf50>
-          <perf75>232</perf75>
-          <perf95>398</perf95>
-          <perf99>482</perf99>
+          <perf25>90</perf25>
+          <perf50>151</perf50>
+          <perf75>237</perf75>
+          <perf95>395</perf95>
+          <perf99>473</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -2720,12 +2720,12 @@
         <percentile>
           <job>Mnk</job>
           <perf1>18067</perf1>
-          <perf10>21651</perf10>
-          <perf25>22752</perf25>
+          <perf10>21618</perf10>
+          <perf25>22776</perf25>
           <perf50>24026</perf50>
-          <perf75>24760</perf75>
-          <perf95>25397</perf95>
-          <perf99>25790</perf99>
+          <perf75>24836</perf75>
+          <perf95>25399</perf95>
+          <perf99>25800</perf99>
         </percentile>
         <percentile>
           <job>Nin</job>
@@ -4849,12 +4849,12 @@
         <percentile>
           <job>Nin</job>
           <perf1>8263</perf1>
-          <perf10>16649</perf10>
-          <perf25>18574</perf25>
-          <perf50>20269</perf50>
-          <perf75>21612</perf75>
-          <perf95>23235</perf95>
-          <perf99>24108</perf99>
+          <perf10>16563</perf10>
+          <perf25>18573</perf25>
+          <perf50>20291</perf50>
+          <perf75>21636</perf75>
+          <perf95>23232</perf95>
+          <perf99>24111</perf99>
         </percentile>
         <percentile>
           <job>Pld</job>
@@ -5377,13 +5377,13 @@
         </percentile>
         <percentile>
           <job>Mch</job>
-          <perf1>2813</perf1>
-          <perf10>6192</perf10>
-          <perf25>6895</perf25>
-          <perf50>7418</perf50>
-          <perf75>7834</perf75>
-          <perf95>8376</perf95>
-          <perf99>8759</perf99>
+          <perf1>2868</perf1>
+          <perf10>6174</perf10>
+          <perf25>6885</perf25>
+          <perf50>7411</perf50>
+          <perf75>7836</perf75>
+          <perf95>8407</perf95>
+          <perf99>8789</perf99>
         </percentile>
         <percentile>
           <job>Mnk</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-10-06 04:08:24+09:00</timestamp>
+  <timestamp>2021-10-06 16:07:39+09:00</timestamp>
 </data>
