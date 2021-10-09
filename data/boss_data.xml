@@ -151,11 +151,11 @@
         <percentile>
           <job>Smn</job>
           <perf1>3034</perf1>
-          <perf10>8306</perf10>
-          <perf25>11703</perf25>
-          <perf50>15834</perf50>
-          <perf75>18827</perf75>
-          <perf95>21221</perf95>
+          <perf10>8295</perf10>
+          <perf25>11736</perf25>
+          <perf50>15883</perf50>
+          <perf75>18758</perf75>
+          <perf95>21327</perf95>
           <perf99>23085</perf99>
         </percentile>
         <percentile>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-10-09 04:08:18+09:00</timestamp>
+  <timestamp>2021-10-09 16:08:03+09:00</timestamp>
 </data>
