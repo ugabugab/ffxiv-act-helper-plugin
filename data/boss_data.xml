@@ -374,13 +374,13 @@
         </percentile>
         <percentile>
           <job>Brd</job>
-          <perf1>54</perf1>
-          <perf10>112</perf10>
-          <perf25>145</perf25>
-          <perf50>212</perf50>
-          <perf75>280</perf75>
-          <perf95>355</perf95>
-          <perf99>451</perf99>
+          <perf1>59</perf1>
+          <perf10>114</perf10>
+          <perf25>147</perf25>
+          <perf50>215</perf50>
+          <perf75>279</perf75>
+          <perf95>352</perf95>
+          <perf99>438</perf99>
         </percentile>
         <percentile>
           <job>Dnc</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-10-16 04:06:14+09:00</timestamp>
+  <timestamp>2021-10-16 16:07:38+09:00</timestamp>
 </data>
