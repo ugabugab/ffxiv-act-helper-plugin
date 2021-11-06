@@ -1563,12 +1563,12 @@
         <percentile>
           <job>Whm</job>
           <perf1>1331</perf1>
-          <perf10>3800</perf10>
-          <perf25>4632</perf25>
-          <perf50>5772</perf50>
+          <perf10>3812</perf10>
+          <perf25>4667</perf25>
+          <perf50>5738</perf50>
           <perf75>6812</perf75>
-          <perf95>8470</perf95>
-          <perf99>9995</perf99>
+          <perf95>8471</perf95>
+          <perf99>9986</perf99>
         </percentile>
       </hPercentiles>
       <exclusionPeriods/>
@@ -3826,12 +3826,12 @@
         <percentile>
           <job>Sam</job>
           <perf1>16834</perf1>
-          <perf10>20298</perf10>
-          <perf25>21722</perf25>
-          <perf50>23025</perf50>
-          <perf75>23796</perf75>
-          <perf95>24625</perf95>
-          <perf99>25176</perf99>
+          <perf10>20296</perf10>
+          <perf25>21691</perf25>
+          <perf50>23043</perf50>
+          <perf75>23748</perf75>
+          <perf95>24592</perf95>
+          <perf99>25170</perf99>
         </percentile>
         <percentile>
           <job>Sch</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-11-06 04:09:13+09:00</timestamp>
+  <timestamp>2021-11-06 16:10:30+09:00</timestamp>
 </data>
