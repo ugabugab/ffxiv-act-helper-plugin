@@ -1109,12 +1109,12 @@
         <percentile>
           <job>Drk</job>
           <perf1>4445</perf1>
-          <perf10>7529</perf10>
-          <perf25>8847</perf25>
-          <perf50>10831</perf50>
-          <perf75>12018</perf75>
-          <perf95>12897</perf95>
-          <perf99>13383</perf99>
+          <perf10>7521</perf10>
+          <perf25>8846</perf25>
+          <perf50>10792</perf50>
+          <perf75>12004</perf75>
+          <perf95>12861</perf95>
+          <perf99>13362</perf99>
         </percentile>
         <percentile>
           <job>Gnb</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-11-10 04:11:01+09:00</timestamp>
+  <timestamp>2021-11-10 15:58:58+09:00</timestamp>
 </data>
