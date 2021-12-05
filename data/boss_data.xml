@@ -685,11 +685,11 @@
         <percentile>
           <job>War</job>
           <perf1>8595</perf1>
-          <perf10>10359</perf10>
-          <perf25>11408</perf25>
-          <perf50>12469</perf50>
-          <perf75>13046</perf75>
-          <perf95>13777</perf95>
+          <perf10>10514</perf10>
+          <perf25>11461</perf25>
+          <perf50>12561</perf50>
+          <perf75>13081</perf75>
+          <perf95>13795</perf95>
           <perf99>14193</perf99>
         </percentile>
         <percentile>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-12-05 03:59:39+09:00</timestamp>
+  <timestamp>2021-12-05 16:00:35+09:00</timestamp>
 </data>
