@@ -2983,13 +2983,13 @@
       <hPercentiles>
         <percentile>
           <job>Ast</job>
-          <perf1>9910</perf1>
-          <perf10>13891</perf10>
-          <perf25>15103</perf25>
-          <perf50>16148</perf50>
-          <perf75>17460</perf75>
-          <perf95>19828</perf95>
-          <perf99>23984</perf99>
+          <perf1>12013</perf1>
+          <perf10>14559</perf10>
+          <perf25>15454</perf25>
+          <perf50>16448</perf50>
+          <perf75>17287</perf75>
+          <perf95>19184</perf95>
+          <perf99>22700</perf99>
         </percentile>
         <percentile>
           <job>Blm</job>
@@ -5824,5 +5824,5 @@
     </boss>
   </bosses>
   <version>1.2</version>
-  <timestamp>2021-12-12 15:58:23+09:00</timestamp>
+  <timestamp>2021-12-13 03:59:44+09:00</timestamp>
 </data>
